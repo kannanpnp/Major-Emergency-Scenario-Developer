@@ -208,6 +208,38 @@ textarea{resize:vertical;min-height:80px}
 /* ── AAR TRACKER SUMMARY ── */
 .aar-trk-row{display:grid;grid-template-columns:60px 1fr 80px 80px;gap:6px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px;align-items:center}
 .aar-trk-row:last-child{border-bottom:none}
+
+/* ── DEBRIEF PRESENTER MODE ── */
+.dbf-presenter{position:fixed;inset:0;background:#0f172a;z-index:700;display:flex;flex-direction:column;color:#fff;overflow:hidden}
+.dbf-pres-hdr{background:#1e293b;padding:12px 24px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #334155;flex-shrink:0}
+.dbf-pres-hdr h2{font-size:15px;font-weight:800;flex:1;letter-spacing:.3px}
+.dbf-pres-body{flex:1;overflow-y:auto;padding:32px 48px;max-width:900px;width:100%;margin:0 auto}
+.dbf-pres-section{margin-bottom:3rem}
+.dbf-pres-section h3{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #334155}
+.dbf-pres-section .content{font-size:15px;line-height:1.8;color:#e2e8f0;white-space:pre-wrap}
+.dbf-pres-section .content:empty::before{content:'— Not recorded —';color:#475569;font-style:italic}
+.dbf-section-nav{display:flex;gap:8px;align-items:center}
+.dbf-step-indicator{font-size:11px;color:#64748b;min-width:80px;text-align:center}
+.dbf-pres-footer{background:#1e293b;padding:10px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #334155;flex-shrink:0;font-size:11px;color:#64748b}
+.pres-section-tab{background:none;border:none;color:#64748b;font-size:11px;padding:5px 10px;cursor:pointer;border-radius:6px;font-family:inherit}
+.pres-section-tab.on,.pres-section-tab:hover{background:#334155;color:#e2e8f0}
+.pres-tl-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #1e293b;align-items:flex-start;font-size:12px}
+.pres-tl-time{color:#64748b;min-width:55px;font-weight:700;font-size:11px;flex-shrink:0}
+.pres-tl-dot{width:10px;height:10px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.pres-tl-body{flex:1}
+.pres-tl-msg{color:#cbd5e1;line-height:1.4}
+.pres-tl-act{font-size:11px;color:#60a5fa;margin-top:3px}
+.pres-tl-gap{font-size:11px;color:#f97316;margin-top:3px;font-style:italic}
+.pres-kc-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #1e293b;font-size:12px}
+.pres-kc-pos{font-weight:800;color:#94a3b8;min-width:40px;font-size:11px}
+.pres-kc-area{flex:1;color:#cbd5e1}
+.pres-kc-D{background:#15803d;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.pres-kc-P{background:#d97706;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.pres-kc-N{background:#dc2626;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.pres-followup-row{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid #1e293b;font-size:12px}
+.pres-action-text{flex:1;color:#e2e8f0}
+.pres-owner{color:#94a3b8;min-width:100px;font-size:11px}
+.pres-date{color:#60a5fa;font-size:11px;min-width:90px}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -239,8 +271,10 @@ textarea{resize:vertical;min-height:80px}
     <button class="pill" onclick="setFilter('medium',this)">&#128992; Medium</button>
     <button class="pill" onclick="setFilter('minor',this)">&#128994; Minor</button>
     <button class="pill" onclick="setFilter('custom',this)"><i class="ti ti-user-star"></i> Custom</button>
+    <button class="pill" onclick="setFilter('history',this)"><i class="ti ti-history"></i> History</button>
   </div>
   <div class="ga" id="sc-grid"></div>
+  <div id="history-grid" style="display:none"></div>
   <div style="margin-top:1rem;padding:12px 16px;border:1px dashed var(--bdr2);border-radius:12px" class="sb">
     <div><div style="font-size:13px;font-weight:700;margin-bottom:2px">Create a custom exercise</div>
     <div style="font-size:12px;color:var(--text2)">Build your own scenario with custom injects, phases, and team positions. Saved exercises appear in the library.</div></div>
@@ -289,10 +323,11 @@ textarea{resize:vertical;min-height:80px}
         <div style="margin-top:8px">
           <div class="s-ttl">Muster update</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
-            <div><label class="lbl">Acct.</label><input type="number" id="m-acc-in" style="padding:5px 7px;font-size:12px" onchange="updateMuster()"></div>
-            <div><label class="lbl">Miss.</label><input type="number" id="m-mis-in" style="padding:5px 7px;font-size:12px" onchange="updateMuster()"></div>
-            <div><label class="lbl">Cas.</label><input type="number" id="m-cas-in" style="padding:5px 7px;font-size:12px" onchange="updateMuster()"></div>
+            <div><label class="lbl">Acct.</label><input type="number" id="m-acc-in" style="padding:5px 7px;font-size:12px;border:2px solid var(--bdr)" oninput="updateMuster()" onchange="updateMuster()"></div>
+            <div><label class="lbl">Miss.</label><input type="number" id="m-mis-in" style="padding:5px 7px;font-size:12px;border:2px solid var(--bdr)" oninput="updateMuster()" onchange="updateMuster()"></div>
+            <div><label class="lbl">Cas.</label><input type="number" id="m-cas-in" style="padding:5px 7px;font-size:12px;border:2px solid var(--bdr)" oninput="updateMuster()" onchange="updateMuster()"></div>
           </div>
+          <div id="muster-warn" style="display:none;font-size:9px;color:var(--amber);font-weight:700;margin-top:4px;padding:3px 5px;background:#fef3c7;border-radius:4px;line-height:1.3"></div>
         </div>
       </div>
       <div>
@@ -423,7 +458,7 @@ textarea{resize:vertical;min-height:80px}
           <div style="font-size:16px;font-weight:800">Exercise De-brief</div>
           <div style="font-size:11px;color:var(--text2)" id="dbf-ex-name">—</div>
         </div>
-        <button class="btn btn-sm no-print" onclick="window.print()"><i class="ti ti-printer"></i> Print de-brief</button>
+        <button class="btn btn-sm btn-p no-print" onclick="startPresenter()"><i class="ti ti-presentation"></i> Present to team</button><button class="btn btn-sm no-print" onclick="window.print()"><i class="ti ti-printer"></i> Print de-brief</button>
       </div>
       <!-- Participants -->
       <div class="dbf-section">
@@ -471,6 +506,29 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 
+
+<!-- DE-BRIEF PRESENTER MODAL -->
+<div id="pres-overlay" class="dbf-presenter" style="display:none">
+  <div class="dbf-pres-hdr">
+    <div>
+      <div class="dbf-step-indicator" id="pres-step-lbl">1 / 8</div>
+    </div>
+    <h2 id="pres-title">Exercise De-brief</h2>
+    <div class="dbf-section-nav">
+      <button class="btn btn-sm btn-g" onclick="presNav(-1)"><i class="ti ti-chevron-left"></i> Prev</button>
+      <button class="btn btn-sm btn-p" onclick="presNav(1)">Next <i class="ti ti-chevron-right"></i></button>
+    </div>
+    <button class="btn btn-sm" onclick="closePres()" style="margin-left:8px"><i class="ti ti-x"></i> Close</button>
+    <button class="btn btn-sm no-print" onclick="window.print()" style="margin-left:4px"><i class="ti ti-printer"></i> Print</button>
+  </div>
+  <!-- Section tabs (small) -->
+  <div style="background:#1e293b;padding:6px 24px;display:flex;gap:4px;border-bottom:1px solid #334155;flex-wrap:wrap" id="pres-tabs"></div>
+  <div class="dbf-pres-body" id="pres-body"></div>
+  <div class="dbf-pres-footer">
+    <span id="pres-footer-ex"></span>
+    <span style="margin-left:auto" id="pres-footer-coord"></span>
+  </div>
+</div>
 <!-- SETTINGS MODAL -->
 <div id="settings-overlay" class="settings-overlay" style="display:none" onclick="closeSettings(event)">
   <div class="settings-modal">
@@ -1311,6 +1369,7 @@ function showRunNav(v){$('nav-run').style.display=v?'':'none';$('nav-aar').style
 
 // ===== HOME =====
 function setFilter(f,btn){
+  if(f==='history'){renderHistory();document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('on');});if(btn)btn.classList.add('on');S.filter=f;return;}
   S.filter=f;
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
   if(btn)btn.classList.add('on');
@@ -1321,6 +1380,7 @@ function renderHome(){
   // API key banner
   var banner=$('api-banner');
   if(banner){banner.style.display=getApiKey()?'none':'flex';}
+  if(S.filter==='history'){renderHistory();return;}
   var all=allScenarios(),f=S.filter;
   var list=all.filter(function(sc){
     if(f==='all')return true;
@@ -1554,7 +1614,96 @@ function doEndex(){
   S.exEndTime=R.elapsed;
   $('ex-status').textContent='ENDEX';$('ex-status').className='badge';$('ex-status').style.cssText='background:#f1f5f9;color:var(--text2)';
   document.querySelectorAll('#run-btns .btn').forEach(function(b){if(b.id!=='btn-pause')b.disabled=true;});
+  saveExerciseHistory();
   showRunNav(true);
+  navTo('aar');
+}
+function saveExerciseHistory(){
+  var sc=S.sc;if(!sc)return;
+  var aarWell=$('aar-well')&&$('aar-well').value||S.aarWell||'';
+  var aarWrong=$('aar-wrong')&&$('aar-wrong').value||S.aarWrong||'';
+  var aarRec=$('aar-rec')&&$('aar-rec').value||S.aarRec||'';
+  var rec={
+    id:'h_'+Date.now(),
+    date:new Date().toISOString(),
+    scCode:sc.code,scName:sc.name,scCat:sc.cat,scLvl:sc.lvl,scTier:sc.tier||null,
+    duration:S.exEndTime||R.elapsed,
+    pob:S.muster.total,acc:S.muster.acc,mis:S.muster.mis,cas:S.muster.cas,
+    injectCount:S.injects.length,
+    actionCount:S.actions.length,
+    verifiedCount:S.tracker.filter(function(t){return t.verified;}).length,
+    trackerTotal:S.tracker.length,
+    injects:S.injects,
+    actions:S.actions,
+    tracker:S.tracker,
+    stk:S.stk,
+    kc:S.kc,
+    muster:S.muster,
+    aarWell:aarWell,aarWrong:aarWrong,aarRec:aarRec,
+    dbfFollowups:S.dbfFollowups
+  };
+  try{
+    var hist=JSON.parse(localStorage.getItem('r2s_history')||'[]');
+    hist.unshift(rec);
+    if(hist.length>30)hist=hist.slice(0,30);
+    localStorage.setItem('r2s_history',JSON.stringify(hist));
+  }catch(e){console.warn('History save failed:',e);}
+}
+function loadHistory(){
+  try{return JSON.parse(localStorage.getItem('r2s_history')||'[]');}catch(e){return[];}
+}
+function deleteHistory(id){
+  if(!confirm('Delete this exercise record?'))return;
+  var hist=loadHistory().filter(function(h){return h.id!==id;});
+  localStorage.setItem('r2s_history',JSON.stringify(hist));
+  renderHistory();
+}
+function renderHistory(){
+  var grid=$('sc-grid');var hgrid=$('history-grid');
+  if(grid)grid.style.display='none';
+  if(!hgrid)return;
+  hgrid.style.display='block';
+  var hist=loadHistory();
+  if(!hist.length){
+    hgrid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text3)"><i class="ti ti-history" style="font-size:2rem;display:block;margin-bottom:8px"></i>No exercise history yet. Completed exercises appear here after ENDEX.</div>';
+    return;
+  }
+  var lvlColor={major:'var(--red)',medium:'var(--amber)',minor:'var(--green)'};
+  hgrid.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">'+hist.map(function(h){
+    var d=new Date(h.date);
+    var dateStr=d.toLocaleDateString()+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    var dur=hhmmss(h.duration);
+    var pct=h.trackerTotal>0?Math.round(h.verifiedCount/h.trackerTotal*100):0;
+    return '<div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:14px;position:relative;border-left:4px solid '+(lvlColor[h.scLvl]||'var(--navy)')+'">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:3px">'+dateStr+'</div>'
+      +'<div style="font-size:11px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px">'+esc(h.scCode)+'</div>'
+      +'<div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--navy)">'+esc(h.scName)+'</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'
+      +'<span style="font-size:10px;background:var(--bg);padding:2px 7px;border-radius:4px"><i class="ti ti-clock" style="font-size:10px"></i> '+dur+'</span>'
+      +'<span style="font-size:10px;background:var(--bg);padding:2px 7px;border-radius:4px"><i class="ti ti-send" style="font-size:10px"></i> '+h.injectCount+' injects</span>'
+      +'<span style="font-size:10px;background:var(--bg);padding:2px 7px;border-radius:4px"><i class="ti ti-clipboard-check" style="font-size:10px"></i> '+h.verifiedCount+'/'+h.trackerTotal+' verified</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px">'
+      +'<button class="btn btn-sm btn-p" style="flex:1" data-action="review-hist" data-hid="'+h.id+'"><i class="ti ti-eye"></i> Review &amp; De-brief</button>'
+      +'<button class="btn btn-sm btn-d" data-action="del-hist" data-hid="'+h.id+'"><i class="ti ti-trash"></i></button>'
+      +'</div>'
+      +'</div>';
+  }).join('')+'</div>';
+}
+function reviewHistory(id){
+  var hist=loadHistory();
+  var h=hist.find(function(x){return x.id===id;});
+  if(!h)return;
+  // Restore state for review
+  S.injects=h.injects||[];S.actions=h.actions||[];
+  S.tracker=h.tracker||[];S.stk=h.stk||[];S.kc=h.kc||{};
+  S.muster=h.muster||{total:0,acc:0,mis:0,cas:0};
+  S.exEndTime=h.duration||0;S.aarWell=h.aarWell||'';S.aarWrong=h.aarWrong||'';S.aarRec=h.aarRec||'';
+  S.dbfFollowups=h.dbfFollowups||[];
+  // Reconstruct a minimal sc object for AAR
+  S.sc={id:h.id,code:h.scCode,name:h.scName,cat:h.scCat,lvl:h.scLvl,tier:h.scTier,
+         pob:h.pob,missing:h.mis,cas:h.cas,dur:Math.round(h.duration/60),ps:'offshore_ecc',
+         loc:'',wx:'',vessel:'',support:'',haz:[],phases:[],inj:[]};
   navTo('aar');
 }
 
@@ -1675,9 +1824,33 @@ function showAarTab(t){
   if(t==='debrief')renderDebrief();
 }
 function updateMuster(){
-  var acc=parseInt($('m-acc-in').value)||0;var mis=parseInt($('m-mis-in').value)||0;var cas=parseInt($('m-cas-in').value)||0;
+  var acc=parseInt($('m-acc-in').value)||0;
+  var mis=parseInt($('m-mis-in').value)||0;
+  var cas=parseInt($('m-cas-in').value)||0;
   S.muster.acc=acc;S.muster.mis=mis;S.muster.cas=cas;
-  $('m-acc').textContent=acc;$('m-mis').textContent=mis;$('m-cas').textContent=cas;
+  // Update large metric displays
+  $('m-acc').textContent=acc;
+  $('m-mis').textContent=mis;
+  $('m-cas').textContent=cas;
+  // Dynamic colours on metric values
+  var misEl=$('m-mis');if(misEl)misEl.style.color=mis>0?'var(--amber)':'var(--green)';
+  var casEl=$('m-cas');if(casEl)casEl.style.color=cas>0?'var(--red)':'var(--green)';
+  // Warn if acc+mis+cas doesn't equal total POB
+  var total=S.muster.total||0;
+  var sum=acc+mis;
+  var warn=$('muster-warn');
+  if(warn){
+    if(total>0&&sum!==total){
+      warn.textContent='Acct ('+acc+') + Missing ('+mis+') = '+sum+' ≠ POB '+total;
+      warn.style.display='block';
+      $('m-acc-in').style.borderColor='var(--amber)';
+      $('m-mis-in').style.borderColor='var(--amber)';
+    } else {
+      warn.textContent='';warn.style.display='none';
+      $('m-acc-in').style.borderColor='var(--bdr)';
+      $('m-mis-in').style.borderColor='var(--bdr)';
+    }
+  }
 }
 function sendManual(){
   var from=$('inj-from').value,to=$('inj-to').value,urg=$('inj-urg').value;
@@ -2239,6 +2412,223 @@ function addFollowup(){
 }
 function removeFollowup(i){S.dbfFollowups.splice(i,1);renderDbfFollowups();}
 
+// history delegation (handled in global delegator below)
+
+// ══════════════════════════════════════════
+// DE-BRIEF PRESENTER MODE
+// ══════════════════════════════════════════
+var presIndex=0;
+var presSections=[];
+
+function buildPresSections(){
+  var sc=S.sc||{};
+  var sections=[];
+
+  // Section 1: Title / Cover
+  sections.push({id:'cover',label:'Cover',title:'EXERCISE DE-BRIEF',render:function(){
+    var d=new Date();
+    return '<div style="text-align:center;padding:40px 0">'
+      +'<div style="font-size:11px;letter-spacing:2px;color:#64748b;margin-bottom:12px">MAJOR EMERGENCIES SIMULATOR — RISK2SAFE</div>'
+      +'<div style="font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:8px;color:#fff">'+esc(sc.code||'')+'</div>'
+      +'<div style="font-size:22px;font-weight:700;color:#94a3b8;margin-bottom:24px;text-transform:uppercase">'+esc(sc.name||'')+'</div>'
+      +'<div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;font-size:13px;color:#64748b">'
+      +'<span><i class="ti ti-clock"></i> Duration: '+hhmmss(S.exEndTime||0)+'</span>'
+      +'<span><i class="ti ti-users"></i> POB: '+S.muster.total+'</span>'
+      +'<span><i class="ti ti-send"></i> Injects: '+S.injects.length+'</span>'
+      +'<span><i class="ti ti-calendar"></i> '+d.toLocaleDateString()+'</span>'
+      +'</div>'
+      +'<div style="margin-top:40px;font-size:14px;color:#475569">Exercise Coordinator: '
+      +'<strong style="color:#94a3b8">'+esc(($('dbf-coord-name')||{}).value||'—')+'</strong></div>'
+      +'</div>';
+  }});
+
+  // Section 2: Exercise Overview
+  sections.push({id:'overview',label:'Overview',title:'EXERCISE OVERVIEW',render:function(){
+    var rows=[
+      {l:'Scenario',v:(sc.code||'')+(sc.name?' — '+sc.name:'')},
+      {l:'Severity / Tier',v:(sc.lvl||'').toUpperCase()+(sc.tier?' — TIER '+sc.tier:'')},
+      {l:'Duration',v:hhmmss(S.exEndTime||0)},
+      {l:'POB / PAX',v:S.muster.total+' personnel'},
+      {l:'Accounted',v:S.muster.acc+' ('+Math.round(S.muster.acc/(S.muster.total||1)*100)+'%)'},
+      {l:'Missing',v:S.muster.mis},
+      {l:'Casualties',v:S.muster.cas},
+      {l:'Total injects',v:S.injects.length},
+      {l:'Actions tracked',v:S.tracker.length},
+      {l:'Actions verified',v:S.tracker.filter(function(t){return t.verified;}).length+' / '+S.tracker.length},
+    ];
+    return '<div style="display:grid;grid-template-columns:180px 1fr;gap:1px;background:#334155;border:1px solid #334155;border-radius:8px;overflow:hidden">'
+      +rows.map(function(r,i){
+        return '<div style="background:#1e293b;padding:10px 14px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px">'+r.l+'</div>'
+          +'<div style="background:#0f172a;padding:10px 14px;font-size:14px;color:#e2e8f0;font-weight:600">'+esc(String(r.v))+'</div>';
+      }).join('')+'</div>';
+  }});
+
+  // Section 3: Exercise Timeline
+  sections.push({id:'timeline',label:'Timeline',title:'EXERCISE TIMELINE — INJECTS & RESPONSES',render:function(){
+    if(!S.injects.length)return '<div style="color:#475569;font-style:italic">No injects recorded.</div>';
+    var urgColor={IMMEDIATE:'#dc2626',URGENT:'#d97706',ROUTINE:'#22c55e'};
+    return S.injects.map(function(inj){
+      var assocAction=S.actions.find(function(a){return a.id===inj.id;});
+      var gap=!assocAction&&inj.act?'<div class="pres-tl-gap"><i class="ti ti-alert-triangle"></i> No action logged for this inject</div>':'';
+      var actLine=assocAction?'<div class="pres-tl-act"><i class="ti ti-corner-down-right"></i> '+esc(assocAction.text)+(assocAction.done?' ✓':' ○')+'</div>':'';
+      return '<div class="pres-tl-row">'
+        +'<div class="pres-tl-time">'+inj.ts+'</div>'
+        +'<div class="pres-tl-dot" style="background:'+(urgColor[inj.urgency]||'#64748b')+'"></div>'
+        +'<div class="pres-tl-body">'
+        +'<div style="font-weight:700;color:#e2e8f0;font-size:12px">'+esc(inj.from)+' → '+esc(inj.to)
+        +' <span style="font-size:9px;background:'+(urgColor[inj.urgency]||'#64748b')+';color:#fff;padding:1px 5px;border-radius:3px;vertical-align:middle">'+(inj.urgency==='IMMEDIATE'?'IMM':inj.urgency==='URGENT'?'URG':'ROU')+'</span></div>'
+        +'<div class="pres-tl-msg">'+esc(inj.msg)+'</div>'
+        +actLine+gap
+        +'</div></div>';
+    }).join('');
+  }});
+
+  // Section 4: Action Tracker Results
+  sections.push({id:'tracker',label:'Actions',title:'ACTION TRACKER — COORDINATOR REVIEW',render:function(){
+    if(!S.tracker.length)return '<div style="color:#475569;font-style:italic">No actions tracked.</div>';
+    var sColor={done:'#15803d',partial:'#2563eb',missed:'#dc2626',pending:'#d97706'};
+    var sLabel={done:'COMPLETE',partial:'PARTIAL',missed:'NOT DONE',pending:'PENDING'};
+    var cats={command:'Command & Control',ops:'Operations',medical:'Medical & Casualty',comms:'Communications',planning:'Planning'};
+    var out='';
+    ['command','ops','medical','comms','planning'].forEach(function(cat){
+      var items=S.tracker.filter(function(t){return t.cat===cat;});
+      if(!items.length)return;
+      out+='<div style="margin-bottom:20px"><div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#475569;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #334155">'+cats[cat]+'</div>';
+      items.forEach(function(t){
+        out+='<div style="display:grid;grid-template-columns:42px 1fr 80px 70px;gap:8px;padding:7px 0;border-bottom:1px solid #1e293b;align-items:center;font-size:12px">'
+          +'<span style="font-weight:800;color:#94a3b8">'+esc(t.pos)+'</span>'
+          +'<span style="color:#e2e8f0">'+esc(t.task)+(t.actual?'<div style="font-size:11px;color:#64748b;margin-top:2px">Observed: '+esc(t.actual)+'</div>':'')+'</span>'
+          +'<span style="font-weight:700;font-size:10px;color:'+(sColor[t.status]||'#64748b')+'">'+sLabel[t.status]+'</span>'
+          +'<span style="font-size:11px;color:'+(t.verified?'#22c55e':'#ef4444')+'">'+(t.verified?'✓ Verified':'✗ Not verified')+'</span>'
+          +'</div>';
+      });
+      out+='</div>';
+    });
+    return out;
+  }});
+
+  // Section 5: Stakeholder Communications
+  sections.push({id:'stk',label:'Stakeholders',title:'STAKEHOLDER COMMUNICATIONS',render:function(){
+    var notified=S.stk.filter(function(s){return s.notified||s.msg||s.acked;});
+    if(!notified.length)return '<div style="color:#475569;font-style:italic">No stakeholder communications recorded.</div>';
+    var out='<div style="display:grid;grid-template-columns:60px 140px 1fr 65px 50px;gap:4px;font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #334155;margin-bottom:8px">'
+      +'<span>Type</span><span>Stakeholder</span><span>Message</span><span>Notified</span><span>Ackd</span></div>';
+    notified.forEach(function(s){
+      out+='<div style="display:grid;grid-template-columns:60px 140px 1fr 65px 50px;gap:4px;padding:7px 0;border-bottom:1px solid #1e293b;align-items:center;font-size:12px">'
+        +'<span style="font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;background:'+(s.type==='internal'?'#1d4ed8':'#7e22ce')+';color:#fff">'+s.type.substr(0,3).toUpperCase()+'</span>'
+        +'<span style="font-weight:600;color:#e2e8f0">'+esc(s.name)+'</span>'
+        +'<span style="color:#94a3b8">'+esc(s.msg||'—')+'</span>'
+        +'<span style="text-align:center;color:#94a3b8">'+esc(s.notified||'—')+'</span>'
+        +'<span style="text-align:center;color:'+(s.acked?'#22c55e':'#475569')+'">'+(s.acked?'✓':'')+'</span>'
+        +'</div>';
+    });
+    return out;
+  }});
+
+  // Section 6: K&C Assessment
+  sections.push({id:'kc',label:'K&C',title:'KNOWLEDGE & COMPETENCY ASSESSMENT',render:function(){
+    var ps=PS[(S.sc||{}).ps]||PS.imt_medium;
+    var ratings=Object.keys(S.kc||{});
+    if(!ratings.length)return '<div style="color:#475569;font-style:italic">No competency assessments recorded.</div>';
+    var out='';
+    ps.forEach(function(p){
+      var posRatings=ratings.filter(function(k){return k.startsWith(p.id+'__');});
+      if(!posRatings.length)return;
+      out+='<div style="margin-bottom:16px"><div style="font-weight:800;color:'+p.c+';font-size:13px;margin-bottom:6px">'+esc(p.id)+' — '+esc(p.full)+'</div>';
+      posRatings.forEach(function(k){
+        var r=S.kc[k]||{};if(!r.rating)return;
+        var area=k.replace(p.id+'__','').replace(/_/g,' ');
+        out+='<div class="pres-kc-row">'
+          +'<span class="pres-kc-pos">'+esc(p.id)+'</span>'
+          +'<span class="pres-kc-area">'+esc(area)+(r.note?'<div style="font-size:10px;color:#64748b;margin-top:1px">'+esc(r.note)+'</div>':'')+'</span>'
+          +'<span class="pres-kc-'+r.rating+'">'+(r.rating==='D'?'Demonstrated':r.rating==='P'?'Partial':'Not dem.')+'</span>'
+          +'</div>';
+      });
+      out+='</div>';
+    });
+    return out||'<div style="color:#475569;font-style:italic">No ratings recorded.</div>';
+  }});
+
+  // Section 7: What went well / Gaps / Learning
+  sections.push({id:'lessons',label:'Lessons',title:'WHAT WENT WELL, GAPS & LEARNING POINTS',render:function(){
+    var well=(($('dbf-well')||{}).value||'').trim();
+    var gaps=(($('dbf-gaps')||{}).value||'').trim();
+    var learning=(($('dbf-learning')||{}).value||'').trim();
+    var aarWell=(($('aar-well')||{}).value||S.aarWell||'').trim();
+    var aarWrong=(($('aar-wrong')||{}).value||S.aarWrong||'').trim();
+    return '<div style="display:grid;gap:20px">'
+      +'<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:18px">&#9989;</span><strong style="font-size:14px;color:#4ade80">What went well</strong></div>'
+      +'<div class="content" style="background:#0f2a1a;border:1px solid #166534;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:#86efac;white-space:pre-wrap">'+esc(well||aarWell||'— Not recorded —')+'</div></div>'
+      +'<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:18px">&#128308;</span><strong style="font-size:14px;color:#f87171">Gaps &amp; areas for development</strong></div>'
+      +'<div class="content" style="background:#2a0f0f;border:1px solid #991b1b;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:#fca5a5;white-space:pre-wrap">'+esc(gaps||aarWrong||'— Not recorded —')+'</div></div>'
+      +'<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:18px">&#128161;</span><strong style="font-size:14px;color:#fbbf24">Key learning points</strong></div>'
+      +'<div class="content" style="background:#1c1a08;border:1px solid #854d0e;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:#fde68a;white-space:pre-wrap">'+esc(learning||'— Not recorded —')+'</div></div>'
+      +'</div>';
+  }});
+
+  // Section 8: Recommendations & Follow-up
+  sections.push({id:'recs',label:'Follow-up',title:'RECOMMENDATIONS & FOLLOW-UP ACTIONS',render:function(){
+    var recs=(($('dbf-recs')||{}).value||'').trim();
+    var followups=S.dbfFollowups||[];
+    var coordNotes=(($('dbf-coord-notes')||{}).value||'').trim();
+    var out='';
+    if(recs)out+='<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Recommendations</div>'
+      +'<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:14px;font-size:13px;color:#e2e8f0;line-height:1.8;white-space:pre-wrap">'+esc(recs)+'</div></div>';
+    if(followups.length){
+      out+='<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Follow-up action log</div>';
+      out+='<div style="display:grid;gap:1px;background:#334155;border:1px solid #334155;border-radius:8px;overflow:hidden">';
+      followups.forEach(function(f){
+        out+='<div class="pres-followup-row" style="background:#0f172a;padding:10px 14px">'
+          +'<span class="pres-action-text">'+esc(f.action)+'</span>'
+          +'<span class="pres-owner"><i class="ti ti-user" style="font-size:10px"></i> '+esc(f.owner||'TBD')+'</span>'
+          +'<span class="pres-date"><i class="ti ti-calendar" style="font-size:10px"></i> '+esc(f.date||'TBD')+'</span>'
+          +'</div>';
+      });
+      out+='</div></div>';
+    }
+    if(coordNotes)out+='<div><div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Coordinator notes</div>'
+      +'<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:14px;font-size:13px;color:#e2e8f0;line-height:1.8;white-space:pre-wrap">'+esc(coordNotes)+'</div></div>';
+    if(!out)out='<div style="color:#475569;font-style:italic">No recommendations or follow-up actions recorded.</div>';
+    return out;
+  }});
+
+  return sections;
+}
+
+function startPresenter(){
+  presSections=buildPresSections();
+  presIndex=0;
+  $('pres-overlay').style.display='flex';
+  renderPresSection();
+}
+function closePres(){$('pres-overlay').style.display='none';}
+function presNav(dir){
+  presIndex=Math.max(0,Math.min(presSections.length-1,presIndex+dir));
+  renderPresSection();
+}
+function renderPresSection(){
+  var sec=presSections[presIndex];if(!sec)return;
+  $('pres-title').textContent=sec.title;
+  $('pres-step-lbl').textContent=(presIndex+1)+' / '+presSections.length;
+  $('pres-body').innerHTML=sec.render();
+  var sc=S.sc||{};
+  $('pres-footer-ex').textContent=(sc.code||'')+(sc.name?' — '+sc.name.toUpperCase():'');
+  $('pres-footer-coord').textContent='Coordinator: '+(($('dbf-coord-name')||{}).value||'—');
+  // Build tabs
+  $('pres-tabs').innerHTML=presSections.map(function(s,i){
+    return '<button class="pres-section-tab'+(i===presIndex?' on':'')+'" onclick="presJumpTo('+i+')">'+s.label+'</button>';
+  }).join('');
+}
+function presJumpTo(i){presIndex=i;renderPresSection();}
+
+// Keyboard navigation
+document.addEventListener('keydown',function(e){
+  if($('pres-overlay').style.display==='none')return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')presNav(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')presNav(-1);
+  if(e.key==='Escape')closePres();
+});
+
 // ===== GLOBAL EVENT DELEGATION (handles data-action buttons) =====
 document.addEventListener('click',function(e){
   var btn=e.target.closest('[data-action]');
@@ -2288,6 +2678,10 @@ document.addEventListener('click',function(e){
     // positions
     case 'edit-pos':
       editPosCard(parseInt(pi));break;
+    case 'review-hist':
+      reviewHistory(btn.dataset.hid);break;
+    case 'del-hist':
+      deleteHistory(btn.dataset.hid);break;
   }
 });
 
