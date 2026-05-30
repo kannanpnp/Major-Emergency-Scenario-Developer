@@ -1151,100 +1151,126 @@ function startEx(){
 }
 function renderSit(){
   var sc=S.sc;
+  var hazHtml=(sc.haz||[]).map(function(h,i){
+    return '<span class="haz" style="display:inline-flex;align-items:center;gap:3px;margin:2px 2px 0 0;font-size:9px">'
+      +esc(h)+'<button class="del-btn" style="width:13px;height:13px;font-size:8px;line-height:1" '
+      +'onclick="removeHazardAt('+i+')">&#215;</button></span>';
+  }).join('');
   $('sit-panel').innerHTML=
-    '<div class="s-ttl" style="display:flex;align-items:center;justify-content:space-between">Situation <button class="edit-btn" title="Edit scenario details" onclick="openScenarioEdit()"><i class="ti ti-edit"></i></button></div>'+
-    '<div style="font-weight:700;margin-bottom:6px;font-size:12px">'+esc(sc.code)+'</div>'+
-    '<div style="margin-bottom:3px"><div class="sit-lbl">Location</div><input class="sit-field" id="sit-loc" value="'+esc(sc.loc)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
-    '<div style="margin-bottom:3px"><div class="sit-lbl">Weather</div><input class="sit-field" id="sit-wx" value="'+esc(sc.wx)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
-    '<div style="margin-bottom:3px"><div class="sit-lbl">Vessel / Standby</div><input class="sit-field" id="sit-vessel" value="'+esc(sc.vessel)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
-    '<div style="margin-bottom:6px"><div class="sit-lbl">External support</div><input class="sit-field" id="sit-sup" value="'+esc(sc.support)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
-    '<div><div class="sit-lbl" style="display:flex;align-items:center;justify-content:space-between">Hazards <button class="edit-btn" onclick="editHazards()" title="Edit hazards"><i class="ti ti-edit"></i></button></div>'+
-    '<div id="sit-haz-tags">'+(sc.haz||[]).map(function(h){return'<span class="haz" style="display:inline-flex;align-items:center;gap:3px;margin:2px 2px 0 0;font-size:9px">'+esc(h)+'<button class="del-btn" style="width:12px;height:12px;font-size:8px" onclick="removeHazard(''+esc(h)+'')">&times;</button></span>';}).join('')+'<button class="edit-btn" onclick="addHazard()" title="Add hazard" style="margin-top:2px"><i class="ti ti-plus"></i></button></div></div>';
+    '<div class="s-ttl" style="display:flex;align-items:center;justify-content:space-between">'
+    +'Situation <button class="edit-btn" title="Edit scenario details" onclick="openScenarioEdit()"><i class="ti ti-edit"></i></button></div>'
+    +'<div style="font-weight:700;margin-bottom:6px;font-size:12px">'+esc(sc.code)+'</div>'
+    +'<div style="margin-bottom:3px"><div class="sit-lbl">Location</div>'
+    +'<input class="sit-field" id="sit-loc" value="'+esc(sc.loc)+'" onchange="applySitEdit()" title="Click to edit"></div>'
+    +'<div style="margin-bottom:3px"><div class="sit-lbl">Weather</div>'
+    +'<input class="sit-field" id="sit-wx" value="'+esc(sc.wx)+'" onchange="applySitEdit()" title="Click to edit"></div>'
+    +'<div style="margin-bottom:3px"><div class="sit-lbl">Vessel / Standby</div>'
+    +'<input class="sit-field" id="sit-vessel" value="'+esc(sc.vessel)+'" onchange="applySitEdit()" title="Click to edit"></div>'
+    +'<div style="margin-bottom:6px"><div class="sit-lbl">External support</div>'
+    +'<input class="sit-field" id="sit-sup" value="'+esc(sc.support)+'" onchange="applySitEdit()" title="Click to edit"></div>'
+    +'<div><div class="sit-lbl" style="display:flex;align-items:center;justify-content:space-between">'
+    +'Hazards <button class="edit-btn" onclick="editHazards()" title="Edit all hazards"><i class="ti ti-edit"></i></button></div>'
+    +'<div id="sit-haz-tags">'+hazHtml
+    +'<button class="edit-btn" onclick="addHazard()" title="Add hazard" style="margin-top:2px"><i class="ti ti-plus"></i></button>'
+    +'</div></div>';
 }
 function applySitEdit(){
   var sc=S.sc;
-  var loc=$('sit-loc');var wx=$('sit-wx');var v=$('sit-vessel');var sup=$('sit-sup');
-  if(loc)sc.loc=loc.value;if(wx)sc.wx=wx.value;if(v)sc.vessel=v.value;if(sup)sc.support=sup.value;
+  var l=$('sit-loc'),w=$('sit-wx'),v=$('sit-vessel'),s=$('sit-sup');
+  if(l)sc.loc=l.value;if(w)sc.wx=w.value;if(v)sc.vessel=v.value;if(s)sc.support=s.value;
 }
-function removeHazard(h){
-  var sc=S.sc;sc.haz=(sc.haz||[]).filter(function(x){return x!==h;});
-  renderSit();
+function removeHazardAt(idx){
+  var sc=S.sc;if(sc.haz&&sc.haz[idx]!==undefined){sc.haz.splice(idx,1);renderSit();}
 }
 function addHazard(){
-  var h=prompt('Add hazard:','');if(!h||!h.trim())return;
+  var h=prompt('New hazard:','');if(!h||!h.trim())return;
   var sc=S.sc;sc.haz=sc.haz||[];sc.haz.push(h.trim());renderSit();
 }
 function editHazards(){
-  var sc=S.sc;var current=(sc.haz||[]).join(', ');
-  showModal('Edit hazards','<div class="form-g"><label>Hazards (comma separated)</label><textarea id="m-haz" rows="4" style="font-size:12px">'+esc(current)+'</textarea></div>',function(){
-    sc.haz=$('m-haz').value.split(',').map(function(h){return h.trim();}).filter(Boolean);
-    renderSit();
-  });
+  var sc=S.sc;
+  showModal('Edit hazards',
+    '<div class="form-g"><label>Hazards (one per line)</label>'
+    +'<textarea id="m-haz" rows="6" style="font-size:12px">'+esc((sc.haz||[]).join('\n'))+'</textarea></div>',
+    function(){
+      sc.haz=$('m-haz').value.split('\n').map(function(h){return h.trim();}).filter(Boolean);
+      renderSit();
+    }
+  );
 }
+
 function renderPosGrid(){
   var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var g=$('pos-grid');
   g.style.gridTemplateColumns=ps.length<=6?'repeat(3,1fr)':ps.length<=9?'repeat(3,1fr)':'repeat(4,1fr)';
   g.innerHTML=ps.map(function(p,pi){
     var pend=S.actions.filter(function(a){return a.pos===p.id&&!a.done;}).length;
     var last=null;for(var i=S.injects.length-1;i>=0;i--){if(S.injects[i].to===p.id||S.injects[i].from===p.id){last=S.injects[i];break;}}
-    return'<div class="pos-card" style="border-left:3px solid '+p.c+'">'+
-      (pend?'<div class="pos-pend">'+pend+'</div>':'')+
-      '<div class="pos-edit-row">'+
-      '<input class="pos-id-input" style="color:'+p.c+'" value="'+esc(p.id)+'" title="Click to rename position ID" onchange="updatePosField('+pi+','id',this.value)" onblur="syncActionPos(''+p.id+'',this.value)">'+
-      '<button class="edit-btn" style="margin-left:auto" title="Edit position" onclick="editPosCard('+pi+')"><i class="ti ti-edit"></i></button>'+
-      '</div>'+
-      '<input class="pos-full-input" value="'+esc(p.full)+'" title="Click to rename" onchange="updatePosField('+pi+','full',this.value)">'+
-      '<div class="pos-ch" contenteditable="true" style="outline:none;cursor:pointer" title="Click to edit channel" onblur="updatePosField('+pi+','ch',this.textContent)">'+esc(p.ch)+'</div>'+
-      (last?'<div class="pos-last" title="'+esc(last.msg)+'">'+esc(last.msg.substring(0,42))+'...</div>':'')+
-      '</div>';
+    return '<div class="pos-card" style="border-left:3px solid '+p.c+'">'
+      +(pend?'<div class="pos-pend">'+pend+'</div>':'')
+      +'<div style="display:flex;align-items:center;gap:3px">'
+      +'<input style="font-size:17px;font-weight:800;color:'+p.c+';border:none;background:transparent;padding:0;width:55px;font-family:inherit;cursor:pointer" '
+      +'value="'+esc(p.id)+'" title="Click to rename position ID" '
+      +'data-pi="'+pi+'" onchange="updatePosId(this.dataset.pi,this.value)" onblur="updatePosId(this.dataset.pi,this.value)">'
+      +'<button class="edit-btn" style="margin-left:auto" data-action="edit-pos" data-pi="'+pi+'" title="Edit position"><i class="ti ti-edit"></i></button>'
+      +'</div>'
+      +'<input style="font-size:10px;color:var(--text2);border:none;background:transparent;padding:0;width:100%;font-family:inherit;font-weight:500;cursor:pointer" '
+      +'value="'+esc(p.full)+'" title="Click to rename" data-pi="'+pi+'" onchange="updatePosFull(this.dataset.pi,this.value)">'
+      +'<div style="font-size:9px;color:var(--text3);margin-top:1px">'+esc(p.ch)+'</div>'
+      +(last?'<div class="pos-last" title="'+esc(last.msg)+'">'+esc(last.msg.substring(0,42))+'...</div>':'')
+      +'</div>';
   }).join('');
 }
-function updatePosField(idx,field,val){
-  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;if(ps[idx])ps[idx][field]=val;
-}
-function syncActionPos(oldId,newId){
-  if(oldId===newId)return;
-  S.actions.forEach(function(a){if(a.pos===oldId)a.pos=newId;});
+
+function updatePosId(idx,val){
+  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;
+  if(!ps[idx]||!val.trim())return;
+  var oldId=ps[idx].id;ps[idx].id=val.trim();
+  S.actions.forEach(function(a){if(a.pos===oldId)a.pos=val.trim();});
   renderActList();
+}
+function updatePosFull(idx,val){
+  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;
+  if(ps[idx]&&val.trim())ps[idx].full=val.trim();
 }
 function editPosCard(pi){
   var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var p=ps[pi];if(!p)return;
-  var colors=['#dc2626','#ea580c','#d97706','#15803d','#2563eb','#7c3aed','#0f766e','#991b1b','#134e4a','#4338ca','#475569','#9a3412'];
-  var colorOpts=colors.map(function(c){return'<span onclick="updatePosField('+pi+','c',''+c+'');closeModal();renderPosGrid();" style="display:inline-block;width:22px;height:22px;border-radius:50%;background:'+c+';cursor:pointer;border:2px solid '+(c===p.c?'#000':'transparent')+'"></span>';}).join(' ');
-  showModal('Edit position: '+p.id,
-    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
-    '<div class="form-g" style="margin:0"><label>Position ID</label><input id="m-pid" value="'+esc(p.id)+'"></div>'+
-    '<div class="form-g" style="margin:0"><label>Full name</label><input id="m-pfull" value="'+esc(p.full)+'"></div>'+
-    '</div>'+
-    '<div class="form-g"><label>Radio net / channel</label><input id="m-pch" value="'+esc(p.ch)+'"></div>'+
-    '<div class="form-g" style="margin:0"><label>Colour</label><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">'+colorOpts+'</div></div>',
+  showModal('Edit position',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'
+    +'<div class="form-g" style="margin:0"><label>Position ID</label><input id="m-pid" value="'+esc(p.id)+'"></div>'
+    +'<div class="form-g" style="margin:0"><label>Full name</label><input id="m-pfull" value="'+esc(p.full)+'"></div>'
+    +'</div>'
+    +'<div class="form-g"><label>Radio net / channel</label><input id="m-pch" value="'+esc(p.ch)+'"></div>'
+    +'<div class="form-g"><label>Accent colour</label>'
+    +'<input type="color" id="m-pc" value="'+esc(p.c)+'" style="height:38px;padding:2px 4px;border-radius:7px;width:100%"></div>',
     function(){
       var oldId=p.id;
       p.id=$('m-pid').value.trim()||p.id;
       p.full=$('m-pfull').value.trim()||p.full;
       p.ch=$('m-pch').value.trim()||p.ch;
-      syncActionPos(oldId,p.id);
-      renderPosGrid();
+      p.c=$('m-pc').value||p.c;
+      S.actions.forEach(function(a){if(a.pos===oldId)a.pos=p.id;});
+      renderPosGrid();renderActList();
     }
   );
 }
+
+
 function renderPhaseRow(){
   var sc=S.sc;var elMin=Math.floor(R.elapsed/60);var cum=0;var cur=0;
   for(var i=0;i<sc.phases.length;i++){if(elMin<cum+sc.phases[i].d){cur=i;break;}cum+=sc.phases[i].d;cur=i;}
   $('phase-row').innerHTML=sc.phases.map(function(p,i){
     var cb=0;for(var j=0;j<i;j++)cb+=sc.phases[j].d;
     var cls='ph-chip';if(elMin>=cb+p.d)cls+=' done';else if(i===cur)cls+=' on';
-    return'<div class="'+cls+'" ondblclick="editPhase('+i+')" title="Double-click to edit phase">'+
-      '<strong>'+esc(p.n)+'</strong><br>'+p.d+'m</div>';
+    return '<div class="'+cls+'" ondblclick="editPhase('+i+')" title="Double-click to edit phase">'
+      +'<strong>'+esc(p.n)+'</strong><br>'+p.d+'m</div>';
   }).join('');
 }
 function editPhase(idx){
   var sc=S.sc;var p=sc.phases[idx];if(!p)return;
   showModal('Edit phase '+(idx+1),
-    '<div class="g2" style="gap:8px">'+
-    '<div class="form-g" style="margin:0"><label>Phase name</label><input id="m-phn" value="'+esc(p.n)+'"></div>'+
-    '<div class="form-g" style="margin:0"><label>Duration (minutes)</label><input type="number" id="m-phd" value="'+p.d+'" min="1"></div>'+
-    '</div>',
+    '<div class="g2" style="gap:8px">'
+    +'<div class="form-g" style="margin:0"><label>Phase name</label><input id="m-phn" value="'+esc(p.n)+'"></div>'
+    +'<div class="form-g" style="margin:0"><label>Duration (min)</label><input type="number" id="m-phd" value="'+p.d+'" min="1"></div>'
+    +'</div>',
     function(){
       p.n=$('m-phn').value.trim()||p.n;
       p.d=parseInt($('m-phd').value)||p.d;
@@ -1252,6 +1278,7 @@ function editPhase(idx){
     }
   );
 }
+
 
 // ===== TIMER =====
 function tick(){
@@ -1298,22 +1325,23 @@ function renderCommsLog(){
   var log=$('comms-log');
   if(!S.injects.length){log.innerHTML='<p style="color:var(--text3);font-size:12px">No messages yet.</p>';return;}
   var uc={IMMEDIATE:'b-imm',URGENT:'b-urg',ROUTINE:'b-rou'};
-  log.innerHTML=[].concat(S.injects).reverse().map(function(i){
-    var urgLbl=i.urgency==='IMMEDIATE'?'IMM':i.urgency==='URGENT'?'URG':'ROU';
-    return'<div class="ce-wrap" id="cew-'+i.id+'">'+
-      '<div class="ce-row">'+
-      '<span class="c-t">'+i.ts+'</span>'+
-      '<span class="c-f">'+esc(i.from)+'</span>'+
-      '<span class="c-to">\u2192 '+esc(i.to)+'</span>'+
-      '<span>'+esc(i.msg)+'</span>'+
-      '<span class="ub '+(uc[i.urgency]||'b-rou')+'">'+urgLbl+'</span>'+
-      '<button class="edit-btn" title="Edit inject" onclick="editCommsEntry(\''+i.id+'\')"><i class="ti ti-edit"></i></button>'+
-      '<button class="del-btn" title="Delete inject" onclick="deleteCommsEntry(\''+i.id+'\')"><i class="ti ti-trash"></i></button>'+
-      '</div>'+
-      (i.act?'<div style="font-size:10px;color:var(--blue);padding:2px 0 5px 47px;border-bottom:1px solid var(--bdr)"><strong>'+esc(i.to)+':</strong> '+esc(i.act)+'</div>':'')+
-    '</div>';
+  log.innerHTML=[].concat(S.injects).reverse().map(function(inj){
+    var urgLbl=inj.urgency==='IMMEDIATE'?'IMM':inj.urgency==='URGENT'?'URG':'ROU';
+    return '<div class="ce-wrap">'
+      +'<div class="ce-row">'
+      +'<span class="c-t">'+inj.ts+'</span>'
+      +'<span class="c-f">'+esc(inj.from)+'</span>'
+      +'<span class="c-to">→ '+esc(inj.to)+'</span>'
+      +'<span>'+esc(inj.msg)+'</span>'
+      +'<span class="ub '+(uc[inj.urgency]||'b-rou')+'">'+urgLbl+'</span>'
+      +'<button class="edit-btn" data-action="edit-inj" data-id="'+inj.id+'" title="Edit"><i class="ti ti-edit"></i></button>'
+      +'<button class="del-btn" data-action="del-inj" data-id="'+inj.id+'" title="Delete"><i class="ti ti-trash"></i></button>'
+      +'</div>'
+      +(inj.act?'<div style="font-size:10px;color:var(--blue);padding:2px 0 5px 47px;border-bottom:1px solid var(--bdr)"><strong>'+esc(inj.to)+':</strong> '+esc(inj.act)+'</div>':'')
+      +'</div>';
   }).join('');
 }
+
 function deleteCommsEntry(id){
   if(!confirm('Delete this comms log entry?'))return;
   S.injects=S.injects.filter(function(i){return i.id!==id;});
@@ -1324,21 +1352,21 @@ function deleteCommsEntry(id){
 }
 function editCommsEntry(id){
   var inj=S.injects.find(function(i){return i.id===id;});if(!inj)return;
-  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;
-  var posOpts=['Control Room','Coastguard','MRCC','Civil Defence','Muster Control','Medic','Standby Vessel','SAR Helicopter','Port Authority','OPRED','HSE Authority','Plant Manager','Environmental Officer','Hospital','External Agency'];
-  var allPos=ps.map(function(p){return p.id;}).concat(posOpts);
-  var mkSel=function(selId,val){return'<select id="'+selId+'">'+allPos.map(function(p){return'<option value="'+esc(p)+'"'+(p===val?' selected':'')+'>'+esc(p)+'</option>';}).join('')+'</select>';};
   showModal('Edit comms log entry',
-    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
-    '<div class="form-g" style="margin:0"><label>From</label>'+mkSel('m-from',inj.from)+'</div>'+
-    '<div class="form-g" style="margin:0"><label>To position</label>'+mkSel('m-to',inj.to)+'</div>'+
-    '</div>'+
-    '<div class="form-g"><label>Urgency</label><select id="m-urg"><option '+(inj.urgency==='IMMEDIATE'?'selected':'')+'>IMMEDIATE</option><option '+(inj.urgency==='URGENT'?'selected':'')+'>URGENT</option><option '+(inj.urgency==='ROUTINE'?'selected':'')+'>ROUTINE</option></select></div>'+
-    '<div class="form-g"><label>Message</label><textarea id="m-msg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'+
-    '<div class="form-g"><label>Required action</label><textarea id="m-act" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'
+    +'<div class="form-g" style="margin:0"><label>From</label><input id="m-efr" value="'+esc(inj.from)+'"></div>'
+    +'<div class="form-g" style="margin:0"><label>To position</label><input id="m-eto" value="'+esc(inj.to)+'"></div>'
+    +'</div>'
+    +'<div class="form-g"><label>Urgency</label><select id="m-eurg">'
+    +'<option'+(inj.urgency==='IMMEDIATE'?' selected':'')+'>IMMEDIATE</option>'
+    +'<option'+(inj.urgency==='URGENT'?' selected':'')+'>URGENT</option>'
+    +'<option'+(inj.urgency==='ROUTINE'?' selected':'')+'>ROUTINE</option>'
+    +'</select></div>'
+    +'<div class="form-g"><label>Message</label><textarea id="m-emsg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'
+    +'<div class="form-g"><label>Required action</label><textarea id="m-eact" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
     function(){
-      inj.from=$('m-from').value;inj.to=$('m-to').value;
-      inj.urgency=$('m-urg').value;inj.msg=$('m-msg').value.trim();inj.act=$('m-act').value.trim();
+      inj.from=$('m-efr').value.trim();inj.to=$('m-eto').value.trim();
+      inj.urgency=$('m-eurg').value;inj.msg=$('m-emsg').value.trim();inj.act=$('m-eact').value.trim();
       var a=S.actions.find(function(x){return x.id===id;});
       if(a){a.pos=inj.to;a.text=inj.act;}
       else if(inj.act){S.actions.push({id:inj.id,pos:inj.to,text:inj.act,ts:inj.ts,done:false});}
@@ -1346,31 +1374,38 @@ function editCommsEntry(id){
     }
   );
 }
+
 function renderActList(){
   var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var list=$('act-list');
   var all=[].concat(S.actions).reverse();
   if(!all.length){list.innerHTML='<p style="color:var(--text3);font-size:12px">No actions pending.</p>';return;}
   list.innerHTML=all.map(function(a){
     var p=ps.find(function(x){return x.id===a.pos;});var c=p?p.c:'var(--navy)';
-    return'<div class="act-item '+(a.done?'done':'')+'" id="act-'+a.id+'">'+
-      '<span class="act-pos" style="color:'+c+'">'+esc(a.pos)+'</span>'+
-      '<span class="act-txt" contenteditable="true" style="outline:none;cursor:text;flex:1" onblur="saveActEdit(''+a.id+'',this.textContent)" title="Click to edit">'+esc(a.text)+'</span>'+
-      '<span class="act-ts">'+esc(a.ts)+'</span>'+
-      (!a.done?
-        '<button class="btn btn-sm btn-s" onclick="markDone(''+a.id+'')" title="Mark complete"><i class="ti ti-check"></i></button>'+
-        '<button class="del-btn" onclick="deleteAction(''+a.id+'')" title="Delete action"><i class="ti ti-trash"></i></button>'
-        :'<span style="font-size:12px;color:var(--green)"><i class="ti ti-circle-check"></i></span>'+
-        '<button class="del-btn" onclick="deleteAction(''+a.id+'')" title="Remove"><i class="ti ti-trash"></i></button>')+
-      '</div>';
+    return '<div class="act-item '+(a.done?'done':'')+'">'
+      +'<span class="act-pos" style="color:'+c+'">'+esc(a.pos)+'</span>'
+      +'<span class="act-txt" contenteditable="true" style="outline:none;cursor:text;flex:1" '
+      +'data-actid="'+a.id+'" '
+      +'onblur="saveActEditEl(this)" '
+      +'title="Click to edit">'+esc(a.text)+'</span>'
+      +'<span class="act-ts">'+esc(a.ts)+'</span>'
+      +(!a.done
+        ?'<button class="btn btn-sm btn-s" data-action="done-act" data-id="'+a.id+'"><i class="ti ti-check"></i></button>'
+         +'<button class="del-btn" data-action="del-act" data-id="'+a.id+'"><i class="ti ti-trash"></i></button>'
+        :'<span style="font-size:12px;color:var(--green)"><i class="ti ti-circle-check"></i></span>'
+         +'<button class="del-btn" data-action="del-act" data-id="'+a.id+'"><i class="ti ti-trash"></i></button>')
+      +'</div>';
   }).join('');
 }
-function saveActEdit(id,txt){
-  var a=S.actions.find(function(x){return x.id===id;});if(a)a.text=txt.trim();
+
+function saveActEditEl(el){
+  var id=el.dataset.actid;var txt=el.textContent.trim();
+  var a=S.actions.find(function(x){return x.id===id;});if(a)a.text=txt;
 }
 function deleteAction(id){
   S.actions=S.actions.filter(function(a){return a.id!==id;});
   renderActList();$('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
 }
+
 function markDone(id){
   var a=S.actions.find(function(x){return x.id===id;});if(a)a.done=true;
   renderActList();renderPosGrid();
@@ -1571,6 +1606,59 @@ function addPreBuiltInject(){
     }
   );
 }
+
+// ===== GLOBAL EVENT DELEGATION (handles data-action buttons) =====
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('[data-action]');
+  if(!btn)return;
+  var action=btn.dataset.action, id=btn.dataset.id, pi=btn.dataset.pi;
+  switch(action){
+    // comms log
+    case 'edit-inj':
+      (function(){
+        var inj=S.injects.find(function(i){return i.id===id;});if(!inj)return;
+        showModal('Edit comms log entry',
+          '<div class="g2" style="gap:8px;margin-bottom:8px">'
+          +'<div class="form-g" style="margin:0"><label>From</label><input id="m-efr" value="'+esc(inj.from)+'"></div>'
+          +'<div class="form-g" style="margin:0"><label>To position</label><input id="m-eto" value="'+esc(inj.to)+'"></div>'
+          +'</div>'
+          +'<div class="form-g"><label>Urgency</label><select id="m-eurg">'
+          +'<option'+(inj.urgency==='IMMEDIATE'?' selected':'')+'>IMMEDIATE</option>'
+          +'<option'+(inj.urgency==='URGENT'?' selected':'')+'>URGENT</option>'
+          +'<option'+(inj.urgency==='ROUTINE'?' selected':'')+'>ROUTINE</option>'
+          +'</select></div>'
+          +'<div class="form-g"><label>Message</label><textarea id="m-emsg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'
+          +'<div class="form-g"><label>Required action</label><textarea id="m-eact" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
+          function(){
+            inj.from=$('m-efr').value.trim();inj.to=$('m-eto').value.trim();
+            inj.urgency=$('m-eurg').value;inj.msg=$('m-emsg').value.trim();inj.act=$('m-eact').value.trim();
+            var a=S.actions.find(function(x){return x.id===id;});
+            if(a){a.pos=inj.to;a.text=inj.act;}
+            else if(inj.act){S.actions.push({id:inj.id,pos:inj.to,text:inj.act,ts:inj.ts,done:false});}
+            renderCommsLog();renderActList();renderPosGrid();
+          }
+        );
+      })();
+      break;
+    case 'del-inj':
+      if(!confirm('Delete this comms log entry?'))break;
+      S.injects=S.injects.filter(function(i){return i.id!==id;});
+      S.actions=S.actions.filter(function(a){return a.id!==id;});
+      renderCommsLog();renderActList();renderPosGrid();
+      $('comms-cnt').textContent=S.injects.length;
+      $('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
+      break;
+    // actions
+    case 'done-act':
+      markDone(id);break;
+    case 'del-act':
+      deleteAction(id);break;
+    // positions
+    case 'edit-pos':
+      editPosCard(parseInt(pi));break;
+  }
+});
+
 // ===== INIT =====
 renderHome();
 </script>
