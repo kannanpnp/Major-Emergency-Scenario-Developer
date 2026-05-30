@@ -603,46 +603,126 @@ textarea{resize:vertical;min-height:80px}
 <script>
 
 const PS={
+ // ── OFFSHORE ECC (OPITO OIS-194/195) ─────────────────────────
  offshore_ecc:[
-  {id:'EM', full:'Emergency Manager',        ch:'CMD NET',c:'#dc2626'},
-  {id:'DEM',full:'Deputy Emergency Manager', ch:'CMD NET',c:'#ea580c'},
-  {id:'RO', full:'Radio Operator',           ch:'ALL CH', c:'#2563eb'},
-  {id:'EL', full:'Event Logger',             ch:'ECC INT',c:'#475569'},
-  {id:'MC', full:'Marine Coordinator',       ch:'MAR NET',c:'#0f766e'},
-  {id:'PT', full:'Planning Team',            ch:'ECC INT',c:'#7c3aed'},
-  {id:'SMO',full:'Safety & Medical Officer', ch:'MED NET',c:'#15803d'},
-  {id:'OTL',full:'Operations Team Leader',   ch:'OPS NET',c:'#d97706'},
-  {id:'FTL',full:'Fire Team Leader',         ch:'F&R NET',c:'#991b1b'},
+  {id:'EM', full:'Emergency Manager',            ch:'CMD NET',  c:'#dc2626'},
+  {id:'DEM',full:'Deputy Emergency Manager',     ch:'CMD NET',  c:'#ea580c'},
+  {id:'RO', full:'Radio Operator',               ch:'ALL CH',   c:'#2563eb'},
+  {id:'EL', full:'Event Logger',                 ch:'ECC INT',  c:'#475569'},
+  {id:'MC', full:'Marine Coordinator',           ch:'MAR NET',  c:'#0f766e'},
+  {id:'PT', full:'Planning Team',                ch:'ECC INT',  c:'#7c3aed'},
+  {id:'SMO',full:'Safety & Medical Officer',     ch:'MED NET',  c:'#15803d'},
+  {id:'OTL',full:'Operations Team Leader',       ch:'OPS NET',  c:'#d97706'},
+  {id:'FTL',full:'Fire Team Leader',             ch:'F&R NET',  c:'#991b1b'},
  ],
+ // ── FEMA ICS — MAJOR (Full ICS, Type 1/2) ────────────────────
+ // Command Staff + 4 Section Chiefs + functional groups
+ ics_major:[
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'PIO', full:'Public Information Officer',  ch:'EXTERNAL', c:'#2563eb'},
+  {id:'LNO', full:'Liaison Officer',             ch:'EXTERNAL', c:'#7c3aed'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'DIVS',full:'Division/Group Supervisor',   ch:'OPS',      c:'#d97706'},
+  {id:'HZM', full:'HazMat Group Supervisor',     ch:'OPS-HZM',  c:'#9a3412'},
+  {id:'MEDU',full:'Medical Unit Leader',         ch:'OPS-MED',  c:'#15803d'},
+  {id:'PSC', full:'Planning Section Chief',      ch:'PLANNING', c:'#1d4ed8'},
+  {id:'SITL',full:'Situation Unit Leader',       ch:'PLANNING', c:'#1e40af'},
+  {id:'RESL',full:'Resources Unit Leader',       ch:'PLANNING', c:'#1e3a8a'},
+  {id:'LSC', full:'Logistics Section Chief',     ch:'LOGISTICS', c:'#0f766e'},
+  {id:'FSC', full:'Finance/Admin Section Chief', ch:'FINANCE',  c:'#4338ca'},
+ ],
+ // ── FEMA ICS — MEDIUM (Type 3, most industrial incidents) ─────
+ ics_medium:[
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'PIO', full:'Public Information Officer',  ch:'EXTERNAL', c:'#2563eb'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'HZM', full:'HazMat/Tech Group Supv.',     ch:'OPS-HZM',  c:'#9a3412'},
+  {id:'MEDU',full:'Medical Unit Leader',         ch:'OPS-MED',  c:'#15803d'},
+  {id:'PSC', full:'Planning Section Chief',      ch:'PLANNING', c:'#1d4ed8'},
+  {id:'SITL',full:'Situation Unit Leader',       ch:'PLANNING', c:'#1e40af'},
+  {id:'LSC', full:'Logistics Section Chief',     ch:'LOGISTICS', c:'#0f766e'},
+  {id:'FSC', full:'Finance/Admin Section Chief', ch:'FINANCE',  c:'#4338ca'},
+ ],
+ // ── FEMA ICS — MINOR (Type 4/5 — small/local incidents) ──────
+ ics_minor:[
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'MEDU',full:'Medical Unit',                ch:'OPS-MED',  c:'#15803d'},
+ ],
+ // ── FEMA ICS — LNG/TERMINAL (Tier 1/2 with emergency services ICS) ──
+ ics_lng:[
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'PIO', full:'Public Information Officer',  ch:'EXTERNAL', c:'#2563eb'},
+  {id:'LNO', full:'Liaison Officer',             ch:'EXTERNAL', c:'#7c3aed'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'HZM', full:'HazMat Group Supervisor',     ch:'OPS-HZM',  c:'#9a3412'},
+  {id:'MEDU',full:'Medical Unit Leader',         ch:'OPS-MED',  c:'#15803d'},
+  {id:'EVAC',full:'Evacuation Group Supv.',      ch:'OPS-EVA',  c:'#d97706'},
+  {id:'PSC', full:'Planning Section Chief',      ch:'PLANNING', c:'#1d4ed8'},
+  {id:'LSC', full:'Logistics Section Chief',     ch:'LOGISTICS', c:'#0f766e'},
+  {id:'FSC', full:'Finance/Admin Section Chief', ch:'FINANCE',  c:'#4338ca'},
+ ],
+ // ── Keep legacy imt_* aliases for custom exercises ────────────
  imt_major:[
-  {id:'IC', full:'Incident Commander',            ch:'Command', c:'#dc2626'},
-  {id:'SO', full:'Safety Officer',                ch:'Safety',  c:'#d97706'},
-  {id:'PIO',full:'Public Information Officer',    ch:'External',c:'#2563eb'},
-  {id:'LO', full:'Liaison Officer',               ch:'External',c:'#7c3aed'},
-  {id:'OSC',full:'Operations Section Chief',      ch:'OPS NET', c:'#ea580c'},
-  {id:'FBD',full:'Fire & Rescue Branch Dir.',     ch:'F&R NET', c:'#991b1b'},
-  {id:'HZM',full:'HazMat Group Supervisor',       ch:'HZM NET', c:'#9a3412'},
-  {id:'MED',full:'Medical Group Supervisor',      ch:'MED NET', c:'#15803d'},
-  {id:'RSC',full:'Rescue Group Supervisor',       ch:'RSC NET', c:'#134e4a'},
-  {id:'PSC',full:'Planning Section Chief',        ch:'PLN NET', c:'#475569'},
-  {id:'LSC',full:'Logistics Section Chief',       ch:'LOG NET', c:'#0f766e'},
-  {id:'FSC',full:'Finance/Admin Section Chief',   ch:'FIN NET', c:'#4338ca'},
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'PIO', full:'Public Information Officer',  ch:'EXTERNAL', c:'#2563eb'},
+  {id:'LNO', full:'Liaison Officer',             ch:'EXTERNAL', c:'#7c3aed'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'HZM', full:'HazMat Group Supervisor',     ch:'OPS-HZM',  c:'#9a3412'},
+  {id:'MEDU',full:'Medical Unit Leader',         ch:'OPS-MED',  c:'#15803d'},
+  {id:'PSC', full:'Planning Section Chief',      ch:'PLANNING', c:'#1d4ed8'},
+  {id:'SITL',full:'Situation Unit Leader',       ch:'PLANNING', c:'#1e40af'},
+  {id:'LSC', full:'Logistics Section Chief',     ch:'LOGISTICS', c:'#0f766e'},
+  {id:'FSC', full:'Finance/Admin Section Chief', ch:'FINANCE',  c:'#4338ca'},
  ],
  imt_medium:[
-  {id:'IC', full:'Incident Commander',      ch:'Command',c:'#dc2626'},
-  {id:'SO', full:'Safety Officer',          ch:'Safety', c:'#d97706'},
-  {id:'OSC',full:'Operations Section Chief',ch:'OPS NET',c:'#ea580c'},
-  {id:'FBD',full:'Fire & Rescue Lead',      ch:'F&R NET',c:'#991b1b'},
-  {id:'MED',full:'Medical Coordinator',     ch:'MED NET',c:'#15803d'},
-  {id:'PSC',full:'Planning Lead',           ch:'PLN NET',c:'#475569'},
+  {id:'IC',  full:'Incident Commander',          ch:'COMMAND',  c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',              ch:'COMMAND',  c:'#b91c1c'},
+  {id:'OSC', full:'Operations Section Chief',    ch:'OPS',      c:'#ea580c'},
+  {id:'MEDU',full:'Medical Coordinator',         ch:'OPS-MED',  c:'#15803d'},
+  {id:'PSC', full:'Planning Section Chief',      ch:'PLANNING', c:'#1d4ed8'},
+  {id:'LSC', full:'Logistics Section Chief',     ch:'LOGISTICS', c:'#0f766e'},
  ],
  imt_minor:[
-  {id:'IC', full:'Incident Commander',  ch:'Command',c:'#dc2626'},
-  {id:'SO', full:'Safety Officer',      ch:'Safety', c:'#d97706'},
-  {id:'OPS',full:'Operations Responder',ch:'OPS',    c:'#475569'},
+  {id:'IC',  full:'Incident Commander',   ch:'COMMAND', c:'#dc2626'},
+  {id:'SO',  full:'Safety Officer',       ch:'COMMAND', c:'#b91c1c'},
+  {id:'OSC', full:'Operations',           ch:'OPS',     c:'#475569'},
  ],
 };
 
+
+// ── Auto-select correct position set based on scenario category ──
+function autoPs(sc){
+  if(!sc)return 'offshore_ecc';
+  if(sc.ps&&PS[sc.ps])return sc.ps; // respect explicit assignment
+  if(sc.cat==='offshore')return 'offshore_ecc';
+  if(sc.cat==='lng')return 'ics_lng';
+  if(sc.cat==='onshore'){
+    if(sc.lvl==='major'||sc.tier)return 'ics_major';
+    if(sc.lvl==='medium')return 'ics_medium';
+    return 'ics_minor';
+  }
+  return 'imt_medium';
+}
+// Label for position set type
+function psLabel(psKey){
+  var labels={
+    offshore_ecc:'OPITO OIS-194/195 — ECC',
+    ics_major:'FEMA ICS — Type 1/2 (Full Command)',
+    ics_medium:'FEMA ICS — Type 3 (Standard)',
+    ics_minor:'FEMA ICS — Type 4/5 (Local)',
+    ics_lng:'FEMA ICS — LNG/Terminal',
+    imt_major:'ICS Major (IMT)',
+    imt_medium:'ICS Medium (IMT)',
+    imt_minor:'ICS Minor (IMT)',
+  };
+  return labels[psKey]||psKey;
+}
 const SCS=[
  {id:'off001',code:'OFF-001',cat:'offshore',lvl:'major',tier:3,
   name:'Uncontrolled well blowout',
@@ -1347,7 +1427,7 @@ function saveCustom(a){try{localStorage.setItem('r2s_cx',JSON.stringify(a));}cat
 function allScenarios(){return[...SCS,...loadCustom().map(s=>({...s,isCustom:true}))];}
 
 // ===== STATE =====
-let S={screen:'home',filter:'all',sc:null,injects:[],actions:[],muster:{total:0,acc:0,mis:0,cas:0},timer:null,fired:new Set(),exEndTime:0,aarWell:'',aarWrong:'',aarRec:'',aarAI:'',tracker:[],stk:[],kc:{},dbfFollowups:[],ovOpen:true};
+let S={screen:'home',filter:'all',sc:null,injects:[],actions:[],muster:{total:0,acc:0,mis:0,cas:0},timer:null,fired:new Set(),exEndTime:0,aarWell:'',aarWrong:'',aarRec:'',aarAI:'',tracker:[],stk:[],extComms:[],kc:{},dbfFollowups:[],ovOpen:true};
 let R={elapsed:0,paused:false,nextAI:180,busy:false};
 
 // ===== UTILS =====
@@ -1439,7 +1519,7 @@ async function selectSc(id){
   $('scr-brief').classList.add('on');S.screen='brief';
   var ps=PS[sc.ps]||PS.imt_medium;
   var tBadge=sc.tier?('<span class="badge b-t'+sc.tier+'">TIER '+sc.tier+'</span>'):'';
-  $('brief-content').innerHTML='<div class="sb" style="margin-bottom:1.25rem"><div class="flg"><button class="btn btn-g btn-sm no-print" onclick="navTo(\'home\')"><i class="ti ti-arrow-left"></i> Back</button><button class="btn btn-sm no-print" onclick="openScenarioEditor()"><i class="ti ti-edit"></i> Edit scenario</button></div><button class="btn btn-xl btn-s no-print" id="btn-start" onclick="startEx()"><i class="ti ti-player-play"></i> STARTEX</button></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="flex-wrap:wrap;gap:1rem;align-items:flex-start"><div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">'+esc(sc.code)+' \u00b7 EXERCISE BRIEF</div><div style="font-size:21px;font-weight:800;margin-bottom:6px;line-height:1.2">'+esc(sc.name)+'</div><div class="flg" style="gap:5px"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'</div></div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div><strong>Location:</strong> '+esc(sc.loc)+'</div><div><strong>POB/PAX:</strong> '+sc.pob+' ('+( sc.missing||0)+' missing, '+(sc.cas||0)+' casualties)</div><div><strong>Duration:</strong> '+sc.dur+' minutes</div><div><strong>Weather:</strong> '+esc(sc.wx)+'</div><div><strong>Vessel/Support:</strong> '+esc(sc.vessel)+'</div><div><strong>External Support:</strong> '+esc(sc.support)+'</div></div></div></div><div class="g2" style="margin-bottom:1rem"><div class="card card-sm"><div class="s-ttl">Phase timeline</div>'+sc.phases.map(function(p,i){return'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px"><span style="font-weight:700;color:var(--text3);min-width:18px">'+(i+1)+'</span><span style="flex:1;font-weight:600">'+esc(p.n)+'</span><span style="color:var(--text2)">'+p.d+'min</span></div>';}).join('')+'<div style="margin-top:8px;font-size:11px;color:var(--text2)"><strong>'+(sc.inj||[]).length+'</strong> pre-built timed injects. AI generates additional injects every 3 minutes.</div></div><div class="card card-sm"><div class="s-ttl">Key hazards</div><div class="sc-hz" style="margin-bottom:12px">'+( sc.haz||[]).map(function(h){return'<span class="haz" style="font-size:11px;padding:3px 8px">'+esc(h)+'</span>';}).join('')+'</div><div class="s-ttl">'+(sc.ps==='offshore_ecc'?'ECC positions (OPITO OIS-194/195)':'IMT positions (ICS/NIMS)')+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px">'+ps.map(function(p){return'<div style="border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;border-left:3px solid '+p.c+'"><div style="font-size:14px;font-weight:800;color:'+p.c+'">'+p.id+'</div><div style="font-size:9px;color:var(--text2);font-weight:500">'+esc(p.full)+'</div></div>';}).join('')+'</div></div></div><div class="card"><div class="sb" style="margin-bottom:10px"><div class="s-ttl" style="margin:0">SMEAC exercise brief \u2014 AI generated</div><span class="badge b-ai" id="brief-status"><span class="spin"></span>&nbsp;Generating...</span></div><div id="brief-txt" class="brief-body" style="color:var(--text3)">Generating SMEAC brief using '+(sc.ps==='offshore_ecc'?'OPITO OIS-194/195':'ICS/NIMS')+' framework...</div></div>';
+  $('brief-content').innerHTML='<div class="sb" style="margin-bottom:1.25rem"><div class="flg"><button class="btn btn-g btn-sm no-print" onclick="navTo(\'home\')"><i class="ti ti-arrow-left"></i> Back</button><button class="btn btn-sm no-print" onclick="openScenarioEditor()"><i class="ti ti-edit"></i> Edit scenario</button></div><button class="btn btn-xl btn-s no-print" id="btn-start" onclick="startEx()"><i class="ti ti-player-play"></i> STARTEX</button></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="flex-wrap:wrap;gap:1rem;align-items:flex-start"><div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">'+esc(sc.code)+' \u00b7 EXERCISE BRIEF</div><div style="font-size:21px;font-weight:800;margin-bottom:6px;line-height:1.2">'+esc(sc.name)+'</div><div class="flg" style="gap:5px"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'</div></div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div><strong>Location:</strong> '+esc(sc.loc)+'</div><div><strong>POB/PAX:</strong> '+sc.pob+' ('+( sc.missing||0)+' missing, '+(sc.cas||0)+' casualties)</div><div><strong>Duration:</strong> '+sc.dur+' minutes</div><div><strong>Weather:</strong> '+esc(sc.wx)+'</div><div><strong>Vessel/Support:</strong> '+esc(sc.vessel)+'</div><div><strong>External Support:</strong> '+esc(sc.support)+'</div></div></div></div><div class="g2" style="margin-bottom:1rem"><div class="card card-sm"><div class="s-ttl">Phase timeline</div>'+sc.phases.map(function(p,i){return'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px"><span style="font-weight:700;color:var(--text3);min-width:18px">'+(i+1)+'</span><span style="flex:1;font-weight:600">'+esc(p.n)+'</span><span style="color:var(--text2)">'+p.d+'min</span></div>';}).join('')+'<div style="margin-top:8px;font-size:11px;color:var(--text2)"><strong>'+(sc.inj||[]).length+'</strong> pre-built timed injects. AI generates additional injects every 3 minutes.</div></div><div class="card card-sm"><div class="s-ttl">Key hazards</div><div class="sc-hz" style="margin-bottom:12px">'+( sc.haz||[]).map(function(h){return'<span class="haz" style="font-size:11px;padding:3px 8px">'+esc(h)+'</span>';}).join('')+'</div><div class="s-ttl">'+psLabel(sc.ps||autoPs(sc))+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px">'+ps.map(function(p){return'<div style="border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;border-left:3px solid '+p.c+'"><div style="font-size:14px;font-weight:800;color:'+p.c+'">'+p.id+'</div><div style="font-size:9px;color:var(--text2);font-weight:500">'+esc(p.full)+'</div></div>';}).join('')+'</div></div></div><div class="card"><div class="sb" style="margin-bottom:10px"><div class="s-ttl" style="margin:0">SMEAC exercise brief \u2014 AI generated</div><span class="badge b-ai" id="brief-status"><span class="spin"></span>&nbsp;Generating...</span></div><div id="brief-txt" class="brief-body" style="color:var(--text3)">Generating SMEAC brief using '+(sc.ps==='offshore_ecc'?'OPITO OIS-194/195':psLabel(sc.ps||'ics_medium'))+' framework...</div></div>';
   genBrief(sc,ps);
 }
 async function genBrief(sc,ps){
@@ -1476,7 +1556,7 @@ function startEx(){
   var ps=PS[sc.ps]||PS.imt_medium;
   var posOpts=ps.map(function(p){return'<option value="'+p.id+'">'+p.id+' \u2014 '+p.full+'</option>';}).join('')+'<option value="Control Room">Control Room</option><option value="Coastguard">Coastguard / MRCC</option><option value="Civil Defence">Civil Defence</option><option value="Muster Control">Muster Control</option><option value="Medic">Medic / Paramedic</option><option value="Standby Vessel">Standby Vessel</option><option value="SAR Helicopter">SAR Helicopter</option><option value="Port Authority">Port Authority</option><option value="OPRED Inspector">OPRED Inspector</option><option value="HSE Authority">HSE Authority</option><option value="Plant Manager">Plant Manager</option><option value="Environmental Officer">Environmental Officer</option><option value="Hospital">Hospital / Medical</option><option value="External Agency">External Agency</option>';
   $('inj-from').innerHTML=posOpts;$('inj-to').innerHTML=posOpts;
-  $('pos-grid-title').textContent=sc.ps==='offshore_ecc'?'ECC positions \u2014 OPITO OIS-194/195':'IMT positions \u2014 ICS/NIMS framework';
+  $('pos-grid-title').textContent=psLabel(sc.ps||autoPs(sc));
   renderSit();renderPosGrid();renderPhaseRow();
   $('comms-log').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">STARTEX \u2014 Exercise commenced. Pre-built injects will fire at their scheduled times.</p>';
   $('act-list').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">No actions pending yet.</p>';
@@ -2247,37 +2327,117 @@ var STK_EXTERNAL=['MRCC / Coastguard','OPRED / Regulator','Port Authority','Hosp
 
 function initTracker(){
   var sc=S.sc;if(!sc)return;
-  var ps=PS[sc.ps]||PS.imt_medium;
-  // Pre-populate with standard phase-based tasks
-  S.tracker=[];
-  var phaseTasks=[
-    {pos:'EM',task:'Declare emergency and activate ECC/IMT',cat:'command'},
-    {pos:'EM',task:'Establish command and control structure',cat:'command'},
-    {pos:'EM',task:'Confirm SMEAC / METHANE report issued',cat:'command'},
-    {pos:'EM',task:'Initiate Tier escalation as required',cat:'command'},
-    {pos:'RO',task:'Establish communications on all nets',cat:'comms'},
-    {pos:'RO',task:'Log all METHANE / SMEAC reports',cat:'comms'},
-    {pos:'OTL',task:'Conduct muster / headcount',cat:'ops'},
-    {pos:'OTL',task:'Deploy response teams per MERP',cat:'ops'},
-    {pos:'OTL',task:'Confirm hazard source identified',cat:'ops'},
-    {pos:'SMO',task:'Confirm medical response activated',cat:'medical'},
-    {pos:'SMO',task:'Casualty triage and treatment initiated',cat:'medical'},
-    {pos:'FTL',task:'Fire / rescue team deployed with SCBA',cat:'ops'},
-    {pos:'EL',task:'Exercise log maintained from STARTEX',cat:'planning'},
-    {pos:'MC',task:'Standby vessel / SAR coordinated',cat:'ops'},
-    {pos:'PT',task:'Situation report drafted for EM',cat:'planning'},
+  var psKey=sc.ps||autoPs(sc);
+  var ps=PS[psKey]||PS.ics_medium;
+  var isICS=psKey.startsWith('ics')||psKey.startsWith('imt');
+  var isECC=psKey==='offshore_ecc';
+
+  // ── Action tasks: ECC (offshore) ──
+  var eccTasks=[
+    {pos:'EM', task:'Declare emergency and activate ECC',                  cat:'command'},
+    {pos:'EM', task:'Establish command structure and brief ECC team',        cat:'command'},
+    {pos:'EM', task:'Issue METHANE report to all sections',                  cat:'command'},
+    {pos:'EM', task:'Initiate Tier escalation (Tier 1/2/3) as required',     cat:'command'},
+    {pos:'EM', task:'Notify Duty Manager (onshore) — METHANE brief',         cat:'comms'},
+    {pos:'DEM',task:'Confirm deputies briefed and standing by',              cat:'command'},
+    {pos:'DEM',task:'Coordinate with external agencies as directed',          cat:'comms'},
+    {pos:'RO', task:'Establish comms on CMD / OPS / MED / MAR nets',          cat:'comms'},
+    {pos:'RO', task:'Transmit MAYDAY/PAN-PAN on VHF Ch16 if required',        cat:'comms'},
+    {pos:'RO', task:'Log all METHANE and SMEAC reports',                     cat:'comms'},
+    {pos:'RO', task:'Notify MRCC / Coastguard per GMDSS procedure',          cat:'comms'},
+    {pos:'OTL',task:'Muster all personnel — account for full POB',            cat:'ops'},
+    {pos:'OTL',task:'Deploy response teams per MERP/ERRP',                   cat:'ops'},
+    {pos:'OTL',task:'Confirm hazard source isolated or controlled',           cat:'ops'},
+    {pos:'OTL',task:'Coordinate access control and search',                   cat:'ops'},
+    {pos:'SMO',task:'Activate medical response — first aid stations manned',   cat:'medical'},
+    {pos:'SMO',task:'Casualty triage initiated using MIST/METHANE',           cat:'medical'},
+    {pos:'SMO',task:'Medivac request submitted if required',                  cat:'medical'},
+    {pos:'FTL',task:'Fire / rescue team deployed with SCBA and BA sets',      cat:'ops'},
+    {pos:'FTL',task:'Fire boundary established / hot zone defined',            cat:'ops'},
+    {pos:'MC', task:'ERRV / standby vessel briefed and on station',           cat:'ops'},
+    {pos:'MC', task:'SAR helicopter / air ambulance requested if required',    cat:'ops'},
+    {pos:'EL', task:'Exercise log opened and maintained from STARTEX',        cat:'planning'},
+    {pos:'EL', task:'Situation reports logged every 15 minutes',              cat:'planning'},
+    {pos:'PT', task:'Situation report (SitRep) drafted for EM review',        cat:'planning'},
+    {pos:'PT', task:'Resource requirements identified and logged',             cat:'planning'},
   ];
-  // Only add tasks for positions present in the current team
+
+  // ── Action tasks: ICS onshore/LNG ──
+  var icsTasks=[
+    {pos:'IC',  task:'Assume Incident Command — identify incident priorities',    cat:'command'},
+    {pos:'IC',  task:'Establish Unified Command if multi-agency (FEMA ICS)',       cat:'command'},
+    {pos:'IC',  task:'Issue initial Incident Action Plan (IAP) / verbal briefing',cat:'command'},
+    {pos:'IC',  task:'Declare incident level and notify Duty Manager',             cat:'command'},
+    {pos:'IC',  task:'Authorise public evacuation / shelter-in-place if required', cat:'command'},
+    {pos:'SO',  task:'Conduct initial risk assessment / site safety survey',       cat:'command'},
+    {pos:'SO',  task:'Establish exclusion zones (hot/warm/cold)',                  cat:'command'},
+    {pos:'SO',  task:'Issue Safety Message to all ICS personnel',                  cat:'command'},
+    {pos:'SO',  task:'Monitor personnel accountability and air monitoring',        cat:'ops'},
+    {pos:'PIO', task:'Draft holding media statement — clear with IC',              cat:'comms'},
+    {pos:'PIO', task:'Establish Joint Information Centre if multi-agency',         cat:'comms'},
+    {pos:'PIO', task:'Coordinate all media releases through single point',         cat:'comms'},
+    {pos:'LNO', task:'Contact and brief all assisting agencies at Unified Command',cat:'comms'},
+    {pos:'LNO', task:'Notify Local Authority Emergency Planning Officer',          cat:'comms'},
+    {pos:'LNO', task:'Maintain agency liaison log',                                cat:'comms'},
+    {pos:'OSC', task:'Deploy operational resources per IAP',                       cat:'ops'},
+    {pos:'OSC', task:'Establish staging area — check-in all arriving resources',   cat:'ops'},
+    {pos:'OSC', task:'Confirm hazard source control / isolation actioned',          cat:'ops'},
+    {pos:'OSC', task:'Coordinate with Fire IC at Unified Command',                 cat:'ops'},
+    {pos:'HZM', task:'Deploy HazMat/CBRN teams per HazMat response plan',         cat:'ops'},
+    {pos:'HZM', task:'Identify product, plume modelling, confirm exclusion zone',  cat:'ops'},
+    {pos:'HZM', task:'Coordinate decontamination corridor if required',            cat:'ops'},
+    {pos:'DIVS',task:'Account for all personnel in division / group',              cat:'ops'},
+    {pos:'DIVS',task:'Report operational progress to OSC every 15 min',            cat:'ops'},
+    {pos:'MEDU',task:'Establish medical post — triage initiated',                  cat:'medical'},
+    {pos:'MEDU',task:'Pre-alert hospital with METHANE / MIST',                     cat:'medical'},
+    {pos:'MEDU',task:'Coordinate patient transport with ambulance service',        cat:'medical'},
+    {pos:'EVAC',task:'Initiate evacuation per site evacuation plan',               cat:'ops'},
+    {pos:'EVAC',task:'Account for all evacuees at assembly point',                 cat:'ops'},
+    {pos:'PSC', task:'Open Incident Command Post — maintain ICS documentation',    cat:'planning'},
+    {pos:'PSC', task:'Develop written IAP for next operational period',            cat:'planning'},
+    {pos:'SITL',task:'Maintain real-time situation display (map / whiteboard)',    cat:'planning'},
+    {pos:'SITL',task:'Issue SitRep to IC every 30 min',                           cat:'planning'},
+    {pos:'RESL',task:'Maintain T-card / resource tracking for all personnel',      cat:'planning'},
+    {pos:'RESL',task:'Request additional resources through LSC',                   cat:'planning'},
+    {pos:'LSC', task:'Establish logistics base — fuel, food, equipment',           cat:'planning'},
+    {pos:'LSC', task:'Coordinate transport for resources and casualties',          cat:'planning'},
+    {pos:'FSC', task:'Open incident cost tracking from time of activation',        cat:'planning'},
+    {pos:'FSC', task:'Authorise emergency procurement as required',                cat:'planning'},
+  ];
+
   var posIds=ps.map(function(p){return p.id;});
-  S.tracker=phaseTasks.filter(function(t){return posIds.indexOf(t.pos)>=0;}).map(function(t,i){
+  var allTasks=isECC?eccTasks:icsTasks;
+  S.tracker=allTasks.filter(function(t){return posIds.indexOf(t.pos)>=0;}).map(function(t,i){
     return {id:'t'+i,pos:t.pos,task:t.task,cat:t.cat,expected:'',actual:'',status:'pending',verified:false,coordNote:''};
   });
-  // Stakeholder comms
-  S.stk=STK_INTERNAL.map(function(n,i){
+
+  // ── External communications from protocol library ──
+  var extComms=getExtComms(sc);
+  S.extComms=extComms.map(function(ec,i){
+    return {
+      id:'ec'+i,
+      protocolId:ec.id,
+      cat:ec.cat,
+      name:ec.name,
+      role:ec.role,
+      authority:ec.authority,
+      channel:ec.channel,
+      format:ec.format,
+      notifyWhen:ec.notifyWhen,
+      updateFreq:ec.updateFreq,
+      mandatory:ec.mandatory,
+      notified:'',acked:false,msg:'',contactName:''
+    };
+  });
+
+  // ── Internal stakeholder list ──
+  var intList=isECC
+    ?['OIM / Emergency Manager','Deputy EM / DEM','Radio Operator','Operations Team','Safety & Medical Officer','Fire Team Leader','Marine Coordinator','Event Logger','Planning Team']
+    :['Incident Commander','Safety Officer','Operations Section Chief','Planning Section Chief','Logistics Section Chief','Finance/Admin Chief','Medical Unit','HazMat Group','Liaison Officer'];
+
+  S.stk=intList.map(function(n,i){
     return {id:'si'+i,type:'internal',name:n,notified:'',acked:false,msg:'',note:''};
-  }).concat(STK_EXTERNAL.map(function(n,i){
-    return {id:'se'+i,type:'external',name:n,notified:'',acked:false,msg:'',note:''};
-  }));
+  });
 }
 
 function renderTracker(){
@@ -2334,26 +2494,86 @@ function renderTracker(){
     +'</select>'
     +'<button class="btn btn-sm btn-p" onclick="addTrackerItem()"><i class="ti ti-plus"></i> Add</button>'
     +'</div></div>';
-  // Stakeholder communications section
+  // ── Internal stakeholder comms ──
   html+='<div class="trk-section" style="margin-top:1rem">'
-    +'<div class="trk-section-hd"><i class="ti ti-phone"></i> Stakeholder Communications</div>'
-    +'<div style="display:grid;grid-template-columns:50px 130px 1fr 65px 26px;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:3px;text-transform:uppercase">'
-    +'<span>Type</span><span>Stakeholder</span><span>Key message / notes</span><span>Notified</span><span></span></div>';
+    +'<div class="trk-section-hd"><i class="ti ti-users-group"></i> Internal Team — Notification Log</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 65px 70px 24px;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:3px;text-transform:uppercase">'
+    +'<span>Position / Role</span><span>Notified</span><span>Message</span><span></span></div>';
   S.stk.forEach(function(s){
-    html+='<div class="stk-row">'
-      +'<span class="stk-type '+(s.type==='internal'?'stk-int':'stk-ext')+'">'+s.type.substr(0,3).toUpperCase()+'</span>'
-      +'<span style="font-weight:600;font-size:10px">'+esc(s.name)+'</span>'
-      +'<input class="stk-msg-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;width:100%" '
-      +'placeholder="Message / action..." value="'+esc(s.msg)+'" onchange="updateStkMsg(this.dataset.stkid,this.value)">'
-      +'<input class="stk-notified-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;width:100%;text-align:center" '
-      +'placeholder="HH:MM" value="'+esc(s.notified)+'" onchange="updateStkNotified(this.dataset.stkid,this.value)" title="Time notified">'
+    html+='<div style="display:grid;grid-template-columns:1fr 65px 70px 24px;gap:4px;align-items:center;padding:4px 0;border-bottom:1px solid var(--bdr);font-size:11px">'
+      +'<span style="font-weight:600">'+esc(s.name)+'</span>'
+      +'<input class="stk-notified-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;text-align:center" '
+      +'placeholder="HH:MM" value="'+esc(s.notified)+'" onchange="updateStkNotified(this.dataset.stkid,this.value)">'
+      +'<input class="stk-msg-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px" '
+      +'placeholder="Notes..." value="'+esc(s.msg)+'" onchange="updateStkMsg(this.dataset.stkid,this.value)">'
       +'<input type="checkbox" class="stk-ack-cb" data-stkid="'+s.id+'" '+(s.acked?'checked ':'')+' title="Acknowledged" onchange="updateStkAck(this.dataset.stkid,this.checked)">'
       +'</div>';
   });
   html+='</div>';
+
+  // ── External Communications Protocol ──
+  var extC=S.extComms||[];
+  if(extC.length){
+    var extCats=[...new Set(extC.map(function(e){return e.cat;}))];
+    html+='<div class="trk-section" style="margin-top:1rem">';
+    html+='<div class="trk-section-hd"><i class="ti ti-phone-outgoing"></i> External Communications Protocol</div>';
+    html+='<div style="font-size:10px;color:var(--text2);margin-bottom:8px;line-height:1.5">Mandatory contacts are highlighted. Click <i class="ti ti-info-circle"></i> to view protocol. Log notification time and message sent.</div>';
+    extCats.forEach(function(cat){
+      var items=extC.filter(function(e){return e.cat===cat;});
+      html+='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">'+esc(cat)+'</div>';
+      items.forEach(function(ec){
+        var mandBadge=ec.mandatory?'<span style="font-size:8px;font-weight:700;background:#fee2e2;color:#dc2626;padding:1px 4px;border-radius:3px;margin-left:4px">MANDATORY</span>':'';
+        html+='<div style="border:1px solid '+(ec.mandatory?'#fca5a5':'var(--bdr)')+';border-radius:7px;padding:7px 9px;margin-bottom:5px">'
+          +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">'
+          +'<span style="font-weight:700;font-size:11px">'+esc(ec.name)+'</span>'+mandBadge
+          +'<button class="edit-btn" style="margin-left:auto" data-action="show-protocol" data-ecid="'+ec.id+'" title="View protocol"><i class="ti ti-info-circle"></i></button>'
+          +'</div>'
+          +'<div style="font-size:10px;color:var(--text3);margin-bottom:5px"><i class="ti ti-user" style="font-size:10px"></i> '+esc(ec.authority)+' &nbsp; <i class="ti ti-device-mobile" style="font-size:10px"></i> '+esc(ec.channel)+'</div>'
+          +'<div style="font-size:10px;color:var(--amber);margin-bottom:5px"><i class="ti ti-clock" style="font-size:10px"></i> '+esc(ec.notifyWhen)+'</div>'
+          +'<div style="display:grid;grid-template-columns:65px 110px 1fr 24px;gap:5px;align-items:center">'
+          +'<input class="ec-notified" data-ecid="'+ec.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;text-align:center" '
+          +'placeholder="HH:MM" value="'+esc(ec.notified)+'" onchange="updateExtComm(this.dataset.ecid,\'notified\',this.value)" title="Time notified">'
+          +'<input class="ec-contact" data-ecid="'+ec.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px" '
+          +'placeholder="Contact name..." value="'+esc(ec.contactName)+'" onchange="updateExtComm(this.dataset.ecid,\'contactName\',this.value)">'
+          +'<input class="ec-msg" data-ecid="'+ec.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px" '
+          +'placeholder="Key message / reference number..." value="'+esc(ec.msg)+'" onchange="updateExtComm(this.dataset.ecid,\'msg\',this.value)">'
+          +'<input type="checkbox" class="ec-ack" data-ecid="'+ec.id+'" '+(ec.acked?'checked ':'')+' title="Confirmed/acknowledged" onchange="updateExtComm(this.dataset.ecid,\'acked\',this.checked)">'
+          +'</div>'
+          +'</div>';
+      });
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+
   $('tracker-content').innerHTML=html;
 }
 
+
+function updateExtComm(id,field,val){
+  if(!S.extComms)return;
+  var ec=S.extComms.find(function(e){return e.id===id;});
+  if(ec)ec[field]=val;
+}
+function showExtProtocol(ecid){
+  if(!S.extComms)return;
+  var ec=S.extComms.find(function(e){return e.id===ecid;});
+  if(!ec)return;
+  var mandBadge=ec.mandatory?'<span style="background:#fee2e2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:8px">MANDATORY</span>':'';
+  showModal(ec.name+' — Protocol',
+    '<div style="font-size:12px;line-height:1.8;color:var(--text)">'
+    +'<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--bdr)"><strong>Role:</strong> '+esc(ec.role)+'</div>'
+    +'<div style="margin-bottom:6px"><strong>Notify when:</strong><br><span style="color:var(--amber)">'+esc(ec.notifyWhen)+'</span></div>'
+    +'<div style="margin-bottom:6px"><strong>Channel:</strong><br><span style="font-family:monospace;font-size:11px;background:var(--bg);padding:3px 6px;border-radius:4px;display:inline-block">'+esc(ec.channel)+'</span></div>'
+    +'<div style="margin-bottom:6px"><strong>Reporting format:</strong><br><span style="background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:6px 8px;display:block;font-size:11px;line-height:1.6">'+esc(ec.format)+'</span></div>'
+    +'<div style="margin-bottom:6px"><strong>Authority:</strong> '+esc(ec.authority)+'</div>'
+    +'<div><strong>Update frequency:</strong> <span style="color:var(--blue)">'+esc(ec.updateFreq)+'</span></div>'
+    +'</div>',
+    null
+  );
+  // Hide save button for info-only modal
+  setTimeout(function(){var sb=$('modal-save-btn');if(sb)sb.style.display='none';},20);
+}
 function updateTrackerActual(id,val){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.actual=val;}
 function updateTrackerStatus(id,val){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.status=val;}
 function toggleTrackerVerify(id,v){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.verified=v;$('trk-cnt').textContent=S.tracker.filter(function(t){return t.verified;}).length+'/'+S.tracker.length;}
@@ -2875,6 +3095,297 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape')closePres();
 });
 
+
+// ══════════════════════════════════════════════════════════════════
+// EXTERNAL COMMUNICATIONS PROTOCOL LIBRARY
+// Each entry: id, cat, name, role, notifyWhen, channel, format,
+//             authority (position), updateFreq, mandatory
+// ══════════════════════════════════════════════════════════════════
+var EXT_COMMS={
+ offshore:[
+  // MARITIME & SAR
+  {id:'mrcc',     cat:'Maritime & SAR',
+   name:'MRCC / HM Coastguard', role:'Maritime Rescue Coordination Centre',
+   notifyWhen:'Immediately on MAYDAY, MAN OVERBOARD, or vessel in distress',
+   channel:'VHF Ch16 / MF 2182kHz / GMDSS DSC',
+   format:'MAYDAY/PAN-PAN: vessel name, position (lat/lon), nature of distress, POB, assistance required, vessel description',
+   authority:'EM / Radio Operator (RO)',
+   updateFreq:'Every 30 min or on request. Hold line until CG assumes coordination.',
+   mandatory:true},
+  {id:'errv',     cat:'Maritime & SAR',
+   name:'ERRV / Standby Vessel', role:'Emergency Response & Rescue Vessel',
+   notifyWhen:'Immediately on muster alarm / MAYDAY — vessel should be at standby position',
+   channel:'VHF Ch16 then working channel / Bridge-to-Bridge',
+   format:'SMEAC brief: Situation, Mission, Execution, Admin, Command. Wind speed/direction, sea state, approach bearing.',
+   authority:'Marine Coordinator (MC)',
+   updateFreq:'Every 15 min during active emergency. Request approach when needed.',
+   mandatory:true},
+  {id:'sar_helo', cat:'Maritime & SAR',
+   name:'SAR Helicopter / Air Ambulance', role:'Search & Rescue / Medevac',
+   notifyWhen:'When airlift required or MAN OVERBOARD confirmed. Notify via MRCC.',
+   channel:'VHF Ch16 (initial) / UHF 243 MHz (military SAR) / Company frequency',
+   format:'Grid reference, LZ status (helideck clear/obstructed), wind/visibility, nature of casualty, MIST: Mechanism, Injury, Signs, Treatment',
+   authority:'Marine Coordinator (MC) / Emergency Manager (EM)',
+   updateFreq:'Continuous during approach. Confirm deck clear when 2nm out.',
+   mandatory:false},
+  // REGULATORY
+  {id:'opred',    cat:'Regulatory',
+   name:'OPRED / NSTF', role:'Offshore Petroleum Regulator for Environment & Decommissioning',
+   notifyWhen:'Major accident, significant hydrocarbon release, fatality, or serious injury — within 2 hours',
+   channel:'Duty Inspector hotline / Email notification',
+   format:'RIDDOR / OPRED notification: installation name, date/time, nature of incident, number of casualties, actions taken, company contact',
+   authority:'Emergency Manager (EM)',
+   updateFreq:'Follow-up written report within 24hrs. Keep updated on escalation/de-escalation.',
+   mandatory:true},
+  {id:'hse',      cat:'Regulatory',
+   name:'HSE / National Regulator', role:'Health & Safety Executive / National Authority',
+   notifyWhen:'Dangerous occurrences, specified injuries, over-7-day injuries per RIDDOR',
+   channel:'HSE Incident Contact Centre: 0345 300 9923 / Online RIDDOR form',
+   format:'RIDDOR report: F2508 form online. Key fields: type of incident, person details, circumstances.',
+   authority:'Emergency Manager (EM) / Company HSE Lead (onshore)',
+   updateFreq:'Initial notification within 10 days. Company investigation report typically 28 days.',
+   mandatory:true},
+  // CORPORATE / DUTY MANAGER
+  {id:'duty_mgr', cat:'Corporate',
+   name:'Duty Manager (Onshore)', role:'24/7 Company Emergency Duty Manager',
+   notifyWhen:'Immediately upon ECC activation — before any media statements',
+   channel:'Emergency contact list / Satellite phone / Company ER line',
+   format:'METHANE: Major incident declared, Exact location, Type of incident, Hazards, Access, Number of casualties, Emergency services',
+   authority:'Emergency Manager (EM)',
+   updateFreq:'Every 15-30 min during active emergency. Advise before escalation/de-escalation.',
+   mandatory:true},
+  {id:'corp_ert', cat:'Corporate',
+   name:'Corporate Emergency Response Team', role:'Tier 2/3 Support & Crisis Management',
+   notifyWhen:'Tier 2 or 3 activation, fatality, major environmental impact, or media escalation',
+   channel:'Corporate ERT hotline / Incident management system',
+   format:'Full SMEAC brief + Tier classification + resources required + estimated duration',
+   authority:'Emergency Manager (EM)',
+   updateFreq:'Every 30 min or on situation change. Corporate may assume Incident Command.',
+   mandatory:false},
+  {id:'insur',    cat:'Corporate',
+   name:'Insurance / P&I Club', role:'Marine / Liability Insurance Notification',
+   notifyWhen:'Major incident with third-party liability, pollution, significant asset damage',
+   channel:'Insurance broker emergency line / P&I Club correspondent',
+   format:'Vessel name, flag, owner, incident date/time, nature, location, initial assessment of damage/liability',
+   authority:'Finance/Admin or Company Legal',
+   updateFreq:'As situation develops. Do not admit liability without insurer advice.',
+   mandatory:false},
+  // NEARBY PLATFORMS / MUTUAL AID
+  {id:'nearby',   cat:'Mutual Aid',
+   name:'Nearby Installations / Platforms', role:'Field Neighbours — Mutual Aid',
+   notifyWhen:'H2S / gas cloud that may drift to adjacent installations; MAYDAY requiring additional resources',
+   channel:'Operator-to-Operator hotline / VHF working channel',
+   format:'Nature of release/incident, wind direction/speed, estimated H2S/gas concentration, recommended actions (shelter/evacuate)',
+   authority:'Emergency Manager (EM) / Marine Coordinator (MC)',
+   updateFreq:'Every 30 min if hazard remains. Confirm all-clear when situation resolved.',
+   mandatory:false},
+  {id:'mutual_aid',cat:'Mutual Aid',
+   name:'Oil Spill Response Contractor (OSRL / ARPEL)', role:'Tier 2/3 Oil Spill Response',
+   notifyWhen:'Confirmed uncontrolled hydrocarbon release to sea — Tier 2 declaration',
+   channel:'OSRL 24hr hotline: +44 (0)23 8033 1551 / Regional centre',
+   format:'POLREP: Location (lat/lon), source, estimated volume/rate, oil type, trajectory forecast, resources on scene, assistance required',
+   authority:'Emergency Manager (EM) / Marine Coordinator (MC)',
+   updateFreq:'Every hour. OSRL will deploy within agreed timeframes. Request Tier 2 activation.',
+   mandatory:false},
+  // EMERGENCY SERVICES
+  {id:'port_auth', cat:'Emergency Services',
+   name:'Port Authority / Harbour Master', role:'Port / Harbour Control',
+   notifyWhen:'Vessel incident in port area, significant spill, or vessel requiring emergency berth',
+   channel:'VHF Ch12/14 (port working) / Port Control direct line',
+   format:'Vessel name, position, nature of emergency, number on board, assistance required, tug/berth requirement',
+   authority:'Marine Coordinator (MC)',
+   updateFreq:'As situation develops. Port Control may restrict vessel movements.',
+   mandatory:false},
+  {id:'hospital',  cat:'Emergency Services',
+   name:'Nearest Hospital / Trauma Centre', role:'Medical Receiving Centre',
+   notifyWhen:'Upon confirmed casualty requiring hospital treatment',
+   channel:'Hospital A&E direct line / Air Ambulance coordination',
+   format:'MIST handover: Mechanism of injury, Injuries found/suspected, Signs and symptoms, Treatment given. ETA, number of casualties.',
+   authority:'Safety & Medical Officer (SMO)',
+   updateFreq:'Pre-alert on departure. Update on ETA change. Confirm handover complete.',
+   mandatory:false},
+  {id:'security',  cat:'Security',
+   name:'Installation Security Officer (ISO)', role:'ISPS Security / Muster Control',
+   notifyWhen:'On activation of emergency alarm. Security may control access points.',
+   channel:'Internal radio / Physical muster point',
+   format:'Muster status, access control requirements, any security threat component to the emergency',
+   authority:'Operations Team Leader (OTL)',
+   updateFreq:'Every muster update. Report any personnel not accounted for.',
+   mandatory:true},
+  {id:'media',     cat:'Media',
+   name:'Media / PR Contact', role:'Corporate Communications',
+   notifyWhen:'Before any external media enquiries. Media brief required within 1 hour of major incident.',
+   channel:'Corporate media line / PR agency on-call',
+   format:'Holding statement: "We are aware of an incident at [installation]. The safety of our personnel is our first priority. We will provide further information as it becomes available."',
+   authority:'Emergency Manager (EM) / PIO (if assigned)',
+   updateFreq:'Every 2 hours or before press conferences. No operational detail without EM approval.',
+   mandatory:false},
+ ],
+ onshore:[
+  // EMERGENCY SERVICES (ICS INTEGRATION)
+  {id:'fire',      cat:'Emergency Services',
+   name:'Fire Service / HAZMAT', role:'Fire & Rescue — ICS Integration',
+   notifyWhen:'Immediately on fire, explosion, or hazardous material release',
+   channel:'999 / 911 emergency line then direct to Fire Incident Commander',
+   format:'999 call: address, nature of incident, casualties, known hazards (materials, access). Fire IC takes unified command under ICS.',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Continuous coordination at Unified Command Post. Fire IC joins ICS structure.',
+   mandatory:true},
+  {id:'police',    cat:'Emergency Services',
+   name:'Police / Law Enforcement', role:'Site Security, Access Control, Investigation',
+   notifyWhen:'Fatality, major casualty incident, or threat to public safety / criminal element',
+   channel:'999 / 911 / Non-emergency police line',
+   format:'Location, nature of incident, number of casualties, any criminal/security concerns, access points, company contact',
+   authority:'Incident Commander (IC) / Liaison Officer (LNO)',
+   updateFreq:'As required. Police take primacy for fatality scene — preserve evidence.',
+   mandatory:false},
+  {id:'ambulance', cat:'Emergency Services',
+   name:'Ambulance Service / EMS', role:'Pre-hospital Medical Care & Transport',
+   notifyWhen:'Immediately on confirmed casualties',
+   channel:'999 / 911 then Medical Branch coordination',
+   format:'METHANE: Major incident, Exact location, Type of incident, Hazards, Access, Number of casualties, Emergency services on scene',
+   authority:'Medical Unit Leader (MEDU) / IC',
+   updateFreq:'Every 10 min during active casualty management. Confirm patient handover.',
+   mandatory:false},
+  {id:'env_agency',cat:'Regulatory',
+   name:'Environmental Agency / EPA', role:'Environmental Regulator',
+   notifyWhen:'Any release to water, soil contamination, or air quality exceedance',
+   channel:'EA Incident Hotline: 0800 807060 (UK) / Regional EPA emergency line',
+   format:'Location, nature/quantity of release, receptor affected (water/land), containment in place, company contact',
+   authority:'Safety Officer (SO) / IC',
+   updateFreq:'Initial notification then hourly for major spills. Written report within 24 hrs.',
+   mandatory:true},
+  {id:'hse_ons',   cat:'Regulatory',
+   name:'HSE / Workplace Safety Regulator', role:'RIDDOR / Dangerous Occurrence Reporting',
+   notifyWhen:'Fatality, specified injury, dangerous occurrence — within 10 days (RIDDOR)',
+   channel:'HSE Incident Contact: 0345 300 9923 / Online',
+   format:'RIDDOR F2508 form: incident type, injured person, workplace, circumstances, first aid/treatment',
+   authority:'Incident Commander (IC) / Company HSE',
+   updateFreq:'Single RIDDOR report. Investigation report as required.',
+   mandatory:true},
+  // CORPORATE / DUTY MANAGER
+  {id:'duty_mgr_o',cat:'Corporate',
+   name:'Duty Manager / On-Call Manager', role:'24/7 Company Emergency Duty Manager',
+   notifyWhen:'Immediately upon ICS activation — at or before Level 2 emergency declaration',
+   channel:'Company emergency on-call line / Mobile',
+   format:'METHANE or SMEAC brief: Situation, resources deployed, ICS level, external agencies notified, media status',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Every 15-30 min. Advise on Level escalation before action.',
+   mandatory:true},
+  {id:'corp_cr',   cat:'Corporate',
+   name:'Corporate Crisis Management Team', role:'Level 3 / Crisis Activation',
+   notifyWhen:'Level 3 activation, fatality, major environmental impact, media escalation',
+   channel:'Corporate crisis line / CMT activation protocol',
+   format:'Full situation report + ICS Incident Action Plan summary + resource status + community impact',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Every 30-60 min. Corporate CMT may activate crisis centre.',
+   mandatory:false},
+  // MUTUAL AID
+  {id:'mutual_ons',cat:'Mutual Aid',
+   name:'Neighbouring Facilities / Mutual Aid', role:'Industry Mutual Aid Partner',
+   notifyWhen:'Resources exhausted or hazard plume may affect adjacent facilities',
+   channel:'Mutual Aid Agreement contact list / Phone',
+   format:'Nature and scale of incident, specific resources required (personnel, equipment, transport), entry point, ICS check-in procedure',
+   authority:'Logistics Section Chief (LSC)',
+   updateFreq:'As required. Arriving resources must check in with Staging Area Manager.',
+   mandatory:false},
+  {id:'osc_contr', cat:'Mutual Aid',
+   name:'Oil Spill / HazMat Contractor', role:'Specialist Response Contractor (HSEEP/Veolia/Clean Harbors)',
+   notifyWhen:'Liquid hydrocarbon spill to drain, watercourse or soil — call within 1 hour',
+   channel:'Contractor 24hr emergency line per retained contract',
+   format:'Site address, nature/quantity of product spilled, receptor affected, containment status, access, site contact',
+   authority:'Safety Officer (SO) / Logistics Section Chief (LSC)',
+   updateFreq:'Every hour until response complete. Document all actions for regulator.',
+   mandatory:false},
+  // LOCAL AUTHORITY / COMMUNITY
+  {id:'local_auth',cat:'Community',
+   name:'Local Authority Emergency Planning', role:'Civil Protection / Local Authority',
+   notifyWhen:'Any incident requiring public evacuation, shelter-in-place, or significant community impact',
+   channel:'Local Authority emergency planning number / GOLD command',
+   format:'Nature of incident, geographic extent, public warning issued, actions taken, company liaison contact',
+   authority:'Liaison Officer (LNO) / IC',
+   updateFreq:'Every 30 min or on public impact change. May activate rest centre.',
+   mandatory:false},
+  {id:'utilities', cat:'Community',
+   name:'Utilities (Gas/Power/Water)', role:'Utility Provider Emergency Control',
+   notifyWhen:'If fire/explosion may have damaged gas/electrical infrastructure; or utility isolation required',
+   channel:'National Gas Emergency: 0800 111 999 / Local distribution operator',
+   format:'Address, nature of damage/concern, isolation required (yes/no), access for engineers, contact on site',
+   authority:'Operations Section Chief (OSC)',
+   updateFreq:'As required. Do not re-energise without utility company clearance.',
+   mandatory:false},
+  // SECURITY
+  {id:'sec_mgr',   cat:'Security',
+   name:'Security Manager / Guard Force', role:'Site Access Control & Perimeter',
+   notifyWhen:'On activation of emergency alarm — security establishes outer cordon',
+   channel:'Internal security radio / Phone',
+   format:'Nature of incident, access control required, escort needs, camera/CCTV support, evacuation assembly point',
+   authority:'Incident Commander (IC) / OSC',
+   updateFreq:'Every muster update. Report any unauthorized personnel or security threats.',
+   mandatory:true},
+  {id:'media_ons', cat:'Media',
+   name:'Media / Corporate Communications', role:'PR & Media Relations',
+   notifyWhen:'Before any media statement — holding statement within 60 min of major incident',
+   channel:'Corporate comms on-call / PR agency',
+   format:'Holding statement: confirm incident, confirm safety response activated, no blame/speculation, state when next update expected',
+   authority:'Public Information Officer (PIO) / IC',
+   updateFreq:'Every 2 hours. All media queries to PIO only — no other personnel to speak to media.',
+   mandatory:false},
+ ],
+ lng:[
+  // LNG/Terminal shares a mix of offshore and onshore contacts
+  {id:'lng_mrcc',  cat:'Maritime & SAR',
+   name:'MRCC / Port Authority', role:'Maritime/Port Emergency Coordination',
+   notifyWhen:'Any incident affecting port/jetty/vessel operations',
+   channel:'VHF Ch16 / Port Control working channel',
+   format:'SMEAC: vessel name, berth, nature of incident, POB, fire/explosion, LNG release, assistance required',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Every 15 min during active emergency.',mandatory:true},
+  {id:'lng_fire',  cat:'Emergency Services',
+   name:'Fire Service (Airport/Industrial HAZMAT)', role:'LNG/HAZMAT Specialist Response',
+   notifyWhen:'Immediately on LNG release, fire, explosion, or BLEVe risk',
+   channel:'999 / 911 / Direct HAZMAT unit line',
+   format:'Location (jetty/berth/tank number), LNG release source, wind direction, exclusion zone required, ignited/unignited',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Continuous at Unified Command. Fire IC joins ICS structure.',mandatory:true},
+  {id:'lng_env',   cat:'Regulatory',
+   name:'Environmental Agency', role:'LNG/Cryogenic Spill Regulator',
+   notifyWhen:'Any LNG spill to water or significant vapour cloud formation',
+   channel:'EA Incident Hotline: 0800 807060',
+   format:'Location, estimated quantity, vapour cloud extent, public warning, containment',
+   authority:'Safety Officer (SO)',
+   updateFreq:'Every hour until resolved.',mandatory:true},
+  {id:'lng_duty',  cat:'Corporate',
+   name:'Duty Manager / Terminal Operator', role:'24/7 Company Duty Manager',
+   notifyWhen:'Immediately on Level 2+ activation',
+   channel:'Company emergency line',
+   format:'METHANE brief + ICS level + regulatory agencies notified + vessel/cargo status',
+   authority:'Incident Commander (IC)',
+   updateFreq:'Every 15 min.',mandatory:true},
+  {id:'lng_mutual',cat:'Mutual Aid',
+   name:'Mutual Aid / Terminal Response', role:'Industry LNG Mutual Aid',
+   notifyWhen:'Major LNG release requiring specialist resources',
+   channel:'Mutual Aid Agreement contact',
+   format:'Nature/scale, resources needed, ICS check-in procedure',
+   authority:'Logistics Section Chief (LSC)',
+   updateFreq:'As required.',mandatory:false},
+  {id:'lng_sec',   cat:'Security',
+   name:'Security / ISPS Officer', role:'Port/Terminal Security (ISPS)',
+   notifyWhen:'On activation — security establishes exclusion zone',
+   channel:'Security radio / ISPS notification',
+   format:'Incident nature, exclusion zone boundary, access control for emergency services, ISPS notification required',
+   authority:'Liaison Officer (LNO)',
+   updateFreq:'Every muster update.',mandatory:true},
+ ],
+};
+
+// Get external comms list for current scenario
+function getExtComms(sc){
+  if(!sc)return[];
+  if(sc.cat==='offshore')return EXT_COMMS.offshore;
+  if(sc.cat==='lng')return EXT_COMMS.lng;
+  return EXT_COMMS.onshore;
+}
 // ===== GLOBAL EVENT DELEGATION (handles data-action buttons) =====
 document.addEventListener('click',function(e){
   var btn=e.target.closest('[data-action]');
@@ -2928,6 +3439,8 @@ document.addEventListener('click',function(e){
       reviewHistory(btn.dataset.hid);break;
     case 'del-hist':
       deleteHistory(btn.dataset.hid);break;
+    case 'show-protocol':
+      showExtProtocol(btn.dataset.ecid);break;
     case 'edit-sched':
       editSchedInject(parseInt(btn.dataset.idx));break;
     case 'del-sched':
