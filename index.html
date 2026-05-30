@@ -143,6 +143,71 @@ textarea{resize:vertical;min-height:80px}
 .steps b{color:var(--text);font-weight:600}
 .steps a{color:var(--blue);text-decoration:none}
 .steps a:hover{text-decoration:underline}
+
+/* ── SCENARIO HEADING (bold / caps) ── */
+#ex-run-title{font-size:12px;font-weight:800;color:#e2e8f0;letter-spacing:.6px;text-transform:uppercase;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+/* ── EXERCISE OVERVIEW STRIP ── */
+.ex-ov{background:#1e293b;border-bottom:1px solid #334155;padding:0;overflow:hidden;transition:max-height .3s}
+.ex-ov-inner{max-width:1160px;margin:0 auto;padding:8px 1.25rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 18px;font-size:11px;color:#cbd5e1}
+.ex-ov-field strong{color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:1px;font-weight:700}
+.ov-toggle{width:100%;background:none;border:none;color:#64748b;font-size:10px;padding:3px;cursor:pointer;text-align:center}
+.ov-toggle:hover{color:#94a3b8}
+/* ── TAB PANE ── */
+.tab-pane{display:none;padding:12px 14px;max-height:400px;overflow-y:auto}
+.tab-pane.on{display:block}
+/* ── TRACKER TAB ── */
+.trk-section{margin-bottom:1.1rem}
+.trk-section-hd{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid var(--bdr)}
+.trk-row{display:grid;grid-template-columns:70px 1fr 90px 90px 32px;gap:5px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.trk-row:last-child{border-bottom:none}
+.trk-pos{font-weight:700;font-size:11px}
+.trk-status{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;text-align:center}
+.ts-pending{background:#fef3c7;color:#92400e}
+.ts-done{background:#dcfce7;color:#15803d}
+.ts-missed{background:#fee2e2;color:#dc2626}
+.ts-partial{background:#e0f2fe;color:#0369a1}
+.trk-verify{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--text3)}
+.trk-verify input{cursor:pointer}
+/* stakeholder comms */
+.stk-row{display:grid;grid-template-columns:60px 90px 1fr 70px 26px;gap:5px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.stk-type{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;text-align:center}
+.stk-int{background:#dbeafe;color:#1d4ed8}
+.stk-ext{background:#f3e8ff;color:#7e22ce}
+.stk-ack{font-size:10px;color:var(--green);font-weight:700}
+/* ── K&C CHECK TAB ── */
+.kc-pos-block{margin-bottom:1rem;border:1px solid var(--bdr);border-radius:8px;overflow:hidden}
+.kc-pos-hd{padding:7px 10px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;background:var(--bg)}
+.kc-area-row{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:center;padding:5px 10px;border-top:1px solid var(--bdr);font-size:11px}
+.kc-rating{display:flex;gap:4px}
+.kc-rating label{display:flex;align-items:center;gap:2px;font-size:10px;cursor:pointer;padding:2px 5px;border-radius:4px;border:1px solid var(--bdr)}
+.kc-rating input{margin:0;cursor:pointer}
+.kc-rating label:has(input:checked){background:var(--navy);color:#fff;border-color:var(--navy)}
+/* ── TIMELINE TAB ── */
+.tl-item{display:grid;grid-template-columns:52px 14px 1fr;gap:0 10px;margin-bottom:2px;align-items:flex-start}
+.tl-time{font-size:10px;color:var(--text3);font-weight:700;padding-top:2px;text-align:right}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;border:2px solid #fff;box-shadow:0 0 0 2px var(--bdr)}
+.tl-dot.imm{background:var(--red);box-shadow:0 0 0 2px var(--red)}
+.tl-dot.urg{background:var(--amber);box-shadow:0 0 0 2px var(--amber)}
+.tl-dot.rou{background:#22c55e;box-shadow:0 0 0 2px #22c55e}
+.tl-dot.act{background:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.tl-dot.sys{background:var(--text3);box-shadow:0 0 0 2px var(--text3)}
+.tl-line{width:2px;background:var(--bdr);margin:0 auto;height:100%}
+.tl-connector{display:flex;flex-direction:column;align-items:center}
+.tl-body{padding:3px 0 8px 0;font-size:11px}
+.tl-hd{font-weight:700;color:var(--text)}
+.tl-msg{color:var(--text2);line-height:1.4;margin-top:1px}
+.tl-act{font-size:10px;color:var(--blue);margin-top:2px}
+.tl-gap{font-size:10px;color:var(--red);font-style:italic;margin-top:2px}
+.tl-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+/* ── DEBRIEF TAB (in AAR) ── */
+.dbf-section{background:var(--bg);border-radius:8px;padding:14px;margin-bottom:1rem}
+.dbf-section h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:8px}
+.dbf-section textarea{background:#fff}
+.dbf-participants{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
+.dbf-participant{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 8px;border:1px solid var(--bdr);border-radius:6px;background:#fff}
+/* ── AAR TRACKER SUMMARY ── */
+.aar-trk-row{display:grid;grid-template-columns:60px 1fr 80px 80px;gap:6px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px;align-items:center}
+.aar-trk-row:last-child{border-bottom:none}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -189,7 +254,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="fl" style="gap:10px;height:50px">
         <div class="timer" id="timer">00:00:00</div>
         <span class="badge b-run" id="ex-status">RUNNING</span>
-        <span style="font-size:11px;color:#64748b;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis" id="ex-run-title"></span>
+        <span id="ex-run-title"></span>
         <div class="fl" style="gap:5px" id="run-btns">
           <button class="btn btn-sm" id="btn-pause" onclick="togglePause()"><i class="ti ti-player-pause"></i> Pause</button>
           <button class="btn btn-sm btn-p" onclick="getGuidance()"><i class="ti ti-bulb"></i> Guidance</button>
@@ -203,6 +268,13 @@ textarea{resize:vertical;min-height:80px}
   </div>
   <div style="max-width:1160px;margin:0 auto;padding:1rem 1.25rem">
     <div class="phase-row" id="phase-row"></div>
+    <!-- Exercise overview collapsible strip -->
+    <div class="ex-ov" id="ex-ov-wrap">
+      <div class="ex-ov-inner" id="ex-ov-inner"></div>
+    </div>
+    <button class="ov-toggle" onclick="toggleOverview()" id="ov-toggle-btn" title="Toggle exercise overview">
+      <i class="ti ti-chevron-down" id="ov-icon"></i> EXERCISE OVERVIEW
+    </button>
     <div class="g4" style="margin-bottom:10px">
       <div class="metric"><div class="metric-v" id="m-pob">-</div><div class="metric-l">Total POB/PAX</div></div>
       <div class="metric"><div class="metric-v" style="color:var(--green)" id="m-acc">-</div><div class="metric-l">Accounted</div></div>
@@ -230,10 +302,22 @@ textarea{resize:vertical;min-height:80px}
           <div class="tab-bar">
             <button class="tab-btn on" onclick="showTab('comms')"><i class="ti ti-messages"></i> Comms log <span id="comms-cnt" style="font-size:10px;margin-left:2px;padding:1px 5px;border-radius:3px;background:var(--bg)">0</span></button>
             <button class="tab-btn" onclick="showTab('actions')"><i class="ti ti-checklist"></i> Actions <span id="act-cnt" style="font-size:10px;margin-left:2px;padding:1px 5px;border-radius:3px;background:#fef3c7;color:#92400e">0</span></button>
+            <button class="tab-btn" onclick="showTab('tracker')"><i class="ti ti-clipboard-check"></i> Tracker <span id="trk-cnt" style="font-size:10px;margin-left:2px;padding:1px 5px;border-radius:3px;background:var(--bg)">0</span></button>
+            <button class="tab-btn" onclick="showTab('kc')"><i class="ti ti-award"></i> K&amp;C Check</button>
+            <button class="tab-btn" onclick="showTab('timeline')"><i class="ti ti-timeline"></i> Timeline</button>
             <button class="tab-btn" onclick="showTab('inject')"><i class="ti ti-send"></i> Manual inject</button>
           </div>
           <div id="tp-comms" class="tab-pane on"><div class="comms-wrap" id="comms-log"><p style="color:var(--text3);font-size:12px;padding:4px 0">Exercise not yet started.</p></div></div>
           <div id="tp-actions" class="tab-pane"><div class="act-wrap" id="act-list"><p style="color:var(--text3);font-size:12px;padding:4px 0">No actions pending.</p></div></div>
+          <div id="tp-tracker" class="tab-pane">
+            <div id="tracker-content"><p style="color:var(--text3);font-size:12px">Action tracker initialised at STARTEX.</p></div>
+          </div>
+          <div id="tp-kc" class="tab-pane">
+            <div id="kc-content"><p style="color:var(--text3);font-size:12px">K&amp;C assessment available after STARTEX.</p></div>
+          </div>
+          <div id="tp-timeline" class="tab-pane">
+            <div id="tl-content"><p style="color:var(--text3);font-size:12px">Exercise timeline will appear here.</p></div>
+          </div>
           <div id="tp-inject" class="tab-pane">
             <div style="display:grid;grid-template-columns:1fr 1fr 110px;gap:7px;margin-bottom:7px">
               <div class="form-g" style="margin:0"><label>From</label><select id="inj-from"></select></div>
@@ -262,43 +346,127 @@ textarea{resize:vertical;min-height:80px}
   <div id="build-form"></div>
 </div>
 <div id="scr-aar" class="scr page">
-  <div class="sb" style="margin-bottom:1.5rem">
+  <div class="sb" style="margin-bottom:1rem">
     <div><h2 style="font-size:20px;font-weight:800">After Action Report</h2>
     <p style="font-size:12px;color:var(--text2)" id="aar-exname">Exercise complete</p></div>
     <div class="fl" style="gap:8px">
-      <button class="btn btn-sm no-print" onclick="window.print()"><i class="ti ti-printer"></i> Print AAR</button>
+      <button class="btn btn-sm no-print" onclick="window.print()"><i class="ti ti-printer"></i> Print</button>
       <button class="btn btn-p btn-sm no-print" onclick="generateAAR()"><i class="ti ti-robot"></i> AI Assessment</button>
     </div>
   </div>
-  <div class="g4" style="margin-bottom:1.25rem" id="aar-metrics"></div>
-  <div class="card" style="margin-bottom:1.25rem">
-    <div class="s-ttl">Exercise inject timeline</div>
-    <div id="aar-timeline" style="max-height:180px;overflow-y:auto;font-size:11px"></div>
+  <!-- AAR Tab bar -->
+  <div class="tab-bar" style="margin-bottom:1rem;border:1px solid var(--bdr);border-radius:10px;overflow:hidden;padding:0 4px">
+    <button class="tab-btn on" onclick="showAarTab('summary')" id="aar-tab-summary"><i class="ti ti-report-analytics"></i> Summary</button>
+    <button class="tab-btn" onclick="showAarTab('tracker')" id="aar-tab-tracker"><i class="ti ti-clipboard-check"></i> Action Tracker</button>
+    <button class="tab-btn" onclick="showAarTab('timeline')" id="aar-tab-timeline"><i class="ti ti-timeline"></i> Timeline</button>
+    <button class="tab-btn" onclick="showAarTab('debrief')" id="aar-tab-debrief"><i class="ti ti-messages"></i> De-brief</button>
   </div>
-  <div class="g2" style="margin-bottom:1.25rem">
-    <div class="card">
-      <div class="flg" style="margin-bottom:8px"><i class="ti ti-thumb-up" style="color:var(--green)"></i><div style="font-size:14px;font-weight:700">What went well</div></div>
-      <textarea id="aar-well" rows="6" placeholder="&#8226; ECC/IMT activated within target time&#10;&#8226; Muster completed and reported accurately&#10;&#8226; Communication protocols followed correctly..."></textarea>
+
+  <!-- AAR SUMMARY TAB -->
+  <div id="aar-pane-summary">
+    <div class="g4" style="margin-bottom:1.25rem" id="aar-metrics"></div>
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="card">
+        <div class="flg" style="margin-bottom:8px"><i class="ti ti-thumb-up" style="color:var(--green)"></i><div style="font-size:14px;font-weight:700">What went well</div></div>
+        <textarea id="aar-well" rows="6" placeholder="&#8226; ECC/IMT activated within target time&#10;&#8226; Muster completed and reported accurately&#10;&#8226; Communication protocols followed correctly..."></textarea>
+      </div>
+      <div class="card">
+        <div class="flg" style="margin-bottom:8px"><i class="ti ti-alert-triangle" style="color:var(--red)"></i><div style="font-size:14px;font-weight:700">Areas for improvement</div></div>
+        <textarea id="aar-wrong" rows="6" placeholder="&#8226; Delay in declaring emergency&#10;&#8226; METHANE/SMEAC report was incomplete&#10;&#8226; Coordination gaps between sections..."></textarea>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="flg" style="margin-bottom:8px"><i class="ti ti-bulb" style="color:var(--amber)"></i><div style="font-size:14px;font-weight:700">Lessons learned &amp; recommendations</div></div>
+      <textarea id="aar-rec" rows="5" placeholder="&#8226; Rec 1: Conduct monthly comms drill to improve METHANE reporting&#10;&#8226; Rec 2: Update MERP with current POB and external agency contacts..."></textarea>
+    </div>
+    <div class="card" id="aar-ai-card" style="margin-bottom:1.25rem;display:none">
+      <div class="flg" style="margin-bottom:10px">
+        <i class="ti ti-robot" style="color:var(--purple)"></i>
+        <div style="font-size:14px;font-weight:700">AI exercise assessment</div>
+        <span class="badge b-ai" style="margin-left:auto">AI generated</span>
+      </div>
+      <div id="aar-ai-body" class="aar-ai"></div>
+    </div>
+    <div style="padding:10px 14px;border:1px solid var(--bdr);border-radius:8px;font-size:11px;color:var(--text2)">
+      <strong>Risk2Safe</strong> &mdash; Major Emergencies Simulator &mdash; After Action Report &mdash; OPITO OIS-194/195 / ICS-NIMS framework
+    </div>
+  </div>
+
+  <!-- AAR ACTION TRACKER TAB -->
+  <div id="aar-pane-tracker" style="display:none">
+    <div class="card" style="margin-bottom:1rem">
+      <div class="sb" style="margin-bottom:10px">
+        <div style="font-size:14px;font-weight:700"><i class="ti ti-clipboard-check"></i> Action Tracker — Coordinator Verification</div>
+        <div id="aar-trk-stats" style="font-size:11px;color:var(--text2)"></div>
+      </div>
+      <div id="aar-trk-body"><p style="font-size:12px;color:var(--text3)">No tracked actions yet. Use the Tracker tab during the exercise.</p></div>
     </div>
     <div class="card">
-      <div class="flg" style="margin-bottom:8px"><i class="ti ti-alert-triangle" style="color:var(--red)"></i><div style="font-size:14px;font-weight:700">Areas for improvement</div></div>
-      <textarea id="aar-wrong" rows="6" placeholder="&#8226; Delay in declaring emergency&#10;&#8226; METHANE/SMEAC report was incomplete&#10;&#8226; Coordination gaps between sections..."></textarea>
+      <div style="font-size:14px;font-weight:700;margin-bottom:10px"><i class="ti ti-users"></i> Stakeholder Communications — Verification</div>
+      <div id="aar-stk-body"><p style="font-size:12px;color:var(--text3)">No stakeholder communications recorded.</p></div>
     </div>
   </div>
-  <div class="card" style="margin-bottom:1.25rem">
-    <div class="flg" style="margin-bottom:8px"><i class="ti ti-bulb" style="color:var(--amber)"></i><div style="font-size:14px;font-weight:700">Lessons learned &amp; recommendations</div></div>
-    <textarea id="aar-rec" rows="5" placeholder="&#8226; Rec 1: Conduct monthly comms drill to improve METHANE reporting&#10;&#8226; Rec 2: Update MERP with current POB and external agency contacts&#10;&#8226; Lesson: Early Tier escalation improves inter-agency coordination..."></textarea>
-  </div>
-  <div class="card" id="aar-ai-card" style="margin-bottom:1.25rem;display:none">
-    <div class="flg" style="margin-bottom:10px">
-      <i class="ti ti-robot" style="color:var(--purple)"></i>
-      <div style="font-size:14px;font-weight:700">AI exercise assessment</div>
-      <span class="badge b-ai" style="margin-left:auto">AI generated</span>
+
+  <!-- AAR TIMELINE TAB -->
+  <div id="aar-pane-timeline" style="display:none">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px"><i class="ti ti-timeline"></i> Full Exercise Timeline — Injects, Actions &amp; Gaps</div>
+      <div id="aar-timeline" style="font-size:11px"></div>
     </div>
-    <div id="aar-ai-body" class="aar-ai"></div>
   </div>
-  <div style="padding:10px 14px;border:1px solid var(--bdr);border-radius:8px;font-size:11px;color:var(--text2)">
-    <strong>Risk2Safe</strong> &mdash; Major Emergencies Simulator &mdash; After Action Report &mdash; OPITO OIS-194/195 / ICS-NIMS framework
+
+  <!-- DE-BRIEF TAB -->
+  <div id="aar-pane-debrief" style="display:none">
+    <div class="card" style="margin-bottom:1rem">
+      <div class="sb" style="margin-bottom:1rem">
+        <div>
+          <div style="font-size:16px;font-weight:800">Exercise De-brief</div>
+          <div style="font-size:11px;color:var(--text2)" id="dbf-ex-name">—</div>
+        </div>
+        <button class="btn btn-sm no-print" onclick="window.print()"><i class="ti ti-printer"></i> Print de-brief</button>
+      </div>
+      <!-- Participants -->
+      <div class="dbf-section">
+        <h4><i class="ti ti-users"></i> Participants</h4>
+        <div class="dbf-participants" id="dbf-participants"></div>
+        <textarea id="dbf-extra-participants" rows="2" style="margin-top:8px;font-size:11px" placeholder="Additional attendees / observers..."></textarea>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:1rem">
+      <div class="dbf-section" style="margin:0">
+        <h4><i class="ti ti-thumb-up" style="color:var(--green)"></i> What went well</h4>
+        <textarea id="dbf-well" rows="6" placeholder="&#8226; Key strengths observed during the exercise..."></textarea>
+      </div>
+      <div class="dbf-section" style="margin:0">
+        <h4><i class="ti ti-alert-triangle" style="color:var(--red)"></i> Gaps / Areas for development</h4>
+        <textarea id="dbf-gaps" rows="6" placeholder="&#8226; Key gaps and areas requiring development..."></textarea>
+      </div>
+    </div>
+    <div class="dbf-section" style="margin-bottom:1rem">
+      <h4><i class="ti ti-bulb" style="color:var(--amber)"></i> Key learning points</h4>
+      <textarea id="dbf-learning" rows="5" placeholder="&#8226; Critical learning points to reinforce from this exercise..."></textarea>
+    </div>
+    <div class="dbf-section" style="margin-bottom:1rem">
+      <h4><i class="ti ti-list-check"></i> Recommendations &amp; corrective actions</h4>
+      <textarea id="dbf-recs" rows="5" placeholder="&#8226; Rec 1 [Responsible person] [Target date]..."></textarea>
+    </div>
+    <div class="dbf-section" style="margin-bottom:1rem">
+      <h4><i class="ti ti-message-circle"></i> Coordinator summary notes</h4>
+      <textarea id="dbf-coord-notes" rows="5" placeholder="Overall exercise performance assessment by the Exercise Coordinator..."></textarea>
+    </div>
+    <div class="dbf-section">
+      <h4><i class="ti ti-calendar-event"></i> Follow-up actions</h4>
+      <div id="dbf-followup-list" style="margin-bottom:6px"></div>
+      <div style="display:flex;gap:6px">
+        <input id="dbf-followup-input" placeholder="Add follow-up action..." style="flex:1;font-size:11px">
+        <input id="dbf-followup-owner" placeholder="Owner" style="width:110px;font-size:11px">
+        <input id="dbf-followup-date" type="date" style="width:130px;font-size:11px">
+        <button class="btn btn-sm btn-p" onclick="addFollowup()"><i class="ti ti-plus"></i> Add</button>
+      </div>
+    </div>
+    <div style="margin-top:1rem;padding:10px 14px;border:1px solid var(--bdr);border-radius:8px;font-size:11px;color:var(--text2)">
+      <strong>Risk2Safe</strong> &mdash; Exercise De-brief Record &mdash; Coordinator: <input id="dbf-coord-name" placeholder="Name..." style="border:none;background:transparent;font-size:11px;color:var(--text2);width:180px"> &mdash; Date: <input id="dbf-date" type="date" style="border:none;background:transparent;font-size:11px;color:var(--text2)">
+    </div>
   </div>
 </div>
 
@@ -1090,7 +1258,7 @@ function saveCustom(a){try{localStorage.setItem('r2s_cx',JSON.stringify(a));}cat
 function allScenarios(){return[...SCS,...loadCustom().map(s=>({...s,isCustom:true}))];}
 
 // ===== STATE =====
-let S={screen:'home',filter:'all',sc:null,injects:[],actions:[],muster:{total:0,acc:0,mis:0,cas:0},timer:null,fired:new Set(),exEndTime:0,aarWell:'',aarWrong:'',aarRec:'',aarAI:''};
+let S={screen:'home',filter:'all',sc:null,injects:[],actions:[],muster:{total:0,acc:0,mis:0,cas:0},timer:null,fired:new Set(),exEndTime:0,aarWell:'',aarWrong:'',aarRec:'',aarAI:'',tracker:[],stk:[],kc:{},dbfFollowups:[],ovOpen:true};
 let R={elapsed:0,paused:false,nextAI:180,busy:false};
 
 // ===== UTILS =====
@@ -1207,7 +1375,10 @@ function startEx(){
   document.querySelectorAll('.hdr-btn').forEach(function(b){b.classList.remove('on');});
   $('nav-run').classList.add('on');
   S.screen='run';showRunNav(true);
-  $('ex-run-title').textContent=sc.code+' \u00b7 '+sc.name;
+  $('ex-run-title').textContent=sc.code+' · '+sc.name.toUpperCase();
+  initTracker();
+  renderOverview();
+  var ovWrap=$('ex-ov-wrap');if(ovWrap){ovWrap.style.maxHeight='200px';ovWrap.style.overflow='hidden';}
   $('m-pob').textContent=S.muster.total;
   $('m-acc').textContent=S.muster.acc;$('m-mis').textContent=S.muster.mis;$('m-cas').textContent=S.muster.cas;
   $('m-acc-in').value=S.muster.acc;$('m-mis-in').value=S.muster.mis;$('m-cas-in').value=S.muster.cas;
@@ -1487,8 +1658,21 @@ function markDone(id){
   $('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
 }
 function showTab(t){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('on',['comms','actions','inject'][i]===t);});
-  ['comms','actions','inject'].forEach(function(name){$('tp-'+name).classList.toggle('on',name===t);});
+  var tabs=['comms','actions','tracker','kc','timeline','inject'];
+  document.querySelectorAll('.tab-bar .tab-btn').forEach(function(b,i){b.classList.toggle('on',tabs[i]===t);});
+  tabs.forEach(function(name){var p=$('tp-'+name);if(p)p.classList.toggle('on',name===t);});
+  if(t==='tracker')renderTracker();
+  if(t==='kc')renderKC();
+  if(t==='timeline')renderTimeline();
+}
+function showAarTab(t){
+  ['summary','tracker','timeline','debrief'].forEach(function(n){
+    var p=$('aar-pane-'+n);if(p)p.style.display=n===t?'':'none';
+    var b=$('aar-tab-'+n);if(b)b.classList.toggle('on',n===t);
+  });
+  if(t==='tracker')renderAarTracker();
+  if(t==='timeline')renderAarTimeline();
+  if(t==='debrief')renderDebrief();
 }
 function updateMuster(){
   var acc=parseInt($('m-acc-in').value)||0;var mis=parseInt($('m-mis-in').value)||0;var cas=parseInt($('m-cas-in').value)||0;
@@ -1586,6 +1770,7 @@ function renderAAR(){
   $('aar-metrics').innerHTML='<div class="metric"><div class="metric-v">'+hhmmss(S.exEndTime||0)+'</div><div class="metric-l">Duration</div></div><div class="metric"><div class="metric-v">'+S.injects.length+'</div><div class="metric-l">Total injects</div></div><div class="metric"><div class="metric-v">'+done+'/'+S.actions.length+'</div><div class="metric-l">Actions completed</div></div><div class="metric"><div class="metric-v">'+sc.pob+'</div><div class="metric-l">POB/PAX</div></div>';
   $('aar-timeline').innerHTML=S.injects.length?S.injects.map(function(i){return'<div style="display:grid;grid-template-columns:47px 80px 60px 1fr;gap:5px;padding:5px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--text3)">'+i.ts+'</span><span style="font-weight:700">'+esc(i.from)+'</span><span style="color:var(--text2)">\u2192 '+esc(i.to)+'</span><span>'+esc(i.msg.substring(0,80))+(i.msg.length>80?'...':'')+'</span></div>';}).join(''):'<p style="color:var(--text3)">No inject data recorded.</p>';
   $('aar-well').value=S.aarWell||'';$('aar-wrong').value=S.aarWrong||'';$('aar-rec').value=S.aarRec||'';
+  showAarTab('summary');
   if(S.aarAI){$('aar-ai-card').style.display='';$('aar-ai-body').textContent=S.aarAI;}
   else{$('aar-ai-card').style.display='none';}
 }
@@ -1718,6 +1903,341 @@ function clearApiKey(){
   var m=$('key-status-msg');m.textContent='Key cleared.';m.className='key-status';
   updateApiDot();
 }
+
+
+// ══════════════════════════════════════════
+// EXERCISE OVERVIEW
+// ══════════════════════════════════════════
+function renderOverview(){
+  var sc=S.sc;if(!sc)return;
+  var fields=[
+    {l:'Scenario',v:sc.code+' — '+sc.name},
+    {l:'Location',v:sc.loc},
+    {l:'Weather',v:sc.wx},
+    {l:'POB / PAX',v:sc.pob+' personnel'},
+    {l:'Missing',v:(sc.missing||0)+' / Cas: '+(sc.cas||0)},
+    {l:'Vessel / Standby',v:sc.vessel},
+    {l:'External support',v:sc.support},
+    {l:'Severity',v:sc.lvl.toUpperCase()+(sc.tier?' — TIER '+sc.tier:'')},
+    {l:'Duration',v:sc.dur+' minutes'},
+    {l:'Hazards',v:(sc.haz||[]).join(', ')},
+  ];
+  $('ex-ov-inner').innerHTML=fields.map(function(f){
+    return '<div class="ex-ov-field"><strong>'+f.l+'</strong>'+esc(f.v)+'</div>';
+  }).join('');
+}
+function toggleOverview(){
+  S.ovOpen=!S.ovOpen;
+  var w=$('ex-ov-wrap');var ic=$('ov-icon');
+  w.style.maxHeight=S.ovOpen?'200px':'0';
+  if(ic)ic.className='ti ti-chevron-'+(S.ovOpen?'up':'down');
+}
+
+// ══════════════════════════════════════════
+// ACTION TRACKER
+// ══════════════════════════════════════════
+var STK_INTERNAL=['OIM / Plant Manager','Deputy EM','Operations','Safety','Medical','ECC Team'];
+var STK_EXTERNAL=['MRCC / Coastguard','OPRED / Regulator','Port Authority','Hospital / Medivac','AAIB / Investigation','Media / PR','Mutual Aid / Operator','Environmental Agency'];
+
+function initTracker(){
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  // Pre-populate with standard phase-based tasks
+  S.tracker=[];
+  var phaseTasks=[
+    {pos:'EM',task:'Declare emergency and activate ECC/IMT',cat:'command'},
+    {pos:'EM',task:'Establish command and control structure',cat:'command'},
+    {pos:'EM',task:'Confirm SMEAC / METHANE report issued',cat:'command'},
+    {pos:'EM',task:'Initiate Tier escalation as required',cat:'command'},
+    {pos:'RO',task:'Establish communications on all nets',cat:'comms'},
+    {pos:'RO',task:'Log all METHANE / SMEAC reports',cat:'comms'},
+    {pos:'OTL',task:'Conduct muster / headcount',cat:'ops'},
+    {pos:'OTL',task:'Deploy response teams per MERP',cat:'ops'},
+    {pos:'OTL',task:'Confirm hazard source identified',cat:'ops'},
+    {pos:'SMO',task:'Confirm medical response activated',cat:'medical'},
+    {pos:'SMO',task:'Casualty triage and treatment initiated',cat:'medical'},
+    {pos:'FTL',task:'Fire / rescue team deployed with SCBA',cat:'ops'},
+    {pos:'EL',task:'Exercise log maintained from STARTEX',cat:'planning'},
+    {pos:'MC',task:'Standby vessel / SAR coordinated',cat:'ops'},
+    {pos:'PT',task:'Situation report drafted for EM',cat:'planning'},
+  ];
+  // Only add tasks for positions present in the current team
+  var posIds=ps.map(function(p){return p.id;});
+  S.tracker=phaseTasks.filter(function(t){return posIds.indexOf(t.pos)>=0;}).map(function(t,i){
+    return {id:'t'+i,pos:t.pos,task:t.task,cat:t.cat,expected:'',actual:'',status:'pending',verified:false,coordNote:''};
+  });
+  // Stakeholder comms
+  S.stk=STK_INTERNAL.map(function(n,i){
+    return {id:'si'+i,type:'internal',name:n,notified:'',acked:false,msg:'',note:''};
+  }).concat(STK_EXTERNAL.map(function(n,i){
+    return {id:'se'+i,type:'external',name:n,notified:'',acked:false,msg:'',note:''};
+  }));
+}
+
+function renderTracker(){
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  var completed=S.tracker.filter(function(t){return t.verified;}).length;
+  $('trk-cnt').textContent=completed+'/'+S.tracker.length;
+  var cats={command:'Command & Control',ops:'Operations',medical:'Medical & Casualty',comms:'Communications & Logging',planning:'Planning & Reporting'};
+  var catOrder=['command','ops','medical','comms','planning'];
+  var html='';
+  catOrder.forEach(function(cat){
+    var items=S.tracker.filter(function(t){return t.cat===cat;});
+    if(!items.length)return;
+    html+='<div class="trk-section"><div class="trk-section-hd">'+cats[cat]+'</div>';
+    html+='<div style="display:grid;grid-template-columns:60px 1fr 90px auto auto;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:3px;text-transform:uppercase">'
+         +'<span>Position</span><span>Action required / Actual observed</span><span>Status</span><span style="text-align:center">Verified</span><span></span></div>';
+    items.forEach(function(tr){
+      var p=ps.find(function(x){return x.id===tr.pos;})||{c:'#475569'};
+      html+='<div class="trk-row">'
+        +'<span class="trk-pos" style="color:'+p.c+'">'+esc(tr.pos)+'</span>'
+        +'<span>'+esc(tr.task)
+        +'<div style="margin-top:3px"><input style="font-size:10px;width:100%;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px" '
+        +'placeholder="Actual action observed..." value="'+esc(tr.actual)+'" '
+        +'data-trkid="'+tr.id+'" class="trk-actual-inp" '
+        +'onchange="updateTrackerActual(this.dataset.trkid,this.value)"></div>'
+        +'</span>'
+        +'<select class="trk-status-sel" data-trkid="'+tr.id+'" style="font-size:10px;padding:2px 3px" '
+        +'onchange="updateTrackerStatus(this.dataset.trkid,this.value)">'
+        +'<option value="pending"'+(tr.status==='pending'?' selected':'')+'>Pending</option>'
+        +'<option value="done"'+(tr.status==='done'?' selected':'')+'>Complete</option>'
+        +'<option value="partial"'+(tr.status==='partial'?' selected':'')+'>Partial</option>'
+        +'<option value="missed"'+(tr.status==='missed'?' selected':'')+'>Not done</option>'
+        +'</select>'
+        +'<div style="text-align:center"><input type="checkbox" class="trk-verify-cb" data-trkid="'+tr.id+'" '
+        +(tr.verified?'checked ':'')
+        +'title="Coordinator verified" onchange="toggleTrackerVerify(this.dataset.trkid,this.checked)"></div>'
+        +'<button class="del-btn" data-action="del-trk" data-id="'+tr.id+'"><i class="ti ti-trash"></i></button>'
+        +'</div>';
+    });
+    html+='</div>';
+  });
+  // Add custom action form
+  html+='<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--bdr)">'
+    +'<div style="font-size:10px;font-weight:700;color:var(--text3);margin-bottom:5px">ADD CUSTOM ACTION</div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+    +'<select id="trk-add-pos" style="font-size:11px;width:80px">'
+    +(PS[sc.ps]||PS.imt_medium).map(function(p){return'<option>'+esc(p.id)+'</option>';}).join('')
+    +'</select>'
+    +'<input id="trk-add-task" placeholder="Action description..." style="flex:1;font-size:11px">'
+    +'<select id="trk-add-cat" style="font-size:11px;width:110px">'
+    +'<option value="command">Command</option><option value="ops">Operations</option>'
+    +'<option value="medical">Medical</option><option value="comms">Comms</option>'
+    +'<option value="planning">Planning</option>'
+    +'</select>'
+    +'<button class="btn btn-sm btn-p" onclick="addTrackerItem()"><i class="ti ti-plus"></i> Add</button>'
+    +'</div></div>';
+  // Stakeholder communications section
+  html+='<div class="trk-section" style="margin-top:1rem">'
+    +'<div class="trk-section-hd"><i class="ti ti-phone"></i> Stakeholder Communications</div>'
+    +'<div style="display:grid;grid-template-columns:50px 130px 1fr 65px 26px;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:3px;text-transform:uppercase">'
+    +'<span>Type</span><span>Stakeholder</span><span>Key message / notes</span><span>Notified</span><span></span></div>';
+  S.stk.forEach(function(s){
+    html+='<div class="stk-row">'
+      +'<span class="stk-type '+(s.type==='internal'?'stk-int':'stk-ext')+'">'+s.type.substr(0,3).toUpperCase()+'</span>'
+      +'<span style="font-weight:600;font-size:10px">'+esc(s.name)+'</span>'
+      +'<input class="stk-msg-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;width:100%" '
+      +'placeholder="Message / action..." value="'+esc(s.msg)+'" onchange="updateStkMsg(this.dataset.stkid,this.value)">'
+      +'<input class="stk-notified-inp" data-stkid="'+s.id+'" style="font-size:10px;padding:2px 4px;border:1px solid var(--bdr);border-radius:3px;width:100%;text-align:center" '
+      +'placeholder="HH:MM" value="'+esc(s.notified)+'" onchange="updateStkNotified(this.dataset.stkid,this.value)" title="Time notified">'
+      +'<input type="checkbox" class="stk-ack-cb" data-stkid="'+s.id+'" '+(s.acked?'checked ':'')+' title="Acknowledged" onchange="updateStkAck(this.dataset.stkid,this.checked)">'
+      +'</div>';
+  });
+  html+='</div>';
+  $('tracker-content').innerHTML=html;
+}
+
+function updateTrackerActual(id,val){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.actual=val;}
+function updateTrackerStatus(id,val){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.status=val;}
+function toggleTrackerVerify(id,v){var t=S.tracker.find(function(x){return x.id===id;});if(t)t.verified=v;$('trk-cnt').textContent=S.tracker.filter(function(t){return t.verified;}).length+'/'+S.tracker.length;}
+function updateStkMsg(id,v){var s=S.stk.find(function(x){return x.id===id;});if(s)s.msg=v;}
+function updateStkNotified(id,v){var s=S.stk.find(function(x){return x.id===id;});if(s)s.notified=v;}
+function updateStkAck(id,v){var s=S.stk.find(function(x){return x.id===id;});if(s)s.acked=v;}
+function addTrackerItem(){
+  var pos=($('trk-add-pos')||{}).value;
+  var task=($('trk-add-task')||{}).value.trim();
+  var cat=($('trk-add-cat')||{}).value||'ops';
+  if(!task)return;
+  S.tracker.push({id:'tc'+Date.now(),pos:pos,task:task,cat:cat,expected:'',actual:'',status:'pending',verified:false,coordNote:''});
+  if($('trk-add-task'))$('trk-add-task').value='';
+  renderTracker();
+}
+
+// Handle delete tracker from event delegation
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-action="del-trk"]');
+  if(!b)return;
+  var id=b.dataset.id;
+  S.tracker=S.tracker.filter(function(t){return t.id!==id;});
+  renderTracker();
+});
+
+// ══════════════════════════════════════════
+// KNOWLEDGE & COMPETENCY CHECK
+// ══════════════════════════════════════════
+var KC_AREAS=['Decision making under pressure','Situational awareness','Communication clarity','Leadership & team coordination','Technical knowledge','Resource management','Escalation & Tier declaration','METHANE / SMEAC reporting','Regulatory notification','Incident documentation'];
+
+function renderKC(){
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  var html='<div style="font-size:11px;color:var(--text2);margin-bottom:10px">Rate each position on the competency areas observed. <strong>D</strong>=Demonstrated &nbsp; <strong>P</strong>=Partial &nbsp; <strong>N</strong>=Not demonstrated</div>';
+  ps.forEach(function(p){
+    html+='<div class="kc-pos-block">';
+    html+='<div class="kc-pos-hd" style="border-left:4px solid '+p.c+'"><span style="font-weight:800;color:'+p.c+'">'+esc(p.id)+'</span><span style="font-size:11px;color:var(--text2);margin-left:6px">'+esc(p.full)+'</span></div>';
+    KC_AREAS.forEach(function(area){
+      var key=p.id+'__'+area.replace(/\s+/g,'_');
+      var cur=S.kc[key]||{rating:'',note:''};
+      html+='<div class="kc-area-row">'
+        +'<div>'+esc(area)
+        +'<input class="kc-note-inp" data-kckey="'+key+'" style="margin-top:2px;font-size:10px;width:100%;padding:1px 3px;border:1px solid var(--bdr);border-radius:3px;display:block" '
+        +'placeholder="Observation note..." value="'+esc(cur.note)+'" '
+        +'onchange="setKcNote(this.dataset.kckey,this.value)">'
+        +'</div>'
+        +'<div class="kc-rating">'
+        +'<label><input type="radio" class="kc-radio" name="kcr_'+key+'" data-kckey="'+key+'" value="D" '+(cur.rating==='D'?'checked ':'')+' onchange="setKcRating(this.dataset.kckey,this.value)"> D</label>'
+        +'<label><input type="radio" class="kc-radio" name="kcr_'+key+'" data-kckey="'+key+'" value="P" '+(cur.rating==='P'?'checked ':'')+' onchange="setKcRating(this.dataset.kckey,this.value)"> P</label>'
+        +'<label><input type="radio" class="kc-radio" name="kcr_'+key+'" data-kckey="'+key+'" value="N" '+(cur.rating==='N'?'checked ':'')+' onchange="setKcRating(this.dataset.kckey,this.value)"> N</label>'
+        +'</div>'
+        +'</div>';
+    });
+    html+='</div>';
+  });
+  $('kc-content').innerHTML=html;
+}
+
+function setKcRating(key,val){S.kc[key]=S.kc[key]||{rating:'',note:''};S.kc[key].rating=val;}
+function setKcNote(key,val){S.kc[key]=S.kc[key]||{rating:'',note:''};S.kc[key].note=val;}
+
+// ══════════════════════════════════════════
+// TIMELINE (live + AAR)
+// ══════════════════════════════════════════
+function buildTimelineItems(){
+  var items=[];
+  S.injects.forEach(function(inj){
+    items.push({ts:inj.ts,type:'inject',urgency:inj.urgency,from:inj.from,to:inj.to,msg:inj.msg,act:inj.act,source:inj.source,id:inj.id});
+  });
+  items.sort(function(a,b){return a.ts.localeCompare(b.ts);});
+  return items;
+}
+
+function renderTimeline(){
+  var items=buildTimelineItems();
+  if(!items.length){$('tl-content').innerHTML='<p style="color:var(--text3);font-size:12px">No events yet.</p>';return;}
+  var html='';
+  var uc={IMMEDIATE:'imm',URGENT:'urg',ROUTINE:'rou'};
+  var srcLabel={pre:'Auto',ai:'AI',man:'Manual'};
+  var ps=PS[(S.sc||{}).ps]||PS.imt_medium;
+  items.forEach(function(item){
+    var dotClass='tl-dot '+(uc[item.urgency]||'rou');
+    var urgLbl=item.urgency==='IMMEDIATE'?'IMM':item.urgency==='URGENT'?'URG':'ROU';
+    var src=srcLabel[item.source]||item.source;
+    var assocAction=S.actions.find(function(a){return a.id===item.id;});
+    var gap=!assocAction&&item.act?'<div class="tl-gap"><i class="ti ti-alert-triangle"></i> No action logged for this inject</div>':'';
+    var actLine=assocAction?'<div class="tl-act"><i class="ti ti-arrow-right"></i> '+esc(assocAction.text)+(assocAction.done?' <span style="color:var(--green)">✓ Done</span>':' <span style="color:var(--amber)">Pending</span>')+'</div>':'';
+    html+='<div class="tl-item" style="margin-bottom:6px">'
+      +'<div class="tl-time">'+item.ts+'</div>'
+      +'<div class="tl-connector"><div class="'+dotClass+'"></div><div class="tl-line" style="flex:1;min-height:30px;width:2px;background:var(--bdr);margin:2px auto"></div></div>'
+      +'<div class="tl-body">'
+      +'<div class="tl-hd">'+esc(item.from)+' → '+esc(item.to)
+      +'<span class="tl-badge b-'+(item.urgency==='IMMEDIATE'?'imm':item.urgency==='URGENT'?'urg':'rou')+'" style="font-size:9px;padding:1px 4px;border-radius:3px;color:#fff;background:'+(item.urgency==='IMMEDIATE'?'var(--red)':item.urgency==='URGENT'?'var(--amber)':'#22c55e')+'">'+urgLbl+'</span>'
+      +'<span style="font-size:9px;color:var(--text3);margin-left:4px">'+src+'</span>'
+      +'</div>'
+      +'<div class="tl-msg">'+esc(item.msg)+'</div>'
+      +actLine+gap
+      +'</div></div>';
+  });
+  $('tl-content').innerHTML=html;
+}
+
+function renderAarTimeline(){
+  renderTimeline(); // reuse same function, show in aar div
+  var aarTl=$('aar-timeline');
+  var tlContent=$('tl-content');
+  if(aarTl&&tlContent)aarTl.innerHTML=tlContent.innerHTML;
+}
+
+// ══════════════════════════════════════════
+// AAR TRACKER SUMMARY
+// ══════════════════════════════════════════
+function renderAarTracker(){
+  var tot=S.tracker.length,done=S.tracker.filter(function(t){return t.status==='done';}).length,
+      partial=S.tracker.filter(function(t){return t.status==='partial';}).length,
+      missed=S.tracker.filter(function(t){return t.status==='missed';}).length,
+      ver=S.tracker.filter(function(t){return t.verified;}).length;
+  $('aar-trk-stats').innerHTML='Verified: <strong>'+ver+'/'+tot+'</strong> &nbsp; Complete: <strong style="color:var(--green)">'+done+'</strong> &nbsp; Partial: <strong style="color:var(--blue)">'+partial+'</strong> &nbsp; Missed: <strong style="color:var(--red)">'+missed+'</strong>';
+  var sMap={pending:'ts-pending',done:'ts-done',missed:'ts-missed',partial:'ts-partial'};
+  var sLabel={pending:'Pending',done:'Complete',partial:'Partial',missed:'Not done'};
+  var html='<div style="display:grid;grid-template-columns:60px 1fr 90px 80px 80px;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:4px;text-transform:uppercase;border-bottom:2px solid var(--bdr)">'
+    +'<span>Position</span><span>Action</span><span>Actual observed</span><span>Status</span><span>Coord verified</span></div>';
+  S.tracker.forEach(function(tr){
+    html+='<div class="aar-trk-row">'
+      +'<span style="font-weight:700">'+tr.pos+'</span>'
+      +'<span>'+esc(tr.task)+'</span>'
+      +'<span style="color:var(--text2)">'+esc(tr.actual||'—')+'</span>'
+      +'<span class="trk-status '+sMap[tr.status]+'">'+sLabel[tr.status]+'</span>'
+      +'<span style="text-align:center;color:'+(tr.verified?'var(--green)':'var(--red)')+';">'+(tr.verified?'✓ Yes':'✗ No')+'</span>'
+      +'</div>';
+  });
+  if(!S.tracker.length)html='<p style="font-size:12px;color:var(--text3)">No tracked actions. Use the Tracker tab during the exercise.</p>';
+  $('aar-trk-body').innerHTML=html;
+
+  // Stakeholder comms
+  var stkHtml='<div style="display:grid;grid-template-columns:50px 130px 1fr 65px 70px;gap:4px;font-size:9px;font-weight:700;color:var(--text3);padding-bottom:4px;text-transform:uppercase;border-bottom:2px solid var(--bdr)">'
+    +'<span>Type</span><span>Stakeholder</span><span>Message / notes</span><span>Notified</span><span>Ackd</span></div>';
+  S.stk.filter(function(s){return s.notified||s.msg||s.acked;}).forEach(function(s){
+    stkHtml+='<div style="display:grid;grid-template-columns:50px 130px 1fr 65px 70px;gap:4px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px;align-items:center">'
+      +'<span class="stk-type '+(s.type==='internal'?'stk-int':'stk-ext')+'">'+s.type.substr(0,3).toUpperCase()+'</span>'
+      +'<span style="font-weight:600">'+esc(s.name)+'</span>'
+      +'<span style="color:var(--text2)">'+esc(s.msg||'—')+'</span>'
+      +'<span style="text-align:center">'+esc(s.notified||'—')+'</span>'
+      +'<span style="text-align:center;color:'+(s.acked?'var(--green)':'var(--text3)')+';">'+(s.acked?'✓ Yes':'—')+'</span>'
+      +'</div>';
+  });
+  if(!S.stk.filter(function(s){return s.notified||s.msg;}).length)stkHtml+='<p style="font-size:12px;color:var(--text3);margin-top:6px">No stakeholder communications recorded.</p>';
+  $('aar-stk-body').innerHTML=stkHtml;
+}
+
+// ══════════════════════════════════════════
+// DE-BRIEF
+// ══════════════════════════════════════════
+function renderDebrief(){
+  var sc=S.sc;if(!sc)return;
+  $('dbf-ex-name').textContent=sc.code+' — '+sc.name+' | Duration: '+hhmmss(S.exEndTime||R.elapsed);
+  // Participants from positions
+  var ps=PS[sc.ps]||PS.imt_medium;
+  $('dbf-participants').innerHTML=ps.map(function(p){
+    return '<div class="dbf-participant"><span style="font-weight:700;color:'+p.c+'">'+p.id+'</span><input placeholder="Name..." style="border:none;background:transparent;font-size:11px;flex:1;color:var(--text)" id="dbf-p-'+p.id+'">';
+  }).join('');
+  renderDbfFollowups();
+  // set today's date if empty
+  if($('dbf-date')&&!$('dbf-date').value){
+    var d=new Date();$('dbf-date').value=d.toISOString().split('T')[0];
+  }
+}
+function renderDbfFollowups(){
+  var html=S.dbfFollowups.map(function(f,i){
+    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--bdr);font-size:11px">'
+      +'<i class="ti ti-circle-check" style="color:var(--blue)"></i>'
+      +'<span style="flex:1">'+esc(f.action)+'</span>'
+      +'<span style="color:var(--text3);min-width:90px">'+esc(f.owner)+'</span>'
+      +'<span style="color:var(--text3);min-width:90px">'+esc(f.date)+'</span>'
+      +'<button class="del-btn" onclick="removeFollowup('+i+')"><i class="ti ti-trash"></i></button>'
+      +'</div>';
+  }).join('');
+  $('dbf-followup-list').innerHTML=html||'<p style="font-size:11px;color:var(--text3)">No follow-up actions added yet.</p>';
+}
+function addFollowup(){
+  var a=($('dbf-followup-input')||{}).value.trim();
+  var o=($('dbf-followup-owner')||{}).value.trim();
+  var d=($('dbf-followup-date')||{}).value;
+  if(!a)return;
+  S.dbfFollowups.push({action:a,owner:o,date:d});
+  if($('dbf-followup-input'))$('dbf-followup-input').value='';
+  if($('dbf-followup-owner'))$('dbf-followup-owner').value='';
+  renderDbfFollowups();
+}
+function removeFollowup(i){S.dbfFollowups.splice(i,1);renderDbfFollowups();}
 
 // ===== GLOBAL EVENT DELEGATION (handles data-action buttons) =====
 document.addEventListener('click',function(e){
