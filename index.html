@@ -91,6 +91,38 @@ textarea{resize:vertical;min-height:80px}
 .fl{display:flex;align-items:center}.flg{display:flex;align-items:center;gap:8px}.sb{display:flex;align-items:center;justify-content:space-between}
 .build-inject-row{display:grid;grid-template-columns:50px 80px 100px 1fr 1fr auto;gap:6px;align-items:center;margin-bottom:6px}
 .build-phase-row{display:grid;grid-template-columns:1fr 80px auto;gap:6px;align-items:center;margin-bottom:6px}
+
+/* ── EDIT MODE ── */
+.edit-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:none;background:none;color:var(--text3);cursor:pointer;border-radius:4px;font-size:11px;padding:0;transition:all .15s;flex-shrink:0}
+.edit-btn:hover{background:var(--bg);color:var(--blue)}
+.del-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:none;background:none;color:var(--text3);cursor:pointer;border-radius:4px;font-size:11px;padding:0;transition:all .15s}
+.del-btn:hover{background:#fee2e2;color:var(--red)}
+.ce:hover .ce-acts{opacity:1}
+.ce-acts{opacity:0;transition:opacity .15s;display:flex;gap:2px;align-items:center}
+.ce-wrap{position:relative}
+.ce-row{display:grid;grid-template-columns:47px 85px 60px 1fr auto auto auto;gap:5px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:11px;line-height:1.4}
+.ce-row:last-child{border-bottom:none}
+/* edit overlay */
+.edit-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:500;display:flex;align-items:center;justify-content:center}
+.edit-modal{background:#fff;border-radius:14px;padding:1.5rem;width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.edit-modal h3{font-size:15px;font-weight:700;margin-bottom:1rem}
+/* situation editable */
+.sit-field{display:block;width:100%;padding:4px 6px;border:1px solid transparent;border-radius:5px;font-size:11px;color:var(--text);background:transparent;cursor:pointer;transition:all .15s;font-family:inherit;line-height:1.5}
+.sit-field:hover{border-color:var(--bdr2);background:#fff}
+.sit-field:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 2px rgba(37,99,235,.1);cursor:text}
+.sit-lbl{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:1px}
+/* phase edit */
+.ph-chip-edit{flex:1;min-width:0;padding:0 4px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:10px;font-weight:600;font-family:inherit;text-align:center;cursor:pointer}
+.ph-chip-edit:focus{outline:none;background:#fff;border-color:var(--blue)}
+/* pos card edit */
+.pos-card .pos-edit-row{display:flex;align-items:center;gap:3px}
+.pos-id-input{font-size:17px;font-weight:800;border:none;background:transparent;padding:0;width:60px;font-family:inherit;cursor:pointer}
+.pos-id-input:focus{outline:1px solid var(--blue);border-radius:3px;cursor:text}
+.pos-full-input{font-size:10px;color:var(--text2);border:none;background:transparent;padding:0;width:100%;font-family:inherit;font-weight:500;cursor:pointer}
+.pos-full-input:focus{outline:1px solid var(--blue);border-radius:3px;cursor:text}
+/* scenario card edit btn */
+.sc-edit-btn{position:absolute;bottom:10px;right:10px;opacity:0;transition:opacity .15s}
+.sc-card:hover .sc-edit-btn{opacity:1}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -141,6 +173,8 @@ textarea{resize:vertical;min-height:80px}
           <button class="btn btn-sm" id="btn-pause" onclick="togglePause()"><i class="ti ti-player-pause"></i> Pause</button>
           <button class="btn btn-sm btn-p" onclick="getGuidance()"><i class="ti ti-bulb"></i> Guidance</button>
           <button class="btn btn-sm" onclick="aiInjectNow()"><i class="ti ti-robot"></i> AI Inject</button>
+          <button class="btn btn-sm" onclick="addPreBuiltInject()"><i class="ti ti-plus"></i> Add inject</button>
+          <button class="btn btn-sm" onclick="editRunningScenario()"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn btn-sm btn-d" onclick="doEndex()"><i class="ti ti-square-rounded-x"></i> ENDEX</button>
         </div>
       </div>
@@ -244,6 +278,18 @@ textarea{resize:vertical;min-height:80px}
   </div>
   <div style="padding:10px 14px;border:1px solid var(--bdr);border-radius:8px;font-size:11px;color:var(--text2)">
     <strong>Risk2Safe</strong> &mdash; Major Emergencies Simulator &mdash; After Action Report &mdash; OPITO OIS-194/195 / ICS-NIMS framework
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-overlay" class="edit-overlay" style="display:none" onclick="closeModal(event)">
+  <div class="edit-modal" id="edit-modal">
+    <h3 id="modal-title">Edit</h3>
+    <div id="modal-body"></div>
+    <div class="fl" style="gap:8px;margin-top:1rem;justify-content:flex-end">
+      <button class="btn btn-g" onclick="hideModal()">Cancel</button>
+      <button class="btn btn-p" id="modal-save-btn">Save</button>
+    </div>
   </div>
 </div>
 <script>
@@ -1059,7 +1105,7 @@ async function selectSc(id){
   $('scr-brief').classList.add('on');S.screen='brief';
   var ps=PS[sc.ps]||PS.imt_medium;
   var tBadge=sc.tier?('<span class="badge b-t'+sc.tier+'">TIER '+sc.tier+'</span>'):'';
-  $('brief-content').innerHTML='<div class="sb" style="margin-bottom:1.25rem"><div class="flg"><button class="btn btn-g btn-sm no-print" onclick="navTo(\'home\')"><i class="ti ti-arrow-left"></i> Back</button></div><button class="btn btn-xl btn-s no-print" id="btn-start" onclick="startEx()"><i class="ti ti-player-play"></i> STARTEX</button></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="flex-wrap:wrap;gap:1rem;align-items:flex-start"><div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">'+esc(sc.code)+' \u00b7 EXERCISE BRIEF</div><div style="font-size:21px;font-weight:800;margin-bottom:6px;line-height:1.2">'+esc(sc.name)+'</div><div class="flg" style="gap:5px"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'</div></div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div><strong>Location:</strong> '+esc(sc.loc)+'</div><div><strong>POB/PAX:</strong> '+sc.pob+' ('+( sc.missing||0)+' missing, '+(sc.cas||0)+' casualties)</div><div><strong>Duration:</strong> '+sc.dur+' minutes</div><div><strong>Weather:</strong> '+esc(sc.wx)+'</div><div><strong>Vessel/Support:</strong> '+esc(sc.vessel)+'</div><div><strong>External Support:</strong> '+esc(sc.support)+'</div></div></div></div><div class="g2" style="margin-bottom:1rem"><div class="card card-sm"><div class="s-ttl">Phase timeline</div>'+sc.phases.map(function(p,i){return'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px"><span style="font-weight:700;color:var(--text3);min-width:18px">'+(i+1)+'</span><span style="flex:1;font-weight:600">'+esc(p.n)+'</span><span style="color:var(--text2)">'+p.d+'min</span></div>';}).join('')+'<div style="margin-top:8px;font-size:11px;color:var(--text2)"><strong>'+(sc.inj||[]).length+'</strong> pre-built timed injects. AI generates additional injects every 3 minutes.</div></div><div class="card card-sm"><div class="s-ttl">Key hazards</div><div class="sc-hz" style="margin-bottom:12px">'+( sc.haz||[]).map(function(h){return'<span class="haz" style="font-size:11px;padding:3px 8px">'+esc(h)+'</span>';}).join('')+'</div><div class="s-ttl">'+(sc.ps==='offshore_ecc'?'ECC positions (OPITO OIS-194/195)':'IMT positions (ICS/NIMS)')+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px">'+ps.map(function(p){return'<div style="border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;border-left:3px solid '+p.c+'"><div style="font-size:14px;font-weight:800;color:'+p.c+'">'+p.id+'</div><div style="font-size:9px;color:var(--text2);font-weight:500">'+esc(p.full)+'</div></div>';}).join('')+'</div></div></div><div class="card"><div class="sb" style="margin-bottom:10px"><div class="s-ttl" style="margin:0">SMEAC exercise brief \u2014 AI generated</div><span class="badge b-ai" id="brief-status"><span class="spin"></span>&nbsp;Generating...</span></div><div id="brief-txt" class="brief-body" style="color:var(--text3)">Generating SMEAC brief using '+(sc.ps==='offshore_ecc'?'OPITO OIS-194/195':'ICS/NIMS')+' framework...</div></div>';
+  $('brief-content').innerHTML='<div class="sb" style="margin-bottom:1.25rem"><div class="flg"><button class="btn btn-g btn-sm no-print" onclick="navTo(\'home\')"><i class="ti ti-arrow-left"></i> Back</button><button class="btn btn-sm no-print" onclick="openScenarioEditor()"><i class="ti ti-edit"></i> Edit scenario</button></div><button class="btn btn-xl btn-s no-print" id="btn-start" onclick="startEx()"><i class="ti ti-player-play"></i> STARTEX</button></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="flex-wrap:wrap;gap:1rem;align-items:flex-start"><div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">'+esc(sc.code)+' \u00b7 EXERCISE BRIEF</div><div style="font-size:21px;font-weight:800;margin-bottom:6px;line-height:1.2">'+esc(sc.name)+'</div><div class="flg" style="gap:5px"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'</div></div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div><strong>Location:</strong> '+esc(sc.loc)+'</div><div><strong>POB/PAX:</strong> '+sc.pob+' ('+( sc.missing||0)+' missing, '+(sc.cas||0)+' casualties)</div><div><strong>Duration:</strong> '+sc.dur+' minutes</div><div><strong>Weather:</strong> '+esc(sc.wx)+'</div><div><strong>Vessel/Support:</strong> '+esc(sc.vessel)+'</div><div><strong>External Support:</strong> '+esc(sc.support)+'</div></div></div></div><div class="g2" style="margin-bottom:1rem"><div class="card card-sm"><div class="s-ttl">Phase timeline</div>'+sc.phases.map(function(p,i){return'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:12px"><span style="font-weight:700;color:var(--text3);min-width:18px">'+(i+1)+'</span><span style="flex:1;font-weight:600">'+esc(p.n)+'</span><span style="color:var(--text2)">'+p.d+'min</span></div>';}).join('')+'<div style="margin-top:8px;font-size:11px;color:var(--text2)"><strong>'+(sc.inj||[]).length+'</strong> pre-built timed injects. AI generates additional injects every 3 minutes.</div></div><div class="card card-sm"><div class="s-ttl">Key hazards</div><div class="sc-hz" style="margin-bottom:12px">'+( sc.haz||[]).map(function(h){return'<span class="haz" style="font-size:11px;padding:3px 8px">'+esc(h)+'</span>';}).join('')+'</div><div class="s-ttl">'+(sc.ps==='offshore_ecc'?'ECC positions (OPITO OIS-194/195)':'IMT positions (ICS/NIMS)')+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px">'+ps.map(function(p){return'<div style="border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;border-left:3px solid '+p.c+'"><div style="font-size:14px;font-weight:800;color:'+p.c+'">'+p.id+'</div><div style="font-size:9px;color:var(--text2);font-weight:500">'+esc(p.full)+'</div></div>';}).join('')+'</div></div></div><div class="card"><div class="sb" style="margin-bottom:10px"><div class="s-ttl" style="margin:0">SMEAC exercise brief \u2014 AI generated</div><span class="badge b-ai" id="brief-status"><span class="spin"></span>&nbsp;Generating...</span></div><div id="brief-txt" class="brief-body" style="color:var(--text3)">Generating SMEAC brief using '+(sc.ps==='offshore_ecc'?'OPITO OIS-194/195':'ICS/NIMS')+' framework...</div></div>';
   genBrief(sc,ps);
 }
 async function genBrief(sc,ps){
@@ -1105,16 +1151,82 @@ function startEx(){
 }
 function renderSit(){
   var sc=S.sc;
-  $('sit-panel').innerHTML='<div class="s-ttl">Situation</div><div style="font-weight:700;margin-bottom:5px;font-size:12px">'+esc(sc.code)+'</div><div style="line-height:1.8;color:var(--text2);font-size:11px"><div><strong>Location:</strong> '+esc(sc.loc)+'</div><div><strong>Weather:</strong> '+esc(sc.wx)+'</div><div><strong>Vessel:</strong> '+esc(sc.vessel)+'</div><div><strong>Support:</strong> '+esc(sc.support)+'</div></div><div style="margin-top:8px"><div class="s-ttl">Hazards</div>'+(sc.haz||[]).map(function(h){return'<span class="haz" style="display:inline-block;margin:2px 2px 0 0;font-size:9px">'+esc(h)+'</span>';}).join('')+'</div>';
+  $('sit-panel').innerHTML=
+    '<div class="s-ttl" style="display:flex;align-items:center;justify-content:space-between">Situation <button class="edit-btn" title="Edit scenario details" onclick="openScenarioEdit()"><i class="ti ti-edit"></i></button></div>'+
+    '<div style="font-weight:700;margin-bottom:6px;font-size:12px">'+esc(sc.code)+'</div>'+
+    '<div style="margin-bottom:3px"><div class="sit-lbl">Location</div><input class="sit-field" id="sit-loc" value="'+esc(sc.loc)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
+    '<div style="margin-bottom:3px"><div class="sit-lbl">Weather</div><input class="sit-field" id="sit-wx" value="'+esc(sc.wx)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
+    '<div style="margin-bottom:3px"><div class="sit-lbl">Vessel / Standby</div><input class="sit-field" id="sit-vessel" value="'+esc(sc.vessel)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
+    '<div style="margin-bottom:6px"><div class="sit-lbl">External support</div><input class="sit-field" id="sit-sup" value="'+esc(sc.support)+'" onchange="applySitEdit()" title="Click to edit"></div>'+
+    '<div><div class="sit-lbl" style="display:flex;align-items:center;justify-content:space-between">Hazards <button class="edit-btn" onclick="editHazards()" title="Edit hazards"><i class="ti ti-edit"></i></button></div>'+
+    '<div id="sit-haz-tags">'+(sc.haz||[]).map(function(h){return'<span class="haz" style="display:inline-flex;align-items:center;gap:3px;margin:2px 2px 0 0;font-size:9px">'+esc(h)+'<button class="del-btn" style="width:12px;height:12px;font-size:8px" onclick="removeHazard(''+esc(h)+'')">&times;</button></span>';}).join('')+'<button class="edit-btn" onclick="addHazard()" title="Add hazard" style="margin-top:2px"><i class="ti ti-plus"></i></button></div></div>';
+}
+function applySitEdit(){
+  var sc=S.sc;
+  var loc=$('sit-loc');var wx=$('sit-wx');var v=$('sit-vessel');var sup=$('sit-sup');
+  if(loc)sc.loc=loc.value;if(wx)sc.wx=wx.value;if(v)sc.vessel=v.value;if(sup)sc.support=sup.value;
+}
+function removeHazard(h){
+  var sc=S.sc;sc.haz=(sc.haz||[]).filter(function(x){return x!==h;});
+  renderSit();
+}
+function addHazard(){
+  var h=prompt('Add hazard:','');if(!h||!h.trim())return;
+  var sc=S.sc;sc.haz=sc.haz||[];sc.haz.push(h.trim());renderSit();
+}
+function editHazards(){
+  var sc=S.sc;var current=(sc.haz||[]).join(', ');
+  showModal('Edit hazards','<div class="form-g"><label>Hazards (comma separated)</label><textarea id="m-haz" rows="4" style="font-size:12px">'+esc(current)+'</textarea></div>',function(){
+    sc.haz=$('m-haz').value.split(',').map(function(h){return h.trim();}).filter(Boolean);
+    renderSit();
+  });
 }
 function renderPosGrid(){
   var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var g=$('pos-grid');
   g.style.gridTemplateColumns=ps.length<=6?'repeat(3,1fr)':ps.length<=9?'repeat(3,1fr)':'repeat(4,1fr)';
-  g.innerHTML=ps.map(function(p){
+  g.innerHTML=ps.map(function(p,pi){
     var pend=S.actions.filter(function(a){return a.pos===p.id&&!a.done;}).length;
     var last=null;for(var i=S.injects.length-1;i>=0;i--){if(S.injects[i].to===p.id||S.injects[i].from===p.id){last=S.injects[i];break;}}
-    return'<div class="pos-card" style="border-left:3px solid '+p.c+'">'+(pend?'<div class="pos-pend">'+pend+'</div>':'')+'<div class="pos-id" style="color:'+p.c+'">'+p.id+'</div><div class="pos-full">'+esc(p.full)+'</div><div class="pos-ch">'+p.ch+'</div>'+(last?'<div class="pos-last" title="'+esc(last.msg)+'">'+esc(last.msg.substring(0,42))+'...</div>':'')+'</div>';
+    return'<div class="pos-card" style="border-left:3px solid '+p.c+'">'+
+      (pend?'<div class="pos-pend">'+pend+'</div>':'')+
+      '<div class="pos-edit-row">'+
+      '<input class="pos-id-input" style="color:'+p.c+'" value="'+esc(p.id)+'" title="Click to rename position ID" onchange="updatePosField('+pi+','id',this.value)" onblur="syncActionPos(''+p.id+'',this.value)">'+
+      '<button class="edit-btn" style="margin-left:auto" title="Edit position" onclick="editPosCard('+pi+')"><i class="ti ti-edit"></i></button>'+
+      '</div>'+
+      '<input class="pos-full-input" value="'+esc(p.full)+'" title="Click to rename" onchange="updatePosField('+pi+','full',this.value)">'+
+      '<div class="pos-ch" contenteditable="true" style="outline:none;cursor:pointer" title="Click to edit channel" onblur="updatePosField('+pi+','ch',this.textContent)">'+esc(p.ch)+'</div>'+
+      (last?'<div class="pos-last" title="'+esc(last.msg)+'">'+esc(last.msg.substring(0,42))+'...</div>':'')+
+      '</div>';
   }).join('');
+}
+function updatePosField(idx,field,val){
+  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;if(ps[idx])ps[idx][field]=val;
+}
+function syncActionPos(oldId,newId){
+  if(oldId===newId)return;
+  S.actions.forEach(function(a){if(a.pos===oldId)a.pos=newId;});
+  renderActList();
+}
+function editPosCard(pi){
+  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var p=ps[pi];if(!p)return;
+  var colors=['#dc2626','#ea580c','#d97706','#15803d','#2563eb','#7c3aed','#0f766e','#991b1b','#134e4a','#4338ca','#475569','#9a3412'];
+  var colorOpts=colors.map(function(c){return'<span onclick="updatePosField('+pi+','c',''+c+'');closeModal();renderPosGrid();" style="display:inline-block;width:22px;height:22px;border-radius:50%;background:'+c+';cursor:pointer;border:2px solid '+(c===p.c?'#000':'transparent')+'"></span>';}).join(' ');
+  showModal('Edit position: '+p.id,
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
+    '<div class="form-g" style="margin:0"><label>Position ID</label><input id="m-pid" value="'+esc(p.id)+'"></div>'+
+    '<div class="form-g" style="margin:0"><label>Full name</label><input id="m-pfull" value="'+esc(p.full)+'"></div>'+
+    '</div>'+
+    '<div class="form-g"><label>Radio net / channel</label><input id="m-pch" value="'+esc(p.ch)+'"></div>'+
+    '<div class="form-g" style="margin:0"><label>Colour</label><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">'+colorOpts+'</div></div>',
+    function(){
+      var oldId=p.id;
+      p.id=$('m-pid').value.trim()||p.id;
+      p.full=$('m-pfull').value.trim()||p.full;
+      p.ch=$('m-pch').value.trim()||p.ch;
+      syncActionPos(oldId,p.id);
+      renderPosGrid();
+    }
+  );
 }
 function renderPhaseRow(){
   var sc=S.sc;var elMin=Math.floor(R.elapsed/60);var cum=0;var cur=0;
@@ -1122,8 +1234,23 @@ function renderPhaseRow(){
   $('phase-row').innerHTML=sc.phases.map(function(p,i){
     var cb=0;for(var j=0;j<i;j++)cb+=sc.phases[j].d;
     var cls='ph-chip';if(elMin>=cb+p.d)cls+=' done';else if(i===cur)cls+=' on';
-    return'<div class="'+cls+'"><strong>'+esc(p.n)+'</strong><br>'+p.d+'m</div>';
+    return'<div class="'+cls+'" ondblclick="editPhase('+i+')" title="Double-click to edit phase">'+
+      '<strong>'+esc(p.n)+'</strong><br>'+p.d+'m</div>';
   }).join('');
+}
+function editPhase(idx){
+  var sc=S.sc;var p=sc.phases[idx];if(!p)return;
+  showModal('Edit phase '+(idx+1),
+    '<div class="g2" style="gap:8px">'+
+    '<div class="form-g" style="margin:0"><label>Phase name</label><input id="m-phn" value="'+esc(p.n)+'"></div>'+
+    '<div class="form-g" style="margin:0"><label>Duration (minutes)</label><input type="number" id="m-phd" value="'+p.d+'" min="1"></div>'+
+    '</div>',
+    function(){
+      p.n=$('m-phn').value.trim()||p.n;
+      p.d=parseInt($('m-phd').value)||p.d;
+      renderPhaseRow();
+    }
+  );
 }
 
 // ===== TIMER =====
@@ -1172,9 +1299,52 @@ function renderCommsLog(){
   if(!S.injects.length){log.innerHTML='<p style="color:var(--text3);font-size:12px">No messages yet.</p>';return;}
   var uc={IMMEDIATE:'b-imm',URGENT:'b-urg',ROUTINE:'b-rou'};
   log.innerHTML=[].concat(S.injects).reverse().map(function(i){
-    var srcBadge=i.source==='ai'?'<span class="badge b-ai" style="font-size:9px;padding:1px 4px">AI</span>':i.source==='man'?'<span class="badge b-man" style="font-size:9px;padding:1px 4px">Manual</span>':'<span class="badge b-pre" style="font-size:9px;padding:1px 4px">Auto</span>';
-    return'<div class="ce"><span class="c-t">'+i.ts+'</span><span class="c-f">'+esc(i.from)+'</span><span class="c-to">\u2192 '+esc(i.to)+'</span><span>'+esc(i.msg)+'</span><span class="ub '+(uc[i.urgency]||'b-rou')+'">'+(i.urgency==='IMMEDIATE'?'IMM':i.urgency==='URGENT'?'URG':'ROU')+'</span></div>'+(i.act?'<div style="font-size:10px;color:var(--blue);padding:2px 0 5px 47px;border-bottom:1px solid var(--bdr)"><strong>'+esc(i.to)+':</strong> '+esc(i.act)+'</div>':'');
+    var urgLbl=i.urgency==='IMMEDIATE'?'IMM':i.urgency==='URGENT'?'URG':'ROU';
+    return'<div class="ce-wrap" id="cew-'+i.id+'">'+
+      '<div class="ce-row">'+
+      '<span class="c-t">'+i.ts+'</span>'+
+      '<span class="c-f">'+esc(i.from)+'</span>'+
+      '<span class="c-to">\u2192 '+esc(i.to)+'</span>'+
+      '<span>'+esc(i.msg)+'</span>'+
+      '<span class="ub '+(uc[i.urgency]||'b-rou')+'">'+urgLbl+'</span>'+
+      '<button class="edit-btn" title="Edit inject" onclick="editCommsEntry(\''+i.id+'\')"><i class="ti ti-edit"></i></button>'+
+      '<button class="del-btn" title="Delete inject" onclick="deleteCommsEntry(\''+i.id+'\')"><i class="ti ti-trash"></i></button>'+
+      '</div>'+
+      (i.act?'<div style="font-size:10px;color:var(--blue);padding:2px 0 5px 47px;border-bottom:1px solid var(--bdr)"><strong>'+esc(i.to)+':</strong> '+esc(i.act)+'</div>':'')+
+    '</div>';
   }).join('');
+}
+function deleteCommsEntry(id){
+  if(!confirm('Delete this comms log entry?'))return;
+  S.injects=S.injects.filter(function(i){return i.id!==id;});
+  S.actions=S.actions.filter(function(a){return a.id!==id;});
+  renderCommsLog();renderActList();renderPosGrid();
+  $('comms-cnt').textContent=S.injects.length;
+  $('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
+}
+function editCommsEntry(id){
+  var inj=S.injects.find(function(i){return i.id===id;});if(!inj)return;
+  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;
+  var posOpts=['Control Room','Coastguard','MRCC','Civil Defence','Muster Control','Medic','Standby Vessel','SAR Helicopter','Port Authority','OPRED','HSE Authority','Plant Manager','Environmental Officer','Hospital','External Agency'];
+  var allPos=ps.map(function(p){return p.id;}).concat(posOpts);
+  var mkSel=function(selId,val){return'<select id="'+selId+'">'+allPos.map(function(p){return'<option value="'+esc(p)+'"'+(p===val?' selected':'')+'>'+esc(p)+'</option>';}).join('')+'</select>';};
+  showModal('Edit comms log entry',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
+    '<div class="form-g" style="margin:0"><label>From</label>'+mkSel('m-from',inj.from)+'</div>'+
+    '<div class="form-g" style="margin:0"><label>To position</label>'+mkSel('m-to',inj.to)+'</div>'+
+    '</div>'+
+    '<div class="form-g"><label>Urgency</label><select id="m-urg"><option '+(inj.urgency==='IMMEDIATE'?'selected':'')+'>IMMEDIATE</option><option '+(inj.urgency==='URGENT'?'selected':'')+'>URGENT</option><option '+(inj.urgency==='ROUTINE'?'selected':'')+'>ROUTINE</option></select></div>'+
+    '<div class="form-g"><label>Message</label><textarea id="m-msg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'+
+    '<div class="form-g"><label>Required action</label><textarea id="m-act" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
+    function(){
+      inj.from=$('m-from').value;inj.to=$('m-to').value;
+      inj.urgency=$('m-urg').value;inj.msg=$('m-msg').value.trim();inj.act=$('m-act').value.trim();
+      var a=S.actions.find(function(x){return x.id===id;});
+      if(a){a.pos=inj.to;a.text=inj.act;}
+      else if(inj.act){S.actions.push({id:inj.id,pos:inj.to,text:inj.act,ts:inj.ts,done:false});}
+      renderCommsLog();renderActList();renderPosGrid();
+    }
+  );
 }
 function renderActList(){
   var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var list=$('act-list');
@@ -1182,8 +1352,24 @@ function renderActList(){
   if(!all.length){list.innerHTML='<p style="color:var(--text3);font-size:12px">No actions pending.</p>';return;}
   list.innerHTML=all.map(function(a){
     var p=ps.find(function(x){return x.id===a.pos;});var c=p?p.c:'var(--navy)';
-    return'<div class="act-item '+(a.done?'done':'')+'"><span class="act-pos" style="color:'+c+'">'+esc(a.pos)+'</span><span class="act-txt">'+esc(a.text)+'</span><span class="act-ts">'+esc(a.ts)+'</span>'+(!a.done?'<button class="btn btn-sm btn-s" onclick="markDone(\''+a.id+'\')"><i class="ti ti-check"></i></button>':'<span style="font-size:12px;color:var(--green)"><i class="ti ti-circle-check"></i></span>')+'</div>';
+    return'<div class="act-item '+(a.done?'done':'')+'" id="act-'+a.id+'">'+
+      '<span class="act-pos" style="color:'+c+'">'+esc(a.pos)+'</span>'+
+      '<span class="act-txt" contenteditable="true" style="outline:none;cursor:text;flex:1" onblur="saveActEdit(''+a.id+'',this.textContent)" title="Click to edit">'+esc(a.text)+'</span>'+
+      '<span class="act-ts">'+esc(a.ts)+'</span>'+
+      (!a.done?
+        '<button class="btn btn-sm btn-s" onclick="markDone(''+a.id+'')" title="Mark complete"><i class="ti ti-check"></i></button>'+
+        '<button class="del-btn" onclick="deleteAction(''+a.id+'')" title="Delete action"><i class="ti ti-trash"></i></button>'
+        :'<span style="font-size:12px;color:var(--green)"><i class="ti ti-circle-check"></i></span>'+
+        '<button class="del-btn" onclick="deleteAction(''+a.id+'')" title="Remove"><i class="ti ti-trash"></i></button>')+
+      '</div>';
   }).join('');
+}
+function saveActEdit(id,txt){
+  var a=S.actions.find(function(x){return x.id===id;});if(a)a.text=txt.trim();
+}
+function deleteAction(id){
+  S.actions=S.actions.filter(function(a){return a.id!==id;});
+  renderActList();$('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
 }
 function markDone(id){
   var a=S.actions.find(function(x){return x.id===id;});if(a)a.done=true;
@@ -1307,6 +1493,84 @@ async function generateAAR(){
   btn.disabled=false;btn.innerHTML='<i class="ti ti-robot"></i> AI Assessment';
 }
 
+
+// ===== MODAL HELPERS =====
+var _modalCb=null;
+function showModal(title,body,onSave){
+  $('modal-title').textContent=title;
+  $('modal-body').innerHTML=body;
+  _modalCb=onSave;
+  $('edit-overlay').style.display='flex';
+  var first=$('modal-body').querySelector('input,select,textarea');if(first)setTimeout(function(){first.focus();},50);
+  $('modal-save-btn').onclick=function(){if(_modalCb)_modalCb();hideModal();};
+}
+function hideModal(){$('edit-overlay').style.display='none';_modalCb=null;}
+function closeModal(e){if(e.target===$('edit-overlay'))hideModal();}
+
+// ===== SCENARIO EDIT =====
+function openScenarioEdit(){openScenarioEditorById(S.sc?S.sc.id:null);}
+function openScenarioEditorById(id){
+  var sc=allScenarios().find(function(s){return s.id===id;});
+  if(!sc)return;
+  if(!sc.isCustom){
+    // clone to custom
+    var clone=JSON.parse(JSON.stringify(sc));
+    clone.id='cx_'+Date.now();clone.isCustom=true;clone.code='[EDIT] '+clone.code;
+    var cx=loadCustom();cx.push(clone);saveCustom(cx);
+    S.sc=clone;sc=clone;
+    alert('This is a built-in scenario. A copy has been added to your custom exercises for editing.');
+  }
+  navTo('build');
+  setTimeout(function(){renderBuild(sc.id);},50);
+}
+function openScenarioEditor(){
+  var sc=S.sc;if(!sc)return;
+  openScenarioEditorById(sc.id);
+}
+
+// ===== FULLSCREEN SCENARIO EDIT PANEL (from within live exercise) =====
+function editRunningScenario(){
+  var sc=S.sc;if(!sc)return;
+  showModal('Edit running scenario details',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
+    '<div class="form-g" style="margin:0"><label>Scenario name</label><input id="m-scname" value="'+esc(sc.name)+'"></div>'+
+    '<div class="form-g" style="margin:0"><label>Code</label><input id="m-sccode" value="'+esc(sc.code)+'"></div>'+
+    '</div>'+
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
+    '<div class="form-g" style="margin:0"><label>POB / PAX</label><input type="number" id="m-scpob" value="'+sc.pob+'"></div>'+
+    '<div class="form-g" style="margin:0"><label>Duration (min)</label><input type="number" id="m-scdur" value="'+sc.dur+'"></div>'+
+    '</div>',
+    function(){
+      sc.name=$('m-scname').value.trim()||sc.name;
+      sc.code=$('m-sccode').value.trim()||sc.code;
+      sc.pob=parseInt($('m-scpob').value)||sc.pob;
+      sc.dur=parseInt($('m-scdur').value)||sc.dur;
+      S.muster.total=sc.pob;$('m-pob').textContent=sc.pob;
+      $('ex-run-title').textContent=sc.code+' · '+sc.name;
+      renderSit();
+    }
+  );
+}
+
+// ===== ADD INJECT FROM LIBRARY (manual inject with action tracking) =====
+function addPreBuiltInject(){
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  var posOpts=ps.map(function(p){return'<option>'+p.id+'</option>';}).join('');
+  showModal('Add inject to comms log',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'+
+    '<div class="form-g" style="margin:0"><label>From</label><input id="m-afr" placeholder="e.g. MRCC, Hospital, Operator..."></div>'+
+    '<div class="form-g" style="margin:0"><label>To position</label><select id="m-ato">'+posOpts+'</select></div>'+
+    '</div>'+
+    '<div class="form-g"><label>Urgency</label><select id="m-aurg"><option>IMMEDIATE</option><option>URGENT</option><option selected>ROUTINE</option></select></div>'+
+    '<div class="form-g"><label>Message *</label><textarea id="m-amsg" rows="3" style="font-size:12px" placeholder="Enter inject message..."></textarea></div>'+
+    '<div class="form-g"><label>Required action</label><textarea id="m-aact" rows="2" style="font-size:12px" placeholder="Position: action required..."></textarea></div>',
+    function(){
+      var msg=$('m-amsg').value.trim();if(!msg){alert('Message is required.');return;}
+      fireInject($('m-afr').value.trim()||'Controller',$('m-ato').value,$('m-aurg').value,msg,$('m-aact').value.trim(),'man');
+    }
+  );
+}
 // ===== INIT =====
 renderHome();
 </script>
