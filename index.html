@@ -123,6 +123,26 @@ textarea{resize:vertical;min-height:80px}
 /* scenario card edit btn */
 .sc-edit-btn{position:absolute;bottom:10px;right:10px;opacity:0;transition:opacity .15s}
 .sc-card:hover .sc-edit-btn{opacity:1}
+
+/* API KEY / SETTINGS */
+.api-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+.api-dot.ok{background:#22c55e}
+.api-dot.no{background:#f97316}
+.api-key-banner{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:12px 16px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+.api-key-banner b{color:#92400e}
+.settings-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:600;display:flex;align-items:center;justify-content:center}
+.settings-modal{background:#fff;border-radius:16px;padding:1.75rem;width:480px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+.settings-modal h2{font-size:16px;font-weight:800;margin-bottom:4px}
+.settings-modal .sub{font-size:12px;color:var(--text2);margin-bottom:1.25rem}
+.key-row{display:flex;gap:8px}
+.key-row input{flex:1;font-family:monospace;font-size:12px;letter-spacing:.3px}
+.key-status{font-size:11px;margin-top:6px;color:var(--text3)}
+.key-status.ok{color:#15803d}
+.key-status.err{color:#dc2626}
+.steps{background:var(--bg);border-radius:8px;padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.8;margin-top:12px}
+.steps b{color:var(--text);font-weight:600}
+.steps a{color:var(--blue);text-decoration:none}
+.steps a:hover{text-decoration:underline}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -134,6 +154,7 @@ textarea{resize:vertical;min-height:80px}
   <div class="hdr-brand"><div class="hdr-name">Risk2Safe</div><div class="hdr-sub">MAJOR EMERGENCIES SIMULATOR</div></div>
   <div class="hdr-nav">
     <button class="hdr-btn on" id="nav-home" onclick="navTo('home')"><i class="ti ti-layout-grid"></i> Library</button>
+    <button class="hdr-btn" id="btn-settings" onclick="openSettings()" title="API Key &amp; Settings" style="margin-left:auto;margin-right:-4px"><span class="api-dot no" id="api-dot"></span><i class="ti ti-settings"></i></button>
     <button class="hdr-btn" id="nav-build" onclick="navTo('build')"><i class="ti ti-plus"></i> New Exercise</button>
     <button class="hdr-btn" id="nav-run" style="display:none" onclick="navTo('run')"><i class="ti ti-player-play"></i> Live Exercise</button>
     <button class="hdr-btn" id="nav-aar" style="display:none" onclick="navTo('aar')"><i class="ti ti-report-analytics"></i> After Action</button>
@@ -281,6 +302,36 @@ textarea{resize:vertical;min-height:80px}
   </div>
 </div>
 
+
+<!-- SETTINGS MODAL -->
+<div id="settings-overlay" class="settings-overlay" style="display:none" onclick="closeSettings(event)">
+  <div class="settings-modal">
+    <h2><i class="ti ti-key" style="font-size:18px;vertical-align:-2px"></i> API Key — OpenAI</h2>
+    <p class="sub">Required for AI Inject, AI Guidance, and SMEAC brief generation. Uses GPT-4o.</p>
+    <div class="form-g" style="margin-bottom:6px">
+      <label>Anthropic API Key</label>
+      <div class="key-row">
+        <input type="password" id="api-key-input" placeholder="sk-..." autocomplete="off" spellcheck="false">
+        <button class="btn btn-sm" id="key-toggle-btn" onclick="toggleKeyVis()"><i class="ti ti-eye"></i></button>
+        <button class="btn btn-p btn-sm" onclick="saveApiKey()"><i class="ti ti-device-floppy"></i> Save</button>
+      </div>
+      <div class="key-status" id="key-status-msg"></div>
+    </div>
+    <div class="steps">
+      <b>How to get your OpenAI API key:</b><br>
+      1. Go to <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a><br>
+      2. Click <b>+ Create new secret key</b> &rarr; name it <i>Risk2Safe</i><br>
+      3. Copy the key (starts with <code style="background:#e2e8f0;padding:1px 4px;border-radius:3px">sk-</code>)<br>
+      4. Paste it above and click <b>Save</b><br><br>
+      <b>Model used:</b> GPT-4o (high quality, fast)<br>
+      <b>Note:</b> Key stored only in your browser&rsquo;s localStorage. Set a <a href="https://platform.openai.com/settings/organization/limits" target="_blank">spend limit</a> in your OpenAI account for safety.
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem">
+      <button class="btn btn-g" onclick="clearApiKey()" style="font-size:11px;color:var(--red)"><i class="ti ti-trash"></i> Clear key</button>
+      <button class="btn btn-p" onclick="document.getElementById('settings-overlay').style.display='none'">Done</button>
+    </div>
+  </div>
+</div>
 <!-- EDIT MODAL -->
 <div id="edit-overlay" class="edit-overlay" style="display:none" onclick="closeModal(event)">
   <div class="edit-modal" id="edit-modal">
@@ -1047,12 +1098,31 @@ function hhmmss(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;
 function mmss(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 function $(id){return document.getElementById(id);}
 function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function getApiKey(){return localStorage.getItem('r2s_api_key')||'';}
+function updateApiDot(){
+  var dot=$('api-dot');if(!dot)return;
+  var has=!!getApiKey();
+  dot.className='api-dot '+(has?'ok':'no');
+}
 async function callAI(prompt,max){
   max=max||900;
+  var key=getApiKey();
+  if(!key){
+    openSettings();
+    throw new Error('No API key — open Settings (⚙) to enter your OpenAI key.');
+  }
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:max,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+key
+      },
+      body:JSON.stringify({model:'gpt-4o',max_tokens:max,messages:[{role:'user',content:prompt}]})
+    });
     const d=await r.json();
-    return(d.content&&d.content[0]&&d.content[0].text)||'';
+    if(d.error){throw new Error(d.error.message||'API error');}
+    return(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||'';
   }catch(e){throw e;}
 }
 
@@ -1064,7 +1134,8 @@ function navTo(screen){
   $('scr-'+screen).classList.add('on');
   var nb=$('nav-'+screen);if(nb)nb.classList.add('on');
   S.screen=screen;
-  if(screen==='home')renderHome();
+  if(screen==='home')updateApiDot();
+renderHome();
   if(screen==='build')renderBuild(null);
   if(screen==='aar')renderAAR();
 }
@@ -1075,9 +1146,13 @@ function setFilter(f,btn){
   S.filter=f;
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
   if(btn)btn.classList.add('on');
-  renderHome();
+  updateApiDot();
+renderHome();
 }
 function renderHome(){
+  // API key banner
+  var banner=$('api-banner');
+  if(banner){banner.style.display=getApiKey()?'none':'flex';}
   var all=allScenarios(),f=S.filter;
   var list=all.filter(function(sc){
     if(f==='all')return true;
@@ -1607,6 +1682,43 @@ function addPreBuiltInject(){
   );
 }
 
+
+// ===== SETTINGS / API KEY =====
+function openSettings(){
+  var key=getApiKey();
+  var inp=$('api-key-input');
+  if(inp){inp.value=key;inp.type='password';}
+  var msg=$('key-status-msg');
+  if(msg)msg.textContent=key?'Key loaded from browser storage. You can update it anytime.':'No key saved yet.';
+  if(msg)msg.className='key-status'+(key?' ok':'');
+  $('settings-overlay').style.display='flex';
+}
+function closeSettings(e){if(e.target===$('settings-overlay'))$('settings-overlay').style.display='none';}
+function toggleKeyVis(){
+  var inp=$('api-key-input');var btn=$('key-toggle-btn');
+  if(inp.type==='password'){inp.type='text';btn.innerHTML='<i class="ti ti-eye-off"></i>';}
+  else{inp.type='password';btn.innerHTML='<i class="ti ti-eye"></i>';}
+}
+function saveApiKey(){
+  var val=($('api-key-input').value||'').trim();
+  if(!val){
+    var m=$('key-status-msg');m.textContent='Please enter a key first.';m.className='key-status err';return;
+  }
+  if(!val.startsWith('sk-')){
+    var m=$('key-status-msg');m.textContent='Key should start with sk- — double check and try again.';m.className='key-status err';return;
+  }
+  localStorage.setItem('r2s_api_key',val);
+  var m=$('key-status-msg');m.textContent='OpenAI key saved! AI features are now enabled (GPT-4o).';m.className='key-status ok';
+  updateApiDot();
+  setTimeout(function(){$('settings-overlay').style.display='none';},1200);
+}
+function clearApiKey(){
+  localStorage.removeItem('r2s_api_key');
+  $('api-key-input').value='';
+  var m=$('key-status-msg');m.textContent='Key cleared.';m.className='key-status';
+  updateApiDot();
+}
+
 // ===== GLOBAL EVENT DELEGATION (handles data-action buttons) =====
 document.addEventListener('click',function(e){
   var btn=e.target.closest('[data-action]');
@@ -1660,6 +1772,7 @@ document.addEventListener('click',function(e){
 });
 
 // ===== INIT =====
+updateApiDot();
 renderHome();
 </script>
 </body>
