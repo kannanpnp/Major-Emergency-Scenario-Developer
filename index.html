@@ -240,6 +240,17 @@ textarea{resize:vertical;min-height:80px}
 .pres-action-text{flex:1;color:#e2e8f0}
 .pres-owner{color:#94a3b8;min-width:100px;font-size:11px}
 .pres-date{color:#60a5fa;font-size:11px;min-width:90px}
+
+/* ── INJECT SCHEDULE EDITOR ── */
+.sched-hd{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.sched-row{display:grid;grid-template-columns:36px 70px 70px 1fr 24px 24px;gap:5px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.sched-row.fired{opacity:.45}
+.sched-min{font-weight:800;text-align:center;background:var(--bg);border-radius:4px;padding:2px 4px;font-size:10px}
+.sched-badge{font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px}
+.sched-badge.imm{background:#fee2e2;color:#dc2626}
+.sched-badge.urg{background:#fef3c7;color:#92400e}
+.sched-badge.rou{background:#dcfce7;color:#15803d}
+.sched-badge.done{background:#f1f5f9;color:#94a3b8}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -354,6 +365,26 @@ textarea{resize:vertical;min-height:80px}
             <div id="tl-content"><p style="color:var(--text3);font-size:12px">Exercise timeline will appear here.</p></div>
           </div>
           <div id="tp-inject" class="tab-pane">
+            <!-- Pre-built inject schedule -->
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:2px dashed var(--bdr)">
+              <div class="sched-hd">
+                <span><i class="ti ti-calendar-time"></i> Pre-built inject schedule</span>
+                <button class="btn btn-sm" onclick="toggleSchedule()" id="sched-toggle-btn" style="font-size:10px;padding:2px 8px">
+                  <i class="ti ti-eye"></i> Show
+                </button>
+              </div>
+              <div id="sched-panel" style="display:none">
+                <div style="display:grid;grid-template-columns:36px 70px 70px 1fr 24px 24px;gap:5px;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--bdr)">
+                  <span style="text-align:center">Min</span><span>From</span><span>Urgency</span><span>Message</span><span></span><span></span>
+                </div>
+                <div id="sched-list"></div>
+                <button class="btn btn-sm" style="margin-top:8px;width:100%" onclick="addSchedInject()">
+                  <i class="ti ti-plus"></i> Add to schedule
+                </button>
+              </div>
+            </div>
+            <!-- Manual inject -->
+            <div class="sched-hd" style="margin-bottom:6px"><span><i class="ti ti-send"></i> Send manual inject now</span></div>
             <div style="display:grid;grid-template-columns:1fr 1fr 110px;gap:7px;margin-bottom:7px">
               <div class="form-g" style="margin:0"><label>From</label><select id="inj-from"></select></div>
               <div class="form-g" style="margin:0"><label>To</label><select id="inj-to"></select></div>
@@ -1949,16 +1980,118 @@ function renderAAR(){
 }
 async function generateAAR(){
   var sc=S.sc;if(!sc){alert('No exercise data. Please complete an exercise first.');return;}
-  var btn=event.target;btn.disabled=true;btn.innerHTML='<span class="spin"></span>&nbsp;Generating...';
-  var wellDone=$('aar-well').value.trim(),problems=$('aar-wrong').value.trim(),recs=$('aar-rec').value.trim();
-  var injSum=S.injects.slice(0,15).map(function(i){return'['+i.ts+'] '+i.from+'\u2192'+i.to+' ('+i.urgency+'): '+i.msg.substring(0,80);}).join('\n');
+  var btn=document.querySelector('[onclick="generateAAR()"]');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span>&nbsp;Analysing...';}
+
   var done=S.actions.filter(function(a){return a.done;}).length;
-  var prompt='You are an OPITO/ICS exercise evaluator preparing an After Action Report for a major emergency exercise.\n\nEXERCISE DATA:\nScenario: '+sc.code+' \u2014 '+sc.name+' ('+sc.lvl.toUpperCase()+', '+sc.cat+')\nLocation: '+sc.loc+'\nDuration: '+hhmmss(S.exEndTime||0)+'\nPOB/PAX: '+sc.pob+'\nTotal injects: '+S.injects.length+'\nActions completed: '+done+' of '+S.actions.length+'\nMuster: POB '+sc.pob+' | Accounted '+S.muster.acc+' | Missing '+S.muster.mis+' | Casualties '+S.muster.cas+'\n\nINJECT TIMELINE (first 15):\n'+(injSum||'No data')+'\n\nPARTICIPANT FEEDBACK:\nWhat went well: '+(wellDone||'(not provided)')+'\nAreas for improvement: '+(problems||'(not provided)')+'\nRecommendations: '+(recs||'(not provided)')+'\n\nWrite a professional After Action Report covering:\n\n1. EXERCISE OVERVIEW\nBrief summary of scenario, response, and participation.\n\n2. COMMAND & CONTROL ASSESSMENT\nHow IC/EM and command team performed: decision-making speed, delegation, situational awareness.\n\n3. COMMUNICATIONS ASSESSMENT\nQuality of C3, radio discipline, METHANE/SMEAC reporting, inter-agency communications.\n\n4. KEY STRENGTHS\nWhat the team did well (integrate participant feedback where provided).\n\n5. KEY GAPS & DEVELOPMENT AREAS\nSpecific weaknesses observed. Be constructive.\n\n6. RECOMMENDATIONS\n5 specific, actionable training recommendations.\n\n7. OVERALL RATING\nExcellent | Satisfactory | Requires Improvement | Unsatisfactory - with justification.\n\nUse professional emergency management language. No markdown formatting. Be specific and constructive.';
+  var trkDone=S.tracker.filter(function(t){return t.status==='done';}).length;
+  var trkMissed=S.tracker.filter(function(t){return t.status==='missed';}).length;
+  var trkPartial=S.tracker.filter(function(t){return t.status==='partial';}).length;
+  var trkVerified=S.tracker.filter(function(t){return t.verified;}).length;
+
+  var injSummary=S.injects.map(function(i){
+    var act=S.actions.find(function(a){return a.id===i.id;});
+    return '['+i.ts+'] '+i.from+' -> '+i.to+' ('+i.urgency+'): '+i.msg.substring(0,100)
+      +(act?' | ACTION: '+act.text.substring(0,60)+(act.done?' [DONE]':' [PENDING]'):'| NO ACTION LOGGED');
+  }).join('\n');
+
+  var trkSummary=S.tracker.map(function(t){
+    return t.pos+': '+t.task+' -> '+t.status+(t.actual?' | Observed:'+t.actual:'')+(t.verified?' [VERIFIED]':' [UNVERIFIED]');
+  }).join('\n');
+
+  var kcSummary=Object.keys(S.kc||{}).filter(function(k){return S.kc[k].rating;}).map(function(k){
+    var r=S.kc[k];return k.replace(/__/g,' (')+') -> '+r.rating+(r.note?' | '+r.note:'');
+  }).join('\n');
+
+  var stkSummary=S.stk.filter(function(s){return s.notified||s.msg;}).map(function(s){
+    return s.type.toUpperCase()+'|'+s.name+': '+(s.msg||'no msg')+(s.notified?' Notified:'+s.notified:' NOT NOTIFIED')+(s.acked?' [ACK]':' [NO ACK]');
+  }).join('\n');
+
+  var prompt='You are a senior emergency management exercise evaluator (OPITO OIS-194/195 / ICS-NIMS qualified).'
+    +' Analyse the following exercise data and produce a comprehensive professional de-brief.'
+    +' Return ONLY valid JSON - no markdown, no extra text, nothing before or after the JSON.\n\n'
+    +'EXERCISE: '+sc.code+' - '+sc.name.toUpperCase()+'\n'
+    +'Category: '+sc.cat+' | Severity: '+sc.lvl.toUpperCase()+(sc.tier?' | TIER '+sc.tier:'')+'\n'
+    +'Location: '+sc.loc+'\n'
+    +'Duration: '+hhmmss(S.exEndTime||0)+' | POB: '+sc.pob
+    +' | Accounted: '+S.muster.acc+' | Missing: '+S.muster.mis+' | Casualties: '+S.muster.cas+'\n'
+    +'Total injects: '+S.injects.length+' | Actions completed: '+done+'/'+S.actions.length+'\n'
+    +'Tracker: Complete '+trkDone+' | Partial '+trkPartial+' | Missed '+trkMissed
+    +' | Coordinator verified: '+trkVerified+'/'+S.tracker.length+'\n\n'
+    +'INJECT TIMELINE & RESPONSES:\n'+(injSummary||'No inject data')+'\n\n'
+    +'ACTION TRACKER RESULTS:\n'+(trkSummary||'No tracker data')+'\n\n'
+    +'KNOWLEDGE & COMPETENCY RATINGS:\n'+(kcSummary||'No K&C data')+'\n\n'
+    +'STAKEHOLDER COMMUNICATIONS:\n'+(stkSummary||'No stakeholder data')+'\n\n'
+    +'COORDINATOR MANUAL NOTES:\n'
+    +'What went well: '+(($('dbf-well')||{}).value||($('aar-well')||{}).value||'(none)')+'\n'
+    +'Gaps: '+(($('dbf-gaps')||{}).value||($('aar-wrong')||{}).value||'(none)')+'\n\n'
+    +'Return a JSON object with EXACTLY these keys (all values are strings):\n'
+    +'{"overallRating":"Excellent|Satisfactory|Requires Improvement|Unsatisfactory",'
+    +'"ratingJustification":"1-2 sentence justification",'
+    +'"commandAssessment":"2-3 paragraphs on command and control performance",'
+    +'"commsAssessment":"2-3 paragraphs on communications and reporting performance",'
+    +'"whatWentWell":"bullet list each point starting with bullet covering key strengths, min 5 points",'
+    +'"gaps":"bullet list each point starting with bullet covering specific gaps, min 5 points",'
+    +'"keyLearning":"bullet list each point starting with bullet of critical learning points, min 4 points",'
+    +'"recommendations":"bullet list each point starting with bullet of actionable recommendations with responsible party, min 5 points",'
+    +'"coordinatorNotes":"Overall exercise performance narrative 3-4 sentences as the exercise coordinator",'
+    +'"aarSummaryWell":"condensed version for AAR What Went Well bullet points",'
+    +'"aarSummaryImprovements":"condensed version for AAR Areas for Improvement bullet points",'
+    +'"aarRecommendations":"condensed AAR recommendations bullet points"}';
+
   try{
-    var txt=await callAI(prompt,1400);S.aarAI=txt;
-    $('aar-ai-card').style.display='';$('aar-ai-body').textContent=txt;
-  }catch(e){$('aar-ai-card').style.display='';$('aar-ai-body').textContent='AI assessment unavailable. Please check your API key in the Anthropic console and ensure the key is valid. Complete the manual fields above for your AAR.';}
-  btn.disabled=false;btn.innerHTML='<i class="ti ti-robot"></i> AI Assessment';
+    var raw=await callAI(prompt,2000);
+    var data;
+    try{
+      var cleaned=raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+      data=JSON.parse(cleaned);
+    }catch(pe){
+      S.aarAI=raw;
+      $('aar-ai-card').style.display='';
+      $('aar-ai-body').style.cssText='white-space:pre-wrap;font-size:12px';
+      $('aar-ai-body').textContent=raw;
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-robot"></i> AI Assessment';}
+      return;
+    }
+    // Populate de-brief fields (coordinator can edit after)
+    if(data.whatWentWell&&$('dbf-well'))$('dbf-well').value=data.whatWentWell;
+    if(data.gaps&&$('dbf-gaps'))$('dbf-gaps').value=data.gaps;
+    if(data.keyLearning&&$('dbf-learning'))$('dbf-learning').value=data.keyLearning;
+    if(data.recommendations&&$('dbf-recs'))$('dbf-recs').value=data.recommendations;
+    if(data.coordinatorNotes&&$('dbf-coord-notes'))$('dbf-coord-notes').value=data.coordinatorNotes;
+    // Populate AAR Summary fields
+    if(data.aarSummaryWell&&$('aar-well'))$('aar-well').value=data.aarSummaryWell;
+    if(data.aarSummaryImprovements&&$('aar-wrong'))$('aar-wrong').value=data.aarSummaryImprovements;
+    if(data.aarRecommendations&&$('aar-rec'))$('aar-rec').value=data.aarRecommendations;
+    // Build AI Assessment card with rating + command/comms analysis
+    var ratingColor={Excellent:'#15803d',Satisfactory:'#2563eb','Requires Improvement':'#d97706',Unsatisfactory:'#dc2626'};
+    var rc=ratingColor[data.overallRating]||'#475569';
+    var aarHtml='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #86efac">'
+      +'<span style="font-size:20px;font-weight:900;color:'+rc+'">'+esc(data.overallRating||'')+'</span>'
+      +'<span style="font-size:12px;color:var(--text2);flex:1">'+esc(data.ratingJustification||'')+'</span>'
+      +'</div>'
+      +'<div style="margin-bottom:12px"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text3)">Command &amp; Control</strong>'
+      +'<div style="margin-top:4px;white-space:pre-line;font-size:12px;line-height:1.7">'+esc(data.commandAssessment||'')+'</div></div>'
+      +'<div><strong style="font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text3)">Communications</strong>'
+      +'<div style="margin-top:4px;white-space:pre-line;font-size:12px;line-height:1.7">'+esc(data.commsAssessment||'')+'</div></div>';
+    S.aarAI=(data.overallRating||'')+'|'+(data.ratingJustification||'');
+    $('aar-ai-card').style.display='';
+    $('aar-ai-body').innerHTML=aarHtml;
+    // Switch to De-brief tab and refresh
+    showAarTab('debrief');
+    renderDebrief();
+    // Success banner
+    var banner=document.createElement('div');
+    banner.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#15803d;color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+    banner.innerHTML='<i class="ti ti-check"></i> AI de-brief generated. All fields pre-filled - review and edit as needed.';
+    document.body.appendChild(banner);
+    setTimeout(function(){if(banner.parentNode)banner.parentNode.removeChild(banner);},4500);
+  }catch(e){
+    $('aar-ai-card').style.display='';
+    $('aar-ai-body').style.cssText='white-space:pre-wrap;font-size:12px;color:var(--red);background:var(--bg)';
+    $('aar-ai-body').textContent='AI assessment failed: '+(e.message||String(e))+'\n\nCheck your OpenAI API key in Settings.';
+  }
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-robot"></i> AI Assessment';}
 }
 
 
@@ -2412,6 +2545,119 @@ function addFollowup(){
 }
 function removeFollowup(i){S.dbfFollowups.splice(i,1);renderDbfFollowups();}
 
+
+// ══════════════════════════════════════════
+// PRE-BUILT INJECT SCHEDULE EDITOR
+// ══════════════════════════════════════════
+var schedVisible=false;
+function toggleSchedule(){
+  schedVisible=!schedVisible;
+  $('sched-panel').style.display=schedVisible?'':'none';
+  $('sched-toggle-btn').innerHTML=schedVisible?'<i class="ti ti-eye-off"></i> Hide':'<i class="ti ti-eye"></i> Show';
+  if(schedVisible)renderSchedule();
+}
+function renderSchedule(){
+  var sc=S.sc;if(!sc)return;
+  var injs=(sc.inj||[]).slice().sort(function(a,b){return a.m-b.m;});
+  if(!injs.length){
+    $('sched-list').innerHTML='<div style="color:var(--text3);font-size:11px;padding:6px 0">No pre-built injects in this scenario.</div>';
+    return;
+  }
+  var urgMap={IMMEDIATE:'imm',URGENT:'urg',ROUTINE:'rou'};
+  var elMin=Math.floor(R.elapsed/60);
+  $('sched-list').innerHTML=injs.map(function(inj,idx){
+    var fired=S.fired.has(inj.id)||(elMin>=inj.m);
+    return '<div class="sched-row'+(fired?' fired':'')+'">'
+      +'<span class="sched-min">'+inj.m+'m</span>'
+      +'<span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(inj.fr||'Controller')+'</span>'
+      +'<span class="sched-badge '+(fired?'done':urgMap[inj.u]||'rou')+'">'+(fired?'FIRED':inj.u==='IMMEDIATE'?'IMM':inj.u==='URGENT'?'URG':'ROU')+'</span>'
+      +'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)" title="'+esc(inj.msg)+'">'+esc(inj.msg.substring(0,50))+(inj.msg.length>50?'...':'')+'</span>'
+      +(fired
+        ?'<span></span><span></span>'
+        :'<button class="edit-btn" title="Edit" data-action="edit-sched" data-idx="'+idx+'"><i class="ti ti-edit"></i></button>'
+         +'<button class="del-btn" title="Delete" data-action="del-sched" data-idx="'+idx+'"><i class="ti ti-trash"></i></button>'
+      )
+      +'</div>';
+  }).join('');
+}
+function editSchedInject(idx){
+  var sc=S.sc;if(!sc)return;
+  var injs=sc.inj||[];var inj=injs[idx];if(!inj)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  var posOpts=ps.map(function(p){return'<option value="'+esc(p.id)+'">'+esc(p.id)+'</option>';}).join('')
+    +'<option value="Control Room">Control Room</option>'
+    +'<option value="Coastguard">Coastguard / MRCC</option>'
+    +'<option value="Muster Control">Muster Control</option>'
+    +'<option value="Medic">Medic</option>';
+  showModal('Edit scheduled inject',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'
+    +'<div class="form-g" style="margin:0"><label>Fire at minute</label><input type="number" id="se-min" value="'+inj.m+'" min="0"></div>'
+    +'<div class="form-g" style="margin:0"><label>From</label><select id="se-from">'+posOpts+'</select></div>'
+    +'</div>'
+    +'<div class="form-g"><label>Urgency</label><select id="se-urg">'
+    +'<option'+(inj.u==='IMMEDIATE'?' selected':'')+' value="IMMEDIATE">IMMEDIATE</option>'
+    +'<option'+(inj.u==='URGENT'?' selected':'')+' value="URGENT">URGENT</option>'
+    +'<option'+((!inj.u||inj.u==='ROUTINE')?' selected':'')+' value="ROUTINE">ROUTINE</option>'
+    +'</select></div>'
+    +'<div class="form-g"><label>Message</label><textarea id="se-msg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'
+    +'<div class="form-g"><label>Required action</label><textarea id="se-act" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
+    function(){
+      inj.m=parseInt($('se-min').value)||inj.m;
+      inj.fr=$('se-from').value||inj.fr;
+      inj.u=$('se-urg').value;
+      inj.msg=$('se-msg').value.trim()||inj.msg;
+      inj.act=$('se-act').value.trim();
+      renderSchedule();
+    }
+  );
+  // Set current from value
+  setTimeout(function(){
+    var sel=$('se-from');
+    if(sel)for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===inj.fr)sel.options[i].selected=true;}
+  },30);
+}
+function deleteSchedInject(idx){
+  var sc=S.sc;if(!sc)return;
+  if(!confirm('Remove this inject from the schedule?'))return;
+  sc.inj.splice(idx,1);
+  renderSchedule();
+}
+function addSchedInject(){
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS.imt_medium;
+  var posOpts=ps.map(function(p){return'<option value="'+esc(p.id)+'">'+esc(p.id)+'</option>';}).join('')
+    +'<option value="Control Room">Control Room</option>'
+    +'<option value="Coastguard">Coastguard / MRCC</option>'
+    +'<option value="OPRED">OPRED Inspector</option>'
+    +'<option value="Hospital">Hospital</option>';
+  var elMin=Math.floor(R.elapsed/60);
+  showModal('Add inject to schedule',
+    '<div class="g2" style="gap:8px;margin-bottom:8px">'
+    +'<div class="form-g" style="margin:0"><label>Fire at minute</label><input type="number" id="sa-min" value="'+(elMin+5)+'" min="0"></div>'
+    +'<div class="form-g" style="margin:0"><label>From</label><select id="sa-from">'+posOpts+'</select></div>'
+    +'</div>'
+    +'<div class="form-g"><label>Urgency</label><select id="sa-urg">'
+    +'<option value="IMMEDIATE">IMMEDIATE</option><option value="URGENT">URGENT</option><option selected value="ROUTINE">ROUTINE</option>'
+    +'</select></div>'
+    +'<div class="form-g"><label>Message *</label><textarea id="sa-msg" rows="3" style="font-size:12px" placeholder="Inject message..."></textarea></div>'
+    +'<div class="form-g"><label>Required action</label><textarea id="sa-act" rows="2" style="font-size:12px" placeholder="Position: action required..."></textarea></div>',
+    function(){
+      var msg=($('sa-msg').value||'').trim();if(!msg){alert('Message is required.');return;}
+      sc.inj=sc.inj||[];
+      sc.inj.push({
+        id:'sx_'+Date.now(),
+        m:parseInt($('sa-min').value)||0,
+        fr:$('sa-from').value,
+        to:(PS[sc.ps]||PS.imt_medium)[0].id,
+        u:$('sa-urg').value,
+        msg:msg,
+        act:($('sa-act').value||'').trim()
+      });
+      renderSchedule();
+    }
+  );
+}
+// Add schedule edit/delete to event delegation
 // history delegation (handled in global delegator below)
 
 // ══════════════════════════════════════════
@@ -2682,6 +2928,10 @@ document.addEventListener('click',function(e){
       reviewHistory(btn.dataset.hid);break;
     case 'del-hist':
       deleteHistory(btn.dataset.hid);break;
+    case 'edit-sched':
+      editSchedInject(parseInt(btn.dataset.idx));break;
+    case 'del-sched':
+      deleteSchedInject(parseInt(btn.dataset.idx));break;
   }
 });
 
