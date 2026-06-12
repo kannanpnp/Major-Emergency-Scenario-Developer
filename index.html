@@ -4766,6 +4766,125 @@ function displayIMGFormatted(name,txt,container,docId,scIdx){
   $(container).innerHTML=buildDocPreview(docId?'IMG':'IMG',scForDoc,sections,docId,scIdx,isOffshore);
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+// MAH LIBRARY: generateIMG + generatePIP (NFPA-1620 PIP)
+// ══════════════════════════════════════════════════════════════════
+var briefIMGCache={};
+
+async function generateIMG(docId,scIdx){
+  var docs=loadMAHDocs();
+  var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var sc=doc.scenarios[scIdx];if(!sc)return;
+  var isOffshore=(sc.affectedArea||sc.tier||'').toString().toLowerCase().indexOf('offshore')>=0||(sc.cat||'')===('offshore');
+  setMAHTab('img');
+  $('mah-img-pane').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating IMG for: <strong>'+esc(sc.name)+'</strong> — please wait 20-30 seconds...</div>';
+  var prompt=buildIMGPrompt(sc,isOffshore);
+  try{
+    var txt=await callAI(prompt,3000);
+    doc.scenarios[scIdx].img=txt;
+    saveMAHDocs(docs);
+    displayIMGFormatted(sc.name,txt,'mah-img-pane',docId,scIdx);
+  }catch(e){
+    $('mah-img-pane').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#991b1b"><i class="ti ti-alert-circle"></i> IMG generation failed: '+esc(e.message||String(e))+'</div>';
+  }
+}
+
+async function generatePIP(docId,scIdx){
+  var docs=loadMAHDocs();
+  var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var sc=doc.scenarios[scIdx];if(!sc)return;
+  setMAHTab('pip');
+  $('mah-pip-pane').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating NFPA-1620 Pre-Incident Plan for: <strong>'+esc(sc.name)+'</strong> — please wait 20-30 seconds...</div>';
+  var prompt=buildPIPPrompt(sc);
+  try{
+    var txt=await callAI(prompt,3000);
+    doc.scenarios[scIdx].pip=txt;
+    saveMAHDocs(docs);
+    displayPIP(sc.name,txt,docId,scIdx);
+  }catch(e){
+    $('mah-pip-pane').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#991b1b"><i class="ti ti-alert-circle"></i> PIP generation failed: '+esc(e.message||String(e))+'</div>';
+  }
+}
+
+async function genBriefIMG(){
+  var sc=S.sc;if(!sc)return;
+  if(!getApiKey()){
+    $('brief-img-body').innerHTML='<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px;font-size:12px"><i class="ti ti-key"></i> <strong>API key required.</strong> Click the gear icon to add your OpenAI key.</div>';
+    return;
+  }
+  var btn=$('btn-gen-img');if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generating...';}
+  var isOffshore=sc.cat==='offshore';
+  $('brief-img-body').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating IMG for <strong>'+esc(sc.name)+'</strong> — please wait 20-30 seconds...</div>';
+  var scObj={
+    name:sc.name,cat:sc.cat,lvl:sc.lvl,tier:sc.tier,code:sc.code,
+    loc:sc.loc,pob:sc.pob,
+    hazmat:(sc.haz||[]).join(', '),
+    initiatingEvent:sc.desc||sc.name,
+    consequences:'Emergency response activation — casualties, asset damage, environmental impact possible',
+    hazards:sc.haz||[],
+    controls:['ESD system','Fire & gas detection','Deluge/suppression system','Emergency response plan','PA system'],
+    affectedArea:sc.loc,vessel:sc.vessel||'',support:sc.support||''
+  };
+  var prompt=buildIMGPrompt(scObj,isOffshore);
+  try{
+    var txt=await callAI(prompt,3000);
+    briefIMGCache[sc.id]=txt;
+    displayIMGFormatted(sc.name,txt,'brief-img-body',null,0);
+  }catch(e){
+    $('brief-img-body').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#dc2626"><i class="ti ti-alert-triangle"></i> IMG generation failed: '+esc(e.message||String(e))+'</div>';
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-book"></i> Generate IMG';}
+  }
+}
+
+
+function buildPIPPrompt(sc){
+  return 'You are a certified fire protection engineer and pre-fire planning specialist producing a Pre-Incident Plan (PIP) compliant with NFPA 1620 Standard for Pre-Incident Planning.\\n\\n'
+    +'FACILITY / SCENARIO: '+sc.name+'\\n'
+    +'HAZARDOUS MATERIAL: '+(sc.hazmat||'Hydrocarbons / process chemicals')+'\\n'
+    +'INCIDENT TYPE: '+(sc.lvl||'major').toUpperCase()+(sc.tier?' TIER '+sc.tier:'')+'\\n'
+    +'AFFECTED AREA: '+(sc.affectedArea||'Process area')+'\\n'
+    +'INITIATING EVENT: '+(sc.initiatingEvent||'Equipment failure')+'\\n'
+    +'CONSEQUENCES: '+(sc.consequences||'Fire, toxic release, casualties')+'\\n'
+    +'HAZARDS PRESENT: '+((sc.hazards||[]).join(', '))+'\\n'
+    +'EXISTING CONTROLS: '+((sc.controls||[]).join(', '))+'\\n\\n'
+    +'Generate a complete Pre-Incident Plan following NFPA 1620 structure using ##SECTION: delimiters. For action/checklist sections use ##TABLE...##END_TABLE with rows in "Action | Position" format. For assessment sections use bullet points.\\n\\n'
+    +'##SECTION: SECTION 1 — SITE AND FACILITY INFORMATION\\n'
+    +'[NFPA 1620 §4: Facility name, address, GPS coordinates, site area, number of buildings, construction type (Type I–V per NFPA 220), year built, occupancy classification (NFPA 101), number of floors, total floor area, basement/underground areas, roof construction, normal occupancy hours, maximum occupancy, key contact persons with 24hr phone numbers]\\n\\n'
+    +'##SECTION: SECTION 2 — HAZARD IDENTIFICATION AND ANALYSIS\\n'
+    +'[NFPA 1620 §5: Identify all hazardous materials stored/used by type, quantity, and location (reference NFPA 704 ratings H/F/R/S where applicable). Include: flammable/combustible liquids (NFPA 30), compressed gases, reactive chemicals, toxics. Note IDLH values, LEL/UEL, flash points, autoignition temperatures, special fire hazards. LOPC scenarios, domino effect potential.]\\n\\n'
+    +'##SECTION: SECTION 3 — CONSTRUCTION AND FIRE RESISTANCE\\n'
+    +'[NFPA 1620 §6: Construction type, fire resistance ratings of structural elements (per ASTM E119/NFPA 251), compartmentation/fire walls, openings and their protection, roof venting provisions, potential collapse hazards, hazards to fire fighters (void spaces, HVAC shafts, truss construction). Passive fire protection (intumescent, board protection, spray-applied).]\\n\\n'
+    +'##SECTION: SECTION 4 — FIXED FIRE PROTECTION SYSTEMS\\n'
+    +'##TABLE\\n'
+    +'[10-14 rows covering each fixed system: sprinkler system (type/NFPA 13 or 15 or 25), fire detection (NFPA 72), water-based suppression (deluge/foam/water mist), gaseous suppression (clean agent/CO2), kitchen hood, foam-water systems. For each: system type | Responsible/owner position]\\n'
+    +'##END_TABLE\\n\\n'
+    +'##SECTION: SECTION 5 — WATER SUPPLY ASSESSMENT\\n'
+    +'[NFPA 1620 §7 and NFPA 291: Available water supply (L/min or gpm), hydrant locations and flow test data (static/residual pressure and flow rate), on-site storage (tanks, ponds), fire pump specs (rated flow, pressure, driver type, NFPA 20 compliance), water supply adequacy for design fire scenario, supplemental supply options (tankers, drafting points, ERRV)]\\n\\n'
+    +'##SECTION: SECTION 6 — DETECTION, ALARM AND COMMUNICATIONS\\n'
+    +'##TABLE\\n'
+    +'[10-12 rows: detection/alarm action items with position responsible. Include: F&G detector coverage, smoke detectors, manual call points, FACP location, alarm routing (24hr monitoring), PA/mass notification system, ESD activation, radio channels, backup communications]\\n'
+    +'##END_TABLE\\n\\n'
+    +'##SECTION: SECTION 7 — LIFE SAFETY AND EGRESS\\n'
+    +'[NFPA 1620 §8 and NFPA 101: Egress system description, exit widths, travel distances, areas of refuge, assembly/muster point locations and capacity, emergency lighting, exit signs, smoke control system (stairwell pressurisation, smoke exhaust), occupant notification, special occupant considerations (mobility impaired, shift workers, contractors), accountability system]\\n\\n'
+    +'##SECTION: SECTION 8 — ACCESS, APPROACH AND STAGING\\n'
+    +'[NFPA 1620 §9: Primary and secondary access routes with road widths and weight limits, fire department connection (FDC) locations, key box/access system, fire lane markings, staging area designation, forward command post location, wind-aware approach corridors, utility shut-off locations (gas, electric, water). Note any access restrictions.]\\n\\n'
+    +'##SECTION: SECTION 9 — INITIAL FIRE GROUND OPERATIONS\\n'
+    +'##TABLE\\n'
+    +'[12-16 NFPA 1620-aligned initial actions on incident arrival. Include: size-up checklist, ICS activation, first-in company assignments, resource request, 360 recon, sector assignments, hydrant connection, FDC supply, accountability. Format: Action | ICS Position]\\n'
+    +'##END_TABLE\\n\\n'
+    +'##SECTION: SECTION 10 — TACTICAL CONSIDERATIONS AND STRATEGY\\n'
+    +'[NFPA 1620 §10: Offensive vs defensive mode decision criteria, fire attack strategy for this occupancy, ventilation tactics (positive pressure/natural/hydraulic), search and rescue priorities, salvage considerations, exposure protection, special hazard tactics (flammable liquid, energised equipment, confined space). Minimum 10 tactical bullets.]\\n\\n'
+    +'##SECTION: SECTION 11 — SPECIAL HAZARDS AND TECHNICAL RESCUE\\n'
+    +'[NFPA 1620 §11: Confined space entry (NFPA 350), trench/collapse rescue, hazmat operations (NFPA 472 technician level requirements), radiological/biological/chemical considerations, utility hazards (high voltage, natural gas pressure), cryogenic hazards, water rescue. List specific technical rescue resources pre-identified for this facility.]\\n\\n'
+    +'##SECTION: SECTION 12 — RESOURCE REQUIREMENTS AND PRE-POSITIONING\\n'
+    +'##TABLE\\n'
+    +'[10-12 rows: pre-identified resources. Include apparatus types, specialist teams, mutual aid agreements, medical resources, foam concentrate quantities, BA cylinder reserves. Format: Resource / Equipment | Quantity / Source | Responsible]\\n'
+    +'##END_TABLE\\n\\n'
+    +'Be technically precise. Reference NFPA standards explicitly (NFPA 13, 14, 20, 24, 30, 58, 72, 101, 220, 291, 472, 1620 etc.) where applicable. This plan will be used for live emergency exercises and actual response.';
+}
+
 // ══════════════════════════════════════════════════════════════════
 // DOCUMENT ENGINE — POSITION BADGES + PREVIEW + DOWNLOAD
 // ══════════════════════════════════════════════════════════════════
