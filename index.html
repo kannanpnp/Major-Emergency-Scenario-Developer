@@ -451,6 +451,32 @@ li.onode:not(:first-child):not(:last-child)::after{left:-5px;right:-5px}
 /* Legend */
 .olegend{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bdr)}
 .oleg-item{font-size:9px;font-weight:800;padding:2px 8px;border-radius:3px;border:2px solid}
+
+/* ── IMG VIEWER (sample-format) ── */
+.img-doc-wrap{font-size:11px;color:var(--text)}
+.img-header{background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px 8px 0 0;margin-bottom:0}
+.img-header h3{font-size:14px;font-weight:800;margin:0;letter-spacing:.4px}
+.img-header p{font-size:10px;color:#94a3b8;margin:2px 0 0 0}
+.img-sec{border:1px solid var(--bdr);border-top:none;padding:0}
+.img-sec:last-child{border-radius:0 0 8px 8px;overflow:hidden}
+.img-sec-hd{background:#f1f5f9;padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--navy);border-bottom:1px solid var(--bdr)}
+.img-sec-body{padding:10px 12px}
+.img-action-table{width:100%;border-collapse:collapse;font-size:11px}
+.img-action-table th{background:var(--navy);color:#fff;padding:6px 10px;text-align:left;font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+.img-action-table td{padding:6px 10px;border-bottom:1px solid var(--bdr);vertical-align:top}
+.img-action-table td:last-child{font-weight:700;color:var(--navy);white-space:nowrap;width:70px;text-align:center}
+.img-action-table tr:last-child td{border-bottom:none}
+.img-action-table tr:nth-child(even) td{background:#f8fafc}
+.img-sub-hd{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--red);margin:10px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--red)}
+.img-assess-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.img-assess-box{border:1px solid var(--bdr);border-radius:6px;padding:9px 11px}
+.img-assess-box h4{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--text3);margin:0 0 6px}
+.img-check-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;font-size:11px}
+.img-check-box{width:14px;height:14px;border:1.5px solid var(--bdr);border-radius:2px;flex-shrink:0;margin-top:1px;background:#fff}
+.img-bp{margin:4px 0;padding-left:14px;position:relative;font-size:11px;line-height:1.6}
+.img-bp::before{content:"•";position:absolute;left:2px;color:var(--navy)}
+.img-brief-card{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-top:1rem}
+.img-brief-progress{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 16px;font-size:12px;color:#0369a1;display:flex;align-items:center;gap:8px}
 @media print{.hdr,.no-print{display:none!important}.scr.on{display:block!important}body{background:#fff}}
 @media(max-width:900px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
@@ -4500,64 +4526,261 @@ function renderMAHScenarios(doc){
 }
 
 // ── Generate IMG ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// IMG GENERATION — sample format (IMG_No_01 style)
+// ═══════════════════════════════════════════════════════════════════
+
+function buildIMGPrompt(sc, isOffshore){
+  var posDesc = isOffshore
+    ? 'OFFSHORE ECC POSITIONS (use these abbreviations exactly):\n'
+      +'OIM  = Offshore Installation Manager (Emergency Manager)\n'
+      +'CRO  = Control Room Operator\n'
+      +'PTL  = Process Team Leader\n'
+      +'OTL  = Operations Team Leader\n'
+      +'PC   = Port Captain / Logistics Coordinator\n'
+      +'LogCo= Logistics Coordinator\n'
+      +'Radio= Radio Operator\n'
+      +'OIMA = OIM Assistant / Event Logger\n'
+      +'ERT  = Emergency Response Team Leader\n'
+      +'Medic= Offshore Medic\n'
+      +'PTW  = Permit-to-Work Coordinator\n'
+      +'ALL  = All ECT members'
+    : 'ONSHORE ICS POSITIONS (use these abbreviations exactly):\n'
+      +'IC   = Incident Commander\n'
+      +'SC   = On Scene Commander (Forward)\n'
+      +'SO   = Safety Officer\n'
+      +'PIO  = Public Information Officer\n'
+      +'LNO  = Liaison Officer\n'
+      +'OSC  = Operations Section Chief\n'
+      +'LSC  = Logistics Section Chief\n'
+      +'PSC  = Planning Section Chief\n'
+      +'AFC  = Admin/Finance Section Chief\n'
+      +'MEDU = Medical Unit Leader\n'
+      +'HZM  = HazMat Group Supervisor\n'
+      +'SITL = Situation Unit Leader\n'
+      +'ERT  = Emergency Response Team\n'
+      +'ALL  = All ICS personnel';
+
+  var scDesc = 'SCENARIO: '+sc.name+'\n'
+    +'INCIDENT TYPE: '+(sc.cat||'onshore').toUpperCase()+' — '+(sc.lvl||'major').toUpperCase()+(sc.tier?' (TIER '+sc.tier+')':'')+'\n'
+    +'LOCATION: '+(sc.loc||sc.affectedArea||'Industrial facility')+'\n'
+    +'HAZARDOUS MATERIAL: '+(sc.hazmat||'Hydrocarbons / Process fluids')+'\n'
+    +'INITIATING EVENT: '+(sc.initiatingEvent||sc.desc||'Process failure')+'\n'
+    +'CONSEQUENCES: '+(sc.consequences||'Fire, toxic gas release, casualties')+'\n'
+    +'HAZARDS: '+((sc.hazards||sc.haz||[]).join(', '))+'\n'
+    +'CONTROLS: '+((sc.controls||[]).join(', '))+'\n'
+    +'AFFECTED AREA: '+(sc.affectedArea||sc.loc||'Process area')+'\n'
+    +'POB/PAX: '+(sc.pob||150)+'\n'
+    +'SUPPORT ASSETS: '+(sc.vessel||sc.support||'Emergency response team');
+
+  return 'You are a Senior Emergency Response Specialist producing a formal Incident Management Guideline (IMG) appendix for an Emergency Response Plan.\n\n'
+    +scDesc+'\n\n'
+    +posDesc+'\n\n'
+    +'Generate a complete IMG in EXACTLY this structured format. Use the delimiter ##SECTION: before each section heading. For INITIAL ACTIONS, MUSTER RESULT, and ONGOING ACTIONS, output a two-column pipe-delimited table using ##TABLE...##END_TABLE delimiters. Each row: "Action description | POSITION". For other sections, use bullet points starting with "• ".\n\n'
+    +'##SECTION: INITIAL ACTIONS\n'
+    +'##TABLE\n'
+    +'[15-25 specific immediate actions for this incident type with responsible position abbreviation. Include: alarm activation, PA announcement, ESD/isolation, ECC assembly, notifications, safety assessments, resource mobilisation. Be highly scenario-specific.]\n'
+    +'##END_TABLE\n\n'
+    +'##SECTION: INCIDENT-SPECIFIC ACTIONS\n'
+    +'##TABLE\n'
+    +'[10-15 actions specific to THIS hazard type — e.g. for gas release: gas monitoring, LEL readings, isolation distances; for fire: deluge activation, fire pump checks; for collision: AIS tracking, vessel intercept. Include sub-headers within the table using "--- [sub-heading] ---" rows]\n'
+    +'##END_TABLE\n\n'
+    +'##SECTION: MUSTER RESULT\n'
+    +'##TABLE\n'
+    +'[6-8 actions for muster completion, missing persons search, casualty management]\n'
+    +'##END_TABLE\n\n'
+    +'##SECTION: ONGOING ACTIONS AND CONSIDERATIONS\n'
+    +'##TABLE\n'
+    +'[10-12 ongoing monitoring and management actions throughout the incident]\n'
+    +'##END_TABLE\n\n'
+    +'##SECTION: TIME-OUT / ASSESSMENT GUIDE\n'
+    +'[Assessment checklist for the incident commander time-out. Use sub-sections: SITUATION STATUS, CONTAINMENT STATUS, PERSONNEL, MEANS OF ESCAPE AND EVACUATION, PLAN — POTENTIAL ACTIONS. Format as check items using "[ ] " prefix. Include fill-in fields using "____" for values like gas concentrations, pressures, missing persons count.]\n\n'
+    +'##SECTION: SAFETY SYSTEM DAMAGE ASSESSMENT\n'
+    +'[For each relevant safety system (ESD/Shutdown, Deluge/Firewater, Detection/F&G, Communications, Structural), describe: what it is designed to do, impact if unavailable, and compensatory measures available.]\n\n'
+    +'##SECTION: ESCALATION POTENTIAL CONTROL AND MITIGATION\n'
+    +'[Bullet points covering: key escalation scenarios for this incident type, specific control measures with distances/times/concentrations where relevant, mitigation actions and decision criteria for Tier escalation]\n\n'
+    +'##SECTION: OVERALL STRATEGY — ON-SCENE TACTICS\n'
+    +'[Detailed tactical guidance minimum 10 bullet points. Cover: initial response priorities, ERT deployment tactics, specific hazard management, search and rescue approach, casualty management, evacuation decision criteria, communications protocol, demobilisation criteria. Be specific to this hazard and location type.]';
+}
+
+function parseIMGSections(txt){
+  var sections=[];
+  var parts=txt.split(/##SECTION:\s*/);
+  parts.shift();
+  parts.forEach(function(part){
+    var firstNL=part.indexOf('\n');
+    var heading=part.substring(0,firstNL).trim();
+    var body=part.substring(firstNL+1).trim();
+    sections.push({heading:heading, body:body});
+  });
+  return sections;
+}
+
+function renderIMGTable(tableText){
+  var rows=tableText.split('\n').filter(function(r){return r.trim()&&r.trim()!=='##TABLE'&&r.trim()!=='##END_TABLE';});
+  var html='<table class="img-action-table"><thead><tr><th>Action</th><th>Position</th></tr></thead><tbody>';
+  rows.forEach(function(row){
+    var t=row.trim();
+    if(t.startsWith('---')&&t.endsWith('---')){
+      var sub=t.replace(/^---\s*/,'').replace(/\s*---$/,'');
+      html+='<tr><td colspan="2" style="background:#e0f2fe;color:#0369a1;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:5px 10px">'+esc(sub)+'</td></tr>';
+      return;
+    }
+    var pipe=t.lastIndexOf('|');
+    var action=pipe>=0?t.substring(0,pipe).trim():t;
+    var pos=pipe>=0?t.substring(pipe+1).trim():'';
+    // Clean brackets from AI output
+    action=action.replace(/^\[|\]$/g,'');
+    if(!action)return;
+    html+='<tr><td>'+esc(action)+'</td><td>'+esc(pos)+'</td></tr>';
+  });
+  return html+'</tbody></table>';
+}
+
+function renderIMGSection(sec){
+  var heading=sec.heading;
+  var body=sec.body;
+  var isTable=body.indexOf('##TABLE')>=0;
+  var rendered='';
+  if(isTable){
+    var tableMatch=body.match(/##TABLE([\s\S]*?)##END_TABLE/);
+    var tableContent=tableMatch?tableMatch[1]:'';
+    rendered=renderIMGTable(tableContent);
+    // Render any content after ##END_TABLE as bullets
+    var afterTable=body.replace(/##TABLE[\s\S]*?##END_TABLE/,'').trim();
+    if(afterTable)rendered+=renderIMGText(afterTable);
+  } else {
+    rendered=renderIMGText(body);
+  }
+  return '<div class="img-sec">'
+    +'<div class="img-sec-hd">'+esc(heading)+'</div>'
+    +'<div class="img-sec-body">'+rendered+'</div>'
+    +'</div>';
+}
+
+function renderIMGText(txt){
+  var lines=txt.split('\n');
+  var html='';
+  var inSubSection='';
+  lines.forEach(function(line){
+    var t=line.trim();
+    if(!t)return;
+    if(t.startsWith('###')||t.match(/^[A-Z][A-Z\s\/&]+:?\s*$/)){
+      html+='<div class="img-sub-hd">'+esc(t.replace(/^###\s*/,'').replace(/:$/,''))+'</div>';
+      return;
+    }
+    if(t.startsWith('•')||t.startsWith('-')||t.startsWith('*')){
+      html+='<div class="img-bp">'+esc(t.replace(/^[•\-*]\s*/,''))+'</div>';
+      return;
+    }
+    if(t.startsWith('[')){
+      html+='<div class="img-check-row"><div class="img-check-box"></div><div>'+esc(t.replace(/^\[\s*\]\s*/,''))+'</div></div>';
+      return;
+    }
+    // Sub-header in assessment guide
+    if(t.match(/^[A-Z][A-Z\s\/]+$/)){
+      html+='<div class="img-sub-hd">'+esc(t)+'</div>';
+      return;
+    }
+    html+='<div style="padding:3px 0;font-size:11px;line-height:1.6">'+esc(t)+'</div>';
+  });
+  return html;
+}
+
+function displayIMGFormatted(name,txt,container,docId,scIdx){
+  var sections=parseIMGSections(txt);
+  var secHtml=sections.map(renderIMGSection).join('');
+  var printBtn=docId?
+    '<button class="btn btn-sm" onclick="printMAHDoc(\'IMG\',\''+escAttr(name)+'\','+scIdx+',\''+docId+'\')"><i class="ti ti-printer"></i> Print</button>'
+    :'<button class="btn btn-sm" onclick="printBriefIMG()"><i class="ti ti-printer"></i> Print IMG</button>';
+  var libBtn=docId?
+    '<button class="btn btn-sm btn-p" onclick="addMAHToLibrary(\''+docId+'\','+scIdx+')"><i class="ti ti-library-plus"></i> Add to Library</button>'
+    :'';
+  $(container).innerHTML=
+    '<div class="img-doc-wrap">'
+    +'<div class="img-header">'
+    +'<h3><i class="ti ti-book"></i>&nbsp; IMG: '+esc(name)+'</h3>'
+    +'<p>Incident Management Guideline — Auto-generated from scenario data | Risk2Safe</p>'
+    +'</div>'
+    +secHtml
+    +'<div style="padding:10px 14px;border:1px solid var(--bdr);border-radius:0 0 8px 8px;border-top:none;display:flex;gap:8px;background:#f8fafc">'
+    +printBtn+libBtn
+    +'</div>'
+    +'</div>';
+}
+
+// ── MAH Library: generateIMG (updated) ───────────────────────────
 async function generateIMG(docId,scIdx){
   var docs=loadMAHDocs();
   var doc=docs.find(function(d){return d.id===docId;});
   if(!doc)return;
   var sc=doc.scenarios[scIdx];if(!sc)return;
+  var isOffshore=(sc.tier||0)<=2&&(sc.affectedArea||'').toLowerCase().indexOf('offshore')>=0||false;
   setMAHTab('img');
-  $('mah-img-pane').innerHTML='<div class="mah-progress"><span class="spin"></span> Generating Incident Management Guidelines for: '+esc(sc.name)+'...</div>';
-  var prompt='You are a senior emergency management specialist. Generate a comprehensive Incident Management Guideline (IMG) for the following Major Accident Hazard scenario.\n\n'
-    +'SCENARIO: '+sc.name+'\n'
-    +'HAZARDOUS MATERIAL: '+(sc.hazmat||'N/A')+'\n'
-    +'TIER: '+(sc.tier||2)+'\n'
-    +'SEVERITY: '+(sc.lvl||'major')+'\n'
-    +'INITIATING EVENT: '+(sc.initiatingEvent||'N/A')+'\n'
-    +'CONSEQUENCES: '+(sc.consequences||'N/A')+'\n'
-    +'HAZARDS: '+(sc.hazards||[]).join(', ')+'\n'
-    +'EXISTING CONTROLS: '+(sc.controls||[]).join(', ')+'\n'
-    +'AFFECTED AREA: '+(sc.affectedArea||'N/A')+'\n\n'
-    +'Generate a complete IMG with these sections:\n\n'
-    +'1. SCOPE AND PURPOSE\n'
-    +'2. TRIGGER CRITERIA (detection, alarms, notification threshold for activation)\n'
-    +'3. IMMEDIATE ACTIONS (first 5 minutes — who does what, in sequence)\n'
-    +'4. ESCALATION CRITERIA (Tier 1 → 2 → 3 thresholds with specific decision criteria)\n'
-    +'5. ECC/IMT ACTIVATION (who activates, assembly points, activation sequence)\n'
-    +'6. KEY POSITION RESPONSIBILITIES (IC/EM, Safety, Operations, Medical, Planning, Logistics — specific tasks for this scenario)\n'
-    +'7. EXTERNAL NOTIFICATIONS (who to notify, when, in what format — regulatory, emergency services, mutual aid)\n'
-    +'8. HAZARD-SPECIFIC TACTICS (specific response tactics for this hazard — HAZMAT, fire, structural, marine, etc.)\n'
-    +'9. RESOURCE REQUIREMENTS (personnel, equipment, PPE, specialist resources)\n'
-    +'10. PROTECTIVE ACTIONS (evacuation zones, shelter-in-place, exclusion zones, public protection)\n'
-    +'11. RECOVERY AND STAND-DOWN CRITERIA (when and how to de-escalate)\n'
-    +'12. TRAINING AND EXERCISE REQUIREMENTS\n\n'
-    +'Be specific, practical, and action-oriented. Use professional emergency management language. Reference applicable standards (OPITO, NFPA, ICS, IOGP).';
+  $('mah-img-pane').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating IMG for: <strong>'+esc(sc.name)+'</strong> &mdash; please wait...</div>';
+  var prompt=buildIMGPrompt(sc,isOffshore);
   try{
-    var txt=await callAI(prompt,2500);
+    var txt=await callAI(prompt,3000);
     doc.scenarios[scIdx].img=txt;
     saveMAHDocs(docs);
-    displayIMG(sc.name,txt,docId,scIdx);
+    displayIMGFormatted(sc.name,txt,'mah-img-pane',docId,scIdx);
   }catch(e){
     $('mah-img-pane').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#991b1b">IMG generation failed: '+esc(e.message||String(e))+'</div>';
   }
 }
 
 function displayIMG(name,txt,docId,scIdx){
-  var sections=txt.split(/\n(?=\d+\.\s+[A-Z])/);
-  var rendered=sections.map(function(s){
-    var lines=s.split('\n');
-    var hd=lines[0].replace(/^\d+\.\s*/,'');
-    var body=lines.slice(1).join('\n').trim();
-    return '<div class="img-section"><div class="img-section-hd">'+esc(hd)+'</div><div class="img-section-body">'+esc(body)+'</div></div>';
-  }).join('');
-  $('mah-img-pane').innerHTML=
-    '<div class="sb" style="margin-bottom:10px">'
-    +'<div style="font-size:14px;font-weight:800"><i class="ti ti-book" style="color:var(--blue)"></i> IMG: '+esc(name)+'</div>'
-    +'<div style="display:flex;gap:6px">'
-    +'<button class="btn btn-sm" onclick="printMAHDoc(\'IMG\',\''+escAttr(name)+'\','+scIdx+',\''+docId+'\')"><i class="ti ti-printer"></i> Print</button>'
-    +'<button class="btn btn-sm btn-p" onclick="addMAHToLibrary(\''+docId+'\','+scIdx+')"><i class="ti ti-library-plus"></i> Add to Library</button>'
-    +'</div></div>'
-    +'<div class="img-viewer">'+rendered+'</div>';
+  displayIMGFormatted(name,txt,'mah-img-pane',docId,scIdx);
 }
+
+// ── Brief screen: genBriefIMG ─────────────────────────────────────
+var briefIMGCache={};
+async function genBriefIMG(){
+  var sc=S.sc;if(!sc)return;
+  var btn=$('btn-gen-img');if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generating...';}
+  var isOffshore=sc.cat==='offshore';
+  $('brief-img-body').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating Incident Management Guideline for <strong>'+esc(sc.name)+'</strong> &mdash; this may take 20-30 seconds...</div>';
+  // Build a scenario-compatible object for buildIMGPrompt
+  var scObj={
+    name:sc.name, cat:sc.cat, lvl:sc.lvl, tier:sc.tier,
+    loc:sc.loc, pob:sc.pob,
+    hazmat:(sc.haz||[]).join(', '),
+    initiatingEvent:sc.desc||sc.name,
+    consequences:'Emergency response activation, casualties possible, environmental impact',
+    hazards:sc.haz||[],
+    controls:['ESD/ESD system','Fire detection','Deluge system','Emergency response plan'],
+    affectedArea:sc.loc,
+    vessel:sc.vessel||'',
+    support:sc.support||''
+  };
+  var prompt=buildIMGPrompt(scObj,isOffshore);
+  try{
+    var txt=await callAI(prompt,3000);
+    briefIMGCache[sc.id]=txt;
+    displayIMGFormatted(sc.name,txt,'brief-img-body',null,0);
+  }catch(e){
+    $('brief-img-body').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#dc2626"><i class="ti ti-alert-triangle"></i> IMG generation failed: '+esc(e.message||String(e))+'</div>';
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-book"></i> Generate IMG';}
+  }
+}
+
+function printBriefIMG(){
+  var sc=S.sc;if(!sc)return;
+  var w=window.open('','_blank');
+  var body=$('brief-img-body');
+  if(!body||!body.innerHTML)return;
+  w.document.write('<html><head><title>IMG: '+esc(sc.name)+'</title><style>'
+    +'body{font-family:Arial,sans-serif;font-size:11px;padding:20px}'
+    +'table{width:100%;border-collapse:collapse}'
+    +'th{background:#0f172a;color:#fff;padding:5px 8px;text-align:left;font-size:10px}'
+    +'td{padding:5px 8px;border:1px solid #e2e8f0;vertical-align:top}'
+    +'td:last-child{font-weight:700;text-align:center;width:60px}'
+    +'h3{font-size:13px;border-bottom:2px solid #0f172a;padding-bottom:4px}'
+    +'</style></head><body>'+body.innerHTML+'</body></html>');
+  w.print();
+}
+
 
 // ── Generate PIP ──────────────────────────────────────────────────
 async function generatePIP(docId,scIdx){
