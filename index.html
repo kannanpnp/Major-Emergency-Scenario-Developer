@@ -512,6 +512,19 @@ li.onode:not(:first-child):not(:last-child)::after{left:-5px;right:-5px}
 .doc-escalation-item{border-left:3px solid #dc2626;padding:6px 10px;margin-bottom:5px;background:#fff5f5;border-radius:0 6px 6px 0;font-size:11px;line-height:1.5}
 .doc-tactic-item{border-left:3px solid #1d4ed8;padding:6px 10px;margin-bottom:5px;background:#eff6ff;border-radius:0 6px 6px 0;font-size:11px;line-height:1.5}
 .doc-footer{background:#0f172a;color:#94a3b8;padding:8px 14px;font-size:9px;border-radius:0 0 8px 8px;display:flex;justify-content:space-between}
+
+/* card edit overlay */
+.sc-card-wrap{position:relative;display:contents}
+.sc-edit-btn{position:absolute;top:6px;right:6px;opacity:0;transition:opacity .15s;z-index:2;background:#fff;border:1px solid var(--bdr);border-radius:5px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:11px}
+.sc-card-outer{position:relative}
+.sc-card-outer:hover .sc-edit-btn{opacity:1}
+/* Sort indicator on minute input */
+.build-inject-row input[type=number]{transition:background .2s}
+.build-inject-row input[type=number]:focus{background:#eff6ff}
+/* Run screen STARTEX prompt */
+.startex-prompt{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:12px;padding:20px 24px;text-align:center;margin:16px 0}
+.startex-prompt h3{font-size:15px;font-weight:800;margin-bottom:6px}
+.startex-prompt p{font-size:11px;color:#94a3b8;margin-bottom:14px}
 /* ── IMG VIEWER (sample-format) ── */
 .img-doc-wrap{font-size:11px;color:var(--text)}
 .img-header{background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px 8px 0 0;margin-bottom:0}
@@ -2115,7 +2128,7 @@ function renderHome(){
   g.innerHTML=list.map(function(sc){
     var tBadge=sc.tier?('<span class="badge b-t'+sc.tier+'">TIER '+sc.tier+'</span>'):'';
     var haz=(sc.haz||[]);
-    return'<div class="sc-card" onclick="selectSc(\''+sc.id+'\')">'+(sc.isCustom?'<div class="cust-lbl">CUSTOM</div>':'')+'<div class="sc-code">'+esc(sc.code)+'</div><div class="sc-name">'+esc(sc.name)+'</div><div class="sc-loc"><i class="ti ti-map-pin" style="font-size:10px"></i> '+esc(sc.loc)+'</div><div class="sc-bd"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'<span class="badge" style="background:var(--bg);color:var(--text2)"><i class="ti ti-users" style="font-size:10px"></i> '+sc.pob+'</span><span class="badge" style="background:var(--bg);color:var(--text2)"><i class="ti ti-clock" style="font-size:10px"></i> '+sc.dur+'m</span></div><div class="sc-hz">'+haz.slice(0,3).map(function(h){return'<span class="haz">'+esc(h)+'</span>';}).join('')+(haz.length>3?'<span class="haz">+'+( haz.length-3)+'</span>':'')+'</div></div>';
+    return'<div class="sc-card-outer"><div class="sc-card" onclick="selectSc(\''+sc.id+'\')">'+(sc.isCustom?'<div class="cust-lbl">CUSTOM</div>':'')+'<div class="sc-code">'+esc(sc.code)+'</div><div class="sc-name">'+esc(sc.name)+'</div><div class="sc-loc"><i class="ti ti-map-pin" style="font-size:10px"></i> '+esc(sc.loc)+'</div><div class="sc-bd"><span class="badge b-'+sc.cat+'">'+sc.cat.toUpperCase()+'</span><span class="badge b-'+sc.lvl+'">'+sc.lvl.toUpperCase()+'</span>'+tBadge+'<span class="badge" style="background:var(--bg);color:var(--text2)"><i class="ti ti-users" style="font-size:10px"></i> '+sc.pob+'</span><span class="badge" style="background:var(--bg);color:var(--text2)"><i class="ti ti-clock" style="font-size:10px"></i> '+sc.dur+'m</span></div><div class="sc-hz">'+haz.slice(0,3).map(function(h){return'<span class="haz">'+esc(h)+'</span>';}).join('')+(haz.length>3?'<span class="haz">+'+( haz.length-3)+'</span>':'')+'<button class="sc-edit-btn" onclick="event.stopPropagation();openScenarioEditorById(\''+sc.id+'\')"><i class="ti ti-pencil"></i></button></div></div>';
   }).join('');
 }
 
@@ -2125,6 +2138,9 @@ async function selectSc(id){
   if(!sc)return;
   S.sc=sc;
   S.muster={total:sc.pob,acc:0,mis:0,cas:0};
+  // Reset run state for new scenario selection
+  S.endClockTime=null;S.endClockDate=null;
+  if(S.timer){clearInterval(S.timer);S.timer=null;}
   document.querySelectorAll('.scr').forEach(function(e){e.classList.remove('on');});
   $('scr-brief').classList.add('on');S.screen='brief';
   var ps=PS[sc.ps]||PS.imt_medium;
@@ -2210,6 +2226,7 @@ function startEx(){
   var sc=S.sc;if(!sc)return;
   S.injects=[];S.actions=[];S.fired=new Set();
   S.startClockTime=clockTime();S.startClockDate=clockDate();
+  S.endClockTime=null;S.endClockDate=null;S.stk=[];
   R={elapsed:0,paused:false,nextAI:180,busy:false};
   document.querySelectorAll('.scr').forEach(function(e){e.classList.remove('on');});
   $('scr-run').classList.add('on');
@@ -2241,6 +2258,7 @@ function startEx(){
   var posOpts=ps.map(function(p){return'<option value="'+p.id+'">'+p.id+' \u2014 '+p.full+'</option>';}).join('')+'<option value="Control Room">Control Room</option><option value="Coastguard">Coastguard / MRCC</option><option value="Civil Defence">Civil Defence</option><option value="Muster Control">Muster Control</option><option value="Medic">Medic / Paramedic</option><option value="Standby Vessel">Standby Vessel</option><option value="SAR Helicopter">SAR Helicopter</option><option value="Port Authority">Port Authority</option><option value="OPRED Inspector">OPRED Inspector</option><option value="HSE Authority">HSE Authority</option><option value="Plant Manager">Plant Manager</option><option value="Environmental Officer">Environmental Officer</option><option value="Hospital">Hospital / Medical</option><option value="External Agency">External Agency</option>';
   $('inj-from').innerHTML=posOpts;$('inj-to').innerHTML=posOpts;
   $('pos-grid-title').textContent=psLabel(sc.ps||autoPs(sc));
+  if(!sc.phases||!sc.phases.length)sc.phases=[{n:'Response Phase',d:sc.dur||60}];
   renderSit();renderPosGrid();renderPhaseRow();
   $('comms-log').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0"><strong style="color:var(--navy)">STARTEX</strong> &mdash; <strong>'+S.startClockDate+'</strong> at <strong>'+S.startClockTime+'</strong> &mdash; Exercise commenced. Pre-built injects will fire at their scheduled times.</p>';
   $('act-list').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">No actions pending yet.</p>';
@@ -2707,7 +2725,7 @@ function renderBuild(editId){
   $('build-title').textContent=sc?'Edit: '+sc.name:'Create custom exercise';
   var defPhases=sc?sc.phases:[{n:'Activation & Initial Response',d:10},{n:'Main Response',d:25},{n:'Stabilisation',d:15},{n:'Recovery',d:10}];
   var defInj=sc?sc.inj:[];
-  $('build-form').innerHTML='<div class="g2" style="margin-bottom:1rem"><div><div class="card" style="margin-bottom:1rem"><div class="s-ttl">Basic information</div><div class="form-g"><label>Exercise name *</label><input id="b-name" value="'+esc(sc?sc.name:'')+'" placeholder="e.g. CPF North flare tower fire"></div><div class="form-g"><label>Code</label><input id="b-code" value="'+esc(sc?sc.code:'')+'" placeholder="e.g. EX-001"></div><div class="form-g"><label>Location</label><input id="b-loc" value="'+esc(sc?sc.loc:'')+'" placeholder="e.g. Onshore gas plant, flare area"></div><div class="g2" style="gap:8px"><div class="form-g" style="margin:0"><label>Category</label><select id="b-cat"><option value="offshore" '+(sc&&sc.cat==='offshore'?'selected':'')+'>Offshore O&G</option><option value="onshore" '+(sc&&sc.cat==='onshore'?'selected':'selected')+'>Onshore O&G</option><option value="lng" '+(sc&&sc.cat==='lng'?'selected':'')+'>LNG / Terminal</option></select></div><div class="form-g" style="margin:0"><label>Severity</label><select id="b-lvl"><option value="major" '+(sc&&sc.lvl==='major'?'selected':'')+'>Major</option><option value="medium" '+(sc&&sc.lvl==='medium'?'selected':'selected')+'>Medium</option><option value="minor" '+(sc&&sc.lvl==='minor'?'selected':'')+'>Minor</option></select></div></div><div class="g2" style="gap:8px;margin-top:8px"><div class="form-g" style="margin:0"><label>POB / PAX</label><input type="number" id="b-pob" value="'+(sc?sc.pob:50)+'" min="1"></div><div class="form-g" style="margin:0"><label>Duration (min)</label><input type="number" id="b-dur" value="'+(sc?sc.dur:60)+'" min="10"></div></div></div><div class="card"><div class="s-ttl">Context</div><div class="form-g"><label>Weather conditions</label><input id="b-wx" value="'+esc(sc?sc.wx:'')+'" placeholder="e.g. Wind 15kt NE, clear visibility"></div><div class="form-g"><label>Vessel / standby resource</label><input id="b-vessel" value="'+esc(sc?sc.vessel:'N/A')+'" placeholder="e.g. MV Sentinel on standby"></div><div class="form-g"><label>External support</label><input id="b-sup" value="'+esc(sc?sc.support:'EMS on call')+'" placeholder="e.g. Civil Defence, EMS activated"></div><div class="form-g"><label>Key hazards (comma separated)</label><input id="b-haz" value="'+esc(sc?(sc.haz||[]).join(', '):'')+'" placeholder="e.g. Fire, H2S release, evacuation"></div><div class="form-g"><label>Team structure</label><select id="b-ps"><option value="offshore_ecc" '+(sc&&sc.ps==='offshore_ecc'?'selected':'')+'>Offshore ECC (OPITO OIS-194/195)</option><option value="imt_major" '+(sc&&sc.ps==='imt_major'?'selected':'')+'>IMT Major - Full ICS (12 positions)</option><option value="imt_medium" '+(sc&&sc.ps==='imt_medium'?'selected':'selected')+'>IMT Medium - Simplified ICS (6 positions)</option><option value="imt_minor" '+(sc&&sc.ps==='imt_minor'?'selected':'')+'>IMT Minor - Basic (3 positions)</option></select></div><div class="form-g"><label>Brief description</label><textarea id="b-desc" rows="2" placeholder="Brief description of the scenario...">'+esc(sc?sc.desc:'')+' </textarea></div></div></div><div><div class="card" style="margin-bottom:1rem"><div class="sb" style="margin-bottom:8px"><div class="s-ttl" style="margin:0">Exercise phases</div><button class="btn btn-sm" onclick="addPhase()"><i class="ti ti-plus"></i> Add phase</button></div><div id="phases-list">'+defPhases.map(function(p,i){return'<div class="build-phase-row" id="ph-'+i+'"><input value="'+esc(p.n)+'" placeholder="Phase name" id="ph-n-'+i+'"><input type="number" value="'+p.d+'" min="5" style="text-align:center" id="ph-d-'+i+'"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-phase-row\').remove()"><i class="ti ti-trash"></i></button></div>';}).join('')+'</div></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="margin-bottom:8px"><div class="s-ttl" style="margin:0">Pre-built injects</div><button class="btn btn-sm" onclick="addBInject()"><i class="ti ti-plus"></i> Add inject</button></div><div style="font-size:11px;color:var(--text3);margin-bottom:8px">Injects fire automatically at the specified minute mark. AI generates additional injects every 3 minutes. Manual injects can be sent during the exercise.</div><div id="inj-list">'+defInj.map(function(inj,i){return'<div class="build-inject-row" id="bi-'+i+'"><input type="number" value="'+inj.m+'" min="0" id="bi-m-'+i+'" placeholder="min" style="text-align:center"><input value="'+esc(inj.fr)+'" id="bi-fr-'+i+'" placeholder="From"><select id="bi-u-'+i+'"><option '+(inj.u==='IMMEDIATE'?'selected':'')+'>IMMEDIATE</option><option '+(inj.u==='URGENT'?'selected':'')+'>URGENT</option><option '+(inj.u==='ROUTINE'?'selected':'')+'>ROUTINE</option></select><input value="'+esc(inj.msg)+'" id="bi-msg-'+i+'" placeholder="Inject message"><input value="'+esc(inj.act||'')+'" id="bi-act-'+i+'" placeholder="Required action (optional)"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-inject-row\').remove()"><i class="ti ti-trash"></i></button></div>';}).join('')+'</div></div><div class="fl" style="gap:8px"><button class="btn btn-p btn-lg" onclick="saveExercise(\''+( editId||'')+'\')"><i class="ti ti-device-floppy"></i> Save exercise</button>'+(editId?'<button class="btn btn-d btn-sm" onclick="deleteExercise(\''+editId+'\')"><i class="ti ti-trash"></i> Delete</button>':'')+'<button class="btn btn-g" onclick="navTo(\'home\')">Cancel</button></div><div id="save-msg" style="margin-top:8px;font-size:12px"></div></div></div>';
+  $('build-form').innerHTML='<div class="g2" style="margin-bottom:1rem"><div><div class="card" style="margin-bottom:1rem"><div class="s-ttl">Basic information</div><div class="form-g"><label>Exercise name *</label><input id="b-name" value="'+esc(sc?sc.name:'')+'" placeholder="e.g. CPF North flare tower fire"></div><div class="form-g"><label>Code</label><input id="b-code" value="'+esc(sc?sc.code:'')+'" placeholder="e.g. EX-001"></div><div class="form-g"><label>Location</label><input id="b-loc" value="'+esc(sc?sc.loc:'')+'" placeholder="e.g. Onshore gas plant, flare area"></div><div class="g2" style="gap:8px"><div class="form-g" style="margin:0"><label>Category</label><select id="b-cat"><option value="offshore" '+(sc&&sc.cat==='offshore'?'selected':'')+'>Offshore O&G</option><option value="onshore" '+(sc&&sc.cat==='onshore'?'selected':'selected')+'>Onshore O&G</option><option value="lng" '+(sc&&sc.cat==='lng'?'selected':'')+'>LNG / Terminal</option></select></div><div class="form-g" style="margin:0"><label>Severity</label><select id="b-lvl"><option value="major" '+(sc&&sc.lvl==='major'?'selected':'')+'>Major</option><option value="medium" '+(sc&&sc.lvl==='medium'?'selected':'selected')+'>Medium</option><option value="minor" '+(sc&&sc.lvl==='minor'?'selected':'')+'>Minor</option></select></div></div><div class="g2" style="gap:8px;margin-top:8px"><div class="form-g" style="margin:0"><label>POB / PAX</label><input type="number" id="b-pob" value="'+(sc?sc.pob:50)+'" min="1"></div><div class="form-g" style="margin:0"><label>Duration (min)</label><input type="number" id="b-dur" value="'+(sc?sc.dur:60)+'" min="10"></div></div></div><div class="card"><div class="s-ttl">Context</div><div class="form-g"><label>Weather conditions</label><input id="b-wx" value="'+esc(sc?sc.wx:'')+'" placeholder="e.g. Wind 15kt NE, clear visibility"></div><div class="form-g"><label>Vessel / standby resource</label><input id="b-vessel" value="'+esc(sc?sc.vessel:'N/A')+'" placeholder="e.g. MV Sentinel on standby"></div><div class="form-g"><label>External support</label><input id="b-sup" value="'+esc(sc?sc.support:'EMS on call')+'" placeholder="e.g. Civil Defence, EMS activated"></div><div class="form-g"><label>Key hazards (comma separated)</label><input id="b-haz" value="'+esc(sc?(sc.haz||[]).join(', '):'')+'" placeholder="e.g. Fire, H2S release, evacuation"></div><div class="form-g"><label>Team structure</label><select id="b-ps"><option value="offshore_ecc" '+(sc&&sc.ps==='offshore_ecc'?'selected':'')+'>Offshore ECC (OPITO OIS-194/195)</option><option value="imt_major" '+(sc&&sc.ps==='imt_major'?'selected':'')+'>IMT Major - Full ICS (12 positions)</option><option value="imt_medium" '+(sc&&sc.ps==='imt_medium'?'selected':'selected')+'>IMT Medium - Simplified ICS (6 positions)</option><option value="imt_minor" '+(sc&&sc.ps==='imt_minor'?'selected':'')+'>IMT Minor - Basic (3 positions)</option></select></div><div class="form-g"><label>Brief description</label><textarea id="b-desc" rows="2" placeholder="Brief description of the scenario...">'+esc(sc?sc.desc:'')+' </textarea></div></div></div><div><div class="card" style="margin-bottom:1rem"><div class="sb" style="margin-bottom:8px"><div class="s-ttl" style="margin:0">Exercise phases</div><button class="btn btn-sm" onclick="addPhase()"><i class="ti ti-plus"></i> Add phase</button></div><div id="phases-list">'+defPhases.map(function(p,i){return'<div class="build-phase-row" id="ph-'+i+'"><input value="'+esc(p.n)+'" placeholder="Phase name" id="ph-n-'+i+'"><input type="number" value="'+p.d+'" min="5" style="text-align:center" id="ph-d-'+i+'"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-phase-row\').remove()"><i class="ti ti-trash"></i></button></div>';}).join('')+'</div></div><div class="card" style="margin-bottom:1rem"><div class="sb" style="margin-bottom:8px"><div class="s-ttl" style="margin:0">Pre-built injects</div><button class="btn btn-sm" onclick="addBInject()"><i class="ti ti-plus"></i> Add inject</button></div><div style="font-size:11px;color:var(--text3);margin-bottom:8px">Injects fire automatically at the specified minute mark. AI generates additional injects every 3 minutes. Manual injects can be sent during the exercise.</div><div id="inj-list">'+defInj.map(function(inj,i){return'<div class="build-inject-row" id="bi-'+i+'"><input type="number" value="'+inj.m+'" min="0" id="bi-m-'+i+'" placeholder="min" style="text-align:center" onchange="sortBuildInjects()"><input value="'+esc(inj.fr)+'" id="bi-fr-'+i+'" placeholder="From"><select id="bi-u-'+i+'"><option '+(inj.u==='IMMEDIATE'?'selected':'')+'>IMMEDIATE</option><option '+(inj.u==='URGENT'?'selected':'')+'>URGENT</option><option '+(inj.u==='ROUTINE'?'selected':'')+'>ROUTINE</option></select><input value="'+esc(inj.msg)+'" id="bi-msg-'+i+'" placeholder="Inject message"><input value="'+esc(inj.act||'')+'" id="bi-act-'+i+'" placeholder="Required action (optional)"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-inject-row\').remove()"><i class="ti ti-trash"></i></button></div>';}).join('')+'</div></div><div class="fl" style="gap:8px"><button class="btn btn-p btn-lg" onclick="saveExercise(\''+( editId||'')+'\')"><i class="ti ti-device-floppy"></i> Save exercise</button>'+(editId?'<button class="btn btn-d btn-sm" onclick="deleteExercise(\''+editId+'\')"><i class="ti ti-trash"></i> Delete</button>':'')+'<button class="btn btn-g" onclick="navTo(\'home\')">Cancel</button></div><div id="save-msg" style="margin-top:8px;font-size:12px"></div></div></div>';
   window._phC=defPhases.length;window._biC=defInj.length;
 }
 function addPhase(){
@@ -2715,9 +2733,41 @@ function addPhase(){
   d.innerHTML='<input placeholder="Phase name" id="ph-n-'+i+'"><input type="number" value="20" min="5" style="text-align:center" id="ph-d-'+i+'"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-phase-row\').remove()"><i class="ti ti-trash"></i></button>';
   $('phases-list').appendChild(d);
 }
+function sortBuildInjects(){
+  var rows=[];
+  document.querySelectorAll('[id^="bi-m-"]').forEach(function(el){
+    var i=el.id.split('-').pop();
+    var fr=$('bi-fr-'+i),u=$('bi-u-'+i),msg=$('bi-msg-'+i),act=$('bi-act-'+i);
+    rows.push({
+      m:parseInt(el.value)||0,
+      fr:fr?fr.value:'',
+      u:u?u.value:'URGENT',
+      msg:msg?msg.value:'',
+      act:act?act.value:''
+    });
+  });
+  rows.sort(function(a,b){return a.m-b.m;});
+  var list=$('inj-list');if(!list)return;
+  window._biC=0;
+  list.innerHTML=rows.map(function(inj,i){
+    window._biC=Math.max(window._biC||0,i+1);
+    return '<div class="build-inject-row" id="bi-'+i+'">'
+      +'<input type="number" value="'+inj.m+'" min="0" id="bi-m-'+i+'" placeholder="min" style="text-align:center" onchange="sortBuildInjects()">'
+      +'<input value="'+esc(inj.fr)+'" id="bi-fr-'+i+'" placeholder="From">'
+      +'<select id="bi-u-'+i+'">'
+      +'<option'+(inj.u==='IMMEDIATE'?' selected':'')+'>IMMEDIATE</option>'
+      +'<option'+(inj.u==='URGENT'?' selected':'')+'>URGENT</option>'
+      +'<option'+(inj.u==='ROUTINE'?' selected':'')+'>ROUTINE</option>'
+      +'</select>'
+      +'<input value="'+esc(inj.msg)+'" id="bi-msg-'+i+'" placeholder="Inject message *">'
+      +'<input value="'+esc(inj.act||'')+'" id="bi-act-'+i+'" placeholder="Required action">'
+      +'<button class="btn btn-g btn-sm" onclick="this.closest(\'.build-inject-row\').remove()"><i class="ti ti-trash"></i></button>'
+      +'</div>';
+  }).join('');
+}
 function addBInject(){
   var i=window._biC++;var d=document.createElement('div');d.className='build-inject-row';d.id='bi-'+i;
-  d.innerHTML='<input type="number" value="5" min="0" id="bi-m-'+i+'" style="text-align:center"><input id="bi-fr-'+i+'" placeholder="From"><select id="bi-u-'+i+'"><option>IMMEDIATE</option><option selected>URGENT</option><option>ROUTINE</option></select><input id="bi-msg-'+i+'" placeholder="Inject message *"><input id="bi-act-'+i+'" placeholder="Required action"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-inject-row\').remove()"><i class="ti ti-trash"></i></button>';
+  d.innerHTML='<input type="number" value="5" min="0" id="bi-m-'+i+'" style="text-align:center" onchange="sortBuildInjects()"><input id="bi-fr-'+i+'" placeholder="From"><select id="bi-u-'+i+'"><option>IMMEDIATE</option><option selected>URGENT</option><option>ROUTINE</option></select><input id="bi-msg-'+i+'" placeholder="Inject message *"><input id="bi-act-'+i+'" placeholder="Required action"><button class="btn btn-g btn-sm" onclick="this.closest(\'.build-inject-row\').remove()"><i class="ti ti-trash"></i></button>';
   $('inj-list').appendChild(d);
 }
 function saveExercise(editId){
@@ -2892,7 +2942,7 @@ function openScenarioEditorById(id){
     clone.id='cx_'+Date.now();clone.isCustom=true;clone.code='[EDIT] '+clone.code;
     var cx=loadCustom();cx.push(clone);saveCustom(cx);
     S.sc=clone;sc=clone;
-    alert('This is a built-in scenario. A copy has been added to your custom exercises for editing.');
+    var _toast=document.createElement('div');_toast.style.cssText='position:fixed;top:70px;right:20px;background:#1d4ed8;color:#fff;padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:9999;box-shadow:0 4px 18px rgba(0,0,0,.25)';_toast.innerHTML='<i class="ti ti-copy"></i> Scenario copied to custom — now editing your copy';document.body.appendChild(_toast);setTimeout(function(){if(_toast.parentNode)_toast.parentNode.removeChild(_toast);},3500);
   }
   navTo('build');
   setTimeout(function(){renderBuild(sc.id);},50);
