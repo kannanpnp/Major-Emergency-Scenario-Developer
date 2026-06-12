@@ -2224,52 +2224,96 @@ async function genBrief(sc,ps){
 // ===== EXERCISE START =====
 function startEx(){
   var sc=S.sc;if(!sc)return;
+
+  // ── 1. RESET STATE ────────────────────────────────────────────
   S.injects=[];S.actions=[];S.fired=new Set();
   S.startClockTime=clockTime();S.startClockDate=clockDate();
   S.endClockTime=null;S.endClockDate=null;S.stk=[];
   R={elapsed:0,paused:false,nextAI:180,busy:false};
+  abnChecked={};
+  iapData={opPeriod:1,opStart:clockTime(),opEnd:'',objectives:[],safety:'',comms:'',resources:'',medPlan:'',coordNotes:''};
+  S.timeouts=[];
+  if(!sc.phases||!sc.phases.length)sc.phases=[{n:'Response Phase',d:sc.dur||60}];
+
+  // ── 2. NAVIGATE TO RUN SCREEN ─────────────────────────────────
   document.querySelectorAll('.scr').forEach(function(e){e.classList.remove('on');});
   $('scr-run').classList.add('on');
   document.querySelectorAll('.hdr-btn').forEach(function(b){b.classList.remove('on');});
   $('nav-run').classList.add('on');
   S.screen='run';showRunNav(true);
   $('ex-run-title').textContent=sc.code+' · '+sc.name.toUpperCase();
-  initTracker();
-  renderOverview();
-  startToReminderTimer();
-  if(getApiKey()&&(sc.inj||[]).length<8)setTimeout(function(){generateScenarioInjects(sc);},4000);
-  // Show Abandon button for offshore, hide for onshore
-  var btnAbn=$('btn-abandon');
-  if(btnAbn)btnAbn.style.display=(sc.cat==='offshore')?'':'none';
-  // Show IAP tab for ICS onshore/LNG scenarios
-  var tabIap=$('tab-iap');
-  var psKey=sc.ps||autoPs(sc);
-  if(tabIap)tabIap.style.display=(psKey!=='offshore_ecc')?'':'none';
-  // Reset abandonment checklist for new exercise
-  abnChecked={};
-  iapData={opPeriod:1,opStart:clockTime(),opEnd:'',objectives:[],safety:'',comms:'',resources:'',medPlan:'',coordNotes:''};
-  S.timeouts=[];
-  var ovWrap=$('ex-ov-wrap');if(ovWrap){ovWrap.style.maxHeight='200px';ovWrap.style.overflow='hidden';}
-  $('m-pob').textContent=S.muster.total;
-  $('m-acc').textContent=0;$('m-mis').textContent=0;$('m-cas').textContent=0;
-  $('m-acc-in').value=0;$('m-mis-in').value=0;$('m-cas-in').value=0;
-  var _mw=$('muster-warn');if(_mw){_mw.textContent='Awaiting muster report — enter actual numbers as received.';_mw.style.display='block';_mw.style.background='#dbeafe';_mw.style.color='#1d4ed8';}
-  var ps=PS[sc.ps]||PS.imt_medium;
-  var posOpts=ps.map(function(p){return'<option value="'+p.id+'">'+p.id+' \u2014 '+p.full+'</option>';}).join('')+'<option value="Control Room">Control Room</option><option value="Coastguard">Coastguard / MRCC</option><option value="Civil Defence">Civil Defence</option><option value="Muster Control">Muster Control</option><option value="Medic">Medic / Paramedic</option><option value="Standby Vessel">Standby Vessel</option><option value="SAR Helicopter">SAR Helicopter</option><option value="Port Authority">Port Authority</option><option value="OPRED Inspector">OPRED Inspector</option><option value="HSE Authority">HSE Authority</option><option value="Plant Manager">Plant Manager</option><option value="Environmental Officer">Environmental Officer</option><option value="Hospital">Hospital / Medical</option><option value="External Agency">External Agency</option>';
-  $('inj-from').innerHTML=posOpts;$('inj-to').innerHTML=posOpts;
-  $('pos-grid-title').textContent=psLabel(sc.ps||autoPs(sc));
-  if(!sc.phases||!sc.phases.length)sc.phases=[{n:'Response Phase',d:sc.dur||60}];
-  renderSit();renderPosGrid();renderPhaseRow();
-  $('comms-log').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0"><strong style="color:var(--navy)">STARTEX</strong> &mdash; <strong>'+S.startClockDate+'</strong> at <strong>'+S.startClockTime+'</strong> &mdash; Exercise commenced. Pre-built injects will fire at their scheduled times.</p>';
-  $('act-list').innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">No actions pending yet.</p>';
-  $('guid-panel').style.display='none';
-  $('ex-status').textContent='RUNNING';$('ex-status').className='badge b-run';
-  $('btn-pause').innerHTML='<i class="ti ti-player-pause"></i> Pause';$('btn-pause').disabled=false;
+
+  // ── 3. CRITICAL: SET STATUS, COMMS LOG, START TIMER FIRST ─────
+  // These MUST run before any render that could throw
+  var _el=$('ex-status');if(_el){_el.textContent='RUNNING';_el.className='badge b-run';}
+  var _bp=$('btn-pause');if(_bp){_bp.innerHTML='<i class="ti ti-player-pause"></i> Pause';_bp.disabled=false;}
+  var _gp=$('guid-panel');if(_gp)_gp.style.display='none';
+  var _cl=$('comms-log');
+  if(_cl)_cl.innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">'
+    +'<strong style="color:var(--navy)">STARTEX</strong> &mdash; '
+    +'<strong>'+S.startClockDate+'</strong> at <strong>'+S.startClockTime+'</strong>'
+    +' &mdash; Exercise commenced. Pre-built injects will fire at their scheduled times.</p>';
+  var _al=$('act-list');
+  if(_al)_al.innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">No actions pending yet.</p>';
   if(S.timer)clearInterval(S.timer);
   S.timer=setInterval(tick,1000);
+
+  // ── 4. MUSTER PANEL ──────────────────────────────────────────
+  var _pob=$('m-pob');if(_pob)_pob.textContent=S.muster.total;
+  var _acc=$('m-acc');if(_acc)_acc.textContent=0;
+  var _mis=$('m-mis');if(_mis)_mis.textContent=0;
+  var _cas=$('m-cas');if(_cas)_cas.textContent=0;
+  var _ain=$('m-acc-in');if(_ain)_ain.value=0;
+  var _min=$('m-mis-in');if(_min)_min.value=0;
+  var _cin=$('m-cas-in');if(_cin)_cin.value=0;
+  var _mw=$('muster-warn');
+  if(_mw){_mw.textContent='Awaiting muster report — enter actual numbers as received.';
+    _mw.style.display='block';_mw.style.background='#dbeafe';_mw.style.color='#1d4ed8';}
+  var _ov=$('ex-ov-wrap');if(_ov){_ov.style.maxHeight='200px';_ov.style.overflow='hidden';}
+
+  // ── 5. POSITION DROPDOWN OPTIONS ──────────────────────────────
+  var psKey=sc.ps||autoPs(sc);
+  var ps=PS[psKey]||PS.ics_medium||PS.imt_medium||[];
+  var extraOpts='<option value="Control Room">Control Room</option>'
+    +'<option value="Coastguard">Coastguard / MRCC</option>'
+    +'<option value="Civil Defence">Civil Defence</option>'
+    +'<option value="Muster Control">Muster Control</option>'
+    +'<option value="Medic">Medic / Paramedic</option>'
+    +'<option value="Standby Vessel">Standby Vessel</option>'
+    +'<option value="SAR Helicopter">SAR Helicopter</option>'
+    +'<option value="Port Authority">Port Authority</option>'
+    +'<option value="OPRED Inspector">OPRED Inspector</option>'
+    +'<option value="HSE Authority">HSE Authority</option>'
+    +'<option value="Plant Manager">Plant Manager</option>'
+    +'<option value="Environmental Officer">Environmental Officer</option>'
+    +'<option value="Hospital">Hospital / Medical</option>'
+    +'<option value="External Agency">External Agency</option>';
+  var posOpts=(ps.length?ps.map(function(p){
+    return'<option value="'+p.id+'">'+p.id+' — '+p.full+'</option>';
+  }).join(''):'')+ extraOpts;
+  var _ifr=$('inj-from');if(_ifr)_ifr.innerHTML=posOpts;
+  var _ito=$('inj-to');if(_ito)_ito.innerHTML=posOpts;
+  var _pgt=$('pos-grid-title');if(_pgt)_pgt.textContent=psLabel(psKey);
+
+  // ── 6. SHOW/HIDE SCENARIO-SPECIFIC BUTTONS ────────────────────
+  var _ba=$('btn-abandon');if(_ba)_ba.style.display=(sc.cat==='offshore')?'':'none';
+  var _ti=$('tab-iap');if(_ti)_ti.style.display=(psKey!=='offshore_ecc')?'':'none';
+
+  // ── 7. NON-CRITICAL RENDERS (wrapped — cannot stop the exercise) ──
+  try{initTracker();}catch(e){console.warn('[startEx] initTracker error:',e);}
+  try{renderOverview();}catch(e){console.warn('[startEx] renderOverview error:',e);}
+  try{startToReminderTimer();}catch(e){console.warn('[startEx] startToReminder error:',e);}
+  try{renderSit();}catch(e){console.warn('[startEx] renderSit error:',e);}
+  try{renderPosGrid();}catch(e){console.warn('[startEx] renderPosGrid error:',e);}
+  try{renderPhaseRow();}catch(e){console.warn('[startEx] renderPhaseRow error:',e);}
+
+  // ── 8. AI INJECTS (async — always after exercise starts) ──────
+  if(getApiKey()&&(sc.inj||[]).length<8){
+    setTimeout(function(){generateScenarioInjects(sc);},4000);
+  }
 }
 function renderSit(){
-  var sc=S.sc;
+  var sc=S.sc;if(!sc)return;
   var hazHtml=(sc.haz||[]).map(function(h,i){
     return '<span class="haz" style="display:inline-flex;align-items:center;gap:3px;margin:2px 2px 0 0;font-size:9px">'
       +esc(h)+'<button class="del-btn" style="width:13px;height:13px;font-size:8px;line-height:1" '
@@ -2318,7 +2362,9 @@ function editHazards(){
 }
 
 function renderPosGrid(){
-  var sc=S.sc;var ps=PS[sc.ps]||PS.imt_medium;var g=$('pos-grid');
+  var sc=S.sc;if(!sc)return;
+  var ps=PS[sc.ps]||PS[autoPs(sc)]||PS.ics_medium||PS.ics_major||PS.imt_medium||[];
+  var g=$('pos-grid');if(!g)return;
   g.style.gridTemplateColumns=ps.length<=6?'repeat(3,1fr)':ps.length<=9?'repeat(3,1fr)':'repeat(4,1fr)';
   g.innerHTML=ps.map(function(p,pi){
     var pend=S.actions.filter(function(a){return a.pos===p.id&&!a.done;}).length;
@@ -2374,9 +2420,12 @@ function editPosCard(pi){
 
 
 function renderPhaseRow(){
-  var sc=S.sc;var elMin=Math.floor(R.elapsed/60);var cum=0;var cur=0;
+  var sc=S.sc;if(!sc)return;
+  if(!sc.phases||!sc.phases.length)sc.phases=[{n:'Response',d:sc.dur||60}];
+  var el=$('phase-row');if(!el)return;
+  var elMin=Math.floor(R.elapsed/60);var cum=0;var cur=0;
   for(var i=0;i<sc.phases.length;i++){if(elMin<cum+sc.phases[i].d){cur=i;break;}cum+=sc.phases[i].d;cur=i;}
-  $('phase-row').innerHTML=sc.phases.map(function(p,i){
+  if(!$('phase-row'))return;$('phase-row').innerHTML=sc.phases.map(function(p,i){
     var cb=0;for(var j=0;j<i;j++)cb+=sc.phases[j].d;
     var cls='ph-chip';if(elMin>=cb+p.d)cls+=' done';else if(i===cur)cls+=' on';
     return '<div class="'+cls+'" ondblclick="editPhase('+i+')" title="Double-click to edit phase">'
