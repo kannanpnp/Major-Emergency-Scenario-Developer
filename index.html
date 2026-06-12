@@ -452,6 +452,66 @@ li.onode:not(:first-child):not(:last-child)::after{left:-5px;right:-5px}
 .olegend{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bdr)}
 .oleg-item{font-size:9px;font-weight:800;padding:2px 8px;border-radius:3px;border:2px solid}
 
+
+/* ── DOCUMENT PREVIEW BUTTONS ── */
+.doc-btn-bar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:#f8fafc;border-bottom:1px solid var(--bdr)}
+.doc-dl-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:inherit;letter-spacing:.3px}
+.doc-dl-btn.primary{background:var(--navy);color:#fff}
+.doc-dl-btn.primary:hover{background:#1e40af}
+.doc-dl-btn.secondary{background:#fff;color:var(--text);border:1px solid var(--bdr)}
+.doc-dl-btn.danger{background:#dc2626;color:#fff}
+/* ── IN-APP PREVIEW ── */
+.doc-preview-wrap{font-family:'Segoe UI',Arial,sans-serif;font-size:11px;color:#1e293b;background:#f1f5f9;padding:10px;border-radius:0 0 10px 10px}
+.doc-cover{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);color:#fff;border-radius:8px;padding:16px 20px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start}
+.doc-cover-left h2{font-size:15px;font-weight:900;margin:0 0 3px;letter-spacing:.5px}
+.doc-cover-left h3{font-size:11px;font-weight:400;color:#94a3b8;margin:0 0 8px}
+.doc-cover-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.doc-cover-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.4px}
+.doc-cover-right{text-align:right;font-size:9px;color:#94a3b8;line-height:1.8}
+.doc-section{background:#fff;border-radius:8px;margin-bottom:6px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.doc-sec-header{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid #e2e8f0}
+.doc-sec-body{padding:10px 12px}
+/* Action table — action boxes style */
+.doc-action-tbl{width:100%;border-collapse:separate;border-spacing:0}
+.doc-action-tbl thead tr th:first-child{border-radius:6px 0 0 0}
+.doc-action-tbl thead tr th:last-child{border-radius:0 6px 0 0}
+.doc-action-tbl th{padding:6px 10px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;background:#0f172a;color:#e2e8f0}
+.doc-action-row td{padding:7px 10px;border-bottom:1px solid #f1f5f9;font-size:11px;vertical-align:top;line-height:1.5}
+.doc-action-row:last-child td{border-bottom:none}
+.doc-action-row:nth-child(even) td{background:#f8fafc}
+.doc-action-row td.num{width:28px;font-weight:800;color:#64748b;text-align:center;font-size:10px}
+.doc-action-row td.pos{width:60px;text-align:center}
+.pos-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:.4px;background:#0f172a;color:#fff;white-space:nowrap}
+.pos-badge.oim{background:#dc2626}
+.pos-badge.cro{background:#7c3aed}
+.pos-badge.ptl{background:#0369a1}
+.pos-badge.otl{background:#d97706}
+.pos-badge.pc,.pos-badge.logco{background:#059669}
+.pos-badge.radio{background:#1d4ed8}
+.pos-badge.ert{background:#b91c1c}
+.pos-badge.ic{background:#dc2626}
+.pos-badge.osc{background:#ea580c}
+.pos-badge.so{background:#b91c1c}
+.pos-badge.psc{background:#1d4ed8}
+.pos-badge.lsc{background:#059669}
+.pos-badge.afc{background:#7c3aed}
+.doc-subhd{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:5px 10px;background:#f0f9ff;color:#0369a1;border-top:1px solid #bae6fd;border-bottom:1px solid #bae6fd;margin:6px 0}
+.doc-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.doc-check-box{border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px;background:#f8fafc}
+.doc-check-box h4{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#475569;margin:0 0 5px;border-bottom:1px dashed #e2e8f0;padding-bottom:4px}
+.doc-check-item{display:flex;align-items:flex-start;gap:5px;margin-bottom:3px;font-size:10px;line-height:1.5}
+.doc-check-item::before{content:"☐";font-size:11px;flex-shrink:0;color:#94a3b8}
+.doc-bp-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:11px;line-height:1.5}
+.doc-bp-item::before{content:"▸";color:var(--navy);flex-shrink:0;font-size:11px}
+.doc-fill-field{display:inline-block;border-bottom:1px solid #94a3b8;min-width:80px;height:14px;margin:0 4px}
+.doc-safety-row{display:grid;grid-template-columns:130px 1fr 1fr;gap:0;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:5px;font-size:10px}
+.doc-safety-row>div{padding:6px 9px;line-height:1.5}
+.doc-safety-row>div:first-child{background:#0f172a;color:#e2e8f0;font-weight:700}
+.doc-safety-row>div:nth-child(2){background:#fef3c7;color:#92400e;border-left:1px solid #e2e8f0}
+.doc-safety-row>div:last-child{background:#f0fdf4;color:#166534;border-left:1px solid #e2e8f0}
+.doc-escalation-item{border-left:3px solid #dc2626;padding:6px 10px;margin-bottom:5px;background:#fff5f5;border-radius:0 6px 6px 0;font-size:11px;line-height:1.5}
+.doc-tactic-item{border-left:3px solid #1d4ed8;padding:6px 10px;margin-bottom:5px;background:#eff6ff;border-radius:0 6px 6px 0;font-size:11px;line-height:1.5}
+.doc-footer{background:#0f172a;color:#94a3b8;padding:8px 14px;font-size:9px;border-radius:0 0 8px 8px;display:flex;justify-content:space-between}
 /* ── IMG VIEWER (sample-format) ── */
 .img-doc-wrap{font-size:11px;color:var(--text)}
 .img-header{background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px 8px 0 0;margin-bottom:0}
@@ -4696,651 +4756,448 @@ function displayIMGFormatted(name,txt,container,docId,scIdx){
   var libBtn=docId?
     '<button class="btn btn-sm btn-p" onclick="addMAHToLibrary(\''+docId+'\','+scIdx+')"><i class="ti ti-library-plus"></i> Add to Library</button>'
     :'';
-  $(container).innerHTML=
-    '<div class="img-doc-wrap">'
-    +'<div class="img-header">'
-    +'<h3><i class="ti ti-book"></i>&nbsp; IMG: '+esc(name)+'</h3>'
-    +'<p>Incident Management Guideline — Auto-generated from scenario data | Risk2Safe</p>'
+  var isOffshore=!!(S.sc&&S.sc.cat==='offshore')||(docId?false:false);
+  var docs=docId?loadMAHDocs():null;
+  var docObj=docs?docs.find(function(d){return d.id===docId;}):null;
+  var scData=docObj?docObj.scenarios[scIdx]:null;
+  var scForDoc=scData||S.sc||{name:name,code:'R2S',loc:'',pob:'',tier:null,lvl:'major',cat:isOffshore?'offshore':'onshore',haz:[]};
+  if(scData)isOffshore=(scData.affectedArea||'').toLowerCase().indexOf('offshore')>=0;
+  else if(S.sc)isOffshore=S.sc.cat==='offshore';
+  $(container).innerHTML=buildDocPreview(docId?'IMG':'IMG',scForDoc,sections,docId,scIdx,isOffshore);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DOCUMENT ENGINE — POSITION BADGES + PREVIEW + DOWNLOAD
+// ══════════════════════════════════════════════════════════════════
+
+function posBadge(pos){
+  var p=(pos||'').toLowerCase().trim();
+  var cls='';
+  if(p==='oim'||p==='em')cls='oim';
+  else if(p==='cro')cls='cro';
+  else if(p==='ptl')cls='ptl';
+  else if(p==='otl')cls='otl';
+  else if(p==='pc'||p==='logco')cls='pc';
+  else if(p==='radio')cls='radio';
+  else if(p==='ert'||p==='medic')cls='ert';
+  else if(p==='ic'||p==='sc')cls='ic';
+  else if(p==='osc')cls='osc';
+  else if(p==='so')cls='so';
+  else if(p==='psc'||p==='sitl')cls='psc';
+  else if(p==='lsc')cls='lsc';
+  else if(p==='afc')cls='afc';
+  return '<span class="pos-badge'+(cls?' '+cls:'')+'">'+(pos||'—')+'</span>';
+}
+
+function buildDocPreview(type,sc,sections,docId,scIdx,isOffshore){
+  var typeLabel=type==='IMG'?'Incident Management Guideline':'Pre-Incident Plan';
+  var typeColor=type==='IMG'?'#1e3a5f':'#7f1d1d';
+  var typeAccent=type==='IMG'?'#3b82f6':'#ef4444';
+  var catBadge=isOffshore?'<span class="doc-cover-badge" style="background:#0369a1;color:#fff">OFFSHORE ECC</span>':'<span class="doc-cover-badge" style="background:#d97706;color:#fff">ONSHORE ICS</span>';
+  var tierBadge=sc.tier?'<span class="doc-cover-badge" style="background:#dc2626;color:#fff">TIER '+sc.tier+'</span>':'';
+  var lvlBadge='<span class="doc-cover-badge" style="background:#475569;color:#fff">'+(sc.lvl||'MAJOR').toUpperCase()+'</span>';
+  var docNum=type+'-'+(sc.code||'R2S')+'/'+(new Date().getFullYear());
+  var today=clockDate();
+  var framework=isOffshore?'OPITO OIS-194/195':'FEMA ICS/NIMS';
+  var cover='<div class="doc-cover" style="background:linear-gradient(135deg,'+typeColor+' 0%,#0f172a 100%)">'
+    +'<div class="doc-cover-left">'
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Risk2Safe &mdash; '+typeLabel+'</div>'
+    +'<h2 style="font-size:16px;font-weight:900;margin:0 0 4px;color:#fff">'+esc(sc.name||sc.code||'')+'</h2>'
+    +'<div style="font-size:11px;color:#94a3b8;margin-bottom:8px">'+esc(sc.loc||sc.affectedArea||'')+(sc.pob?' &nbsp;|&nbsp; POB: '+sc.pob:'')+'</div>'
+    +'<div class="doc-cover-badges">'+catBadge+lvlBadge+tierBadge+'</div>'
     +'</div>'
-    +secHtml
-    +'<div style="padding:10px 14px;border:1px solid var(--bdr);border-radius:0 0 8px 8px;border-top:none;display:flex;gap:8px;background:#f8fafc">'
-    +printBtn+libBtn
+    +'<div class="doc-cover-right">'
+    +'<div style="font-size:11px;font-weight:700;color:#e2e8f0">'+docNum+'</div>'
+    +'<div>'+today+'</div>'
+    +'<div>'+framework+'</div>'
+    +'<div style="margin-top:6px"><span style="background:rgba(255,255,255,.1);padding:2px 8px;border-radius:3px;font-size:10px">INTERNAL USE ONLY</span></div>'
     +'</div>'
     +'</div>';
+  var secHtml=sections.map(function(sec){return renderDocSection(sec,typeAccent,type);}).join('');
+  var printId=docId?'printMAHDoc("'+type+'","'+escAttr(sc.name||sc.code||'')+'",'+scIdx+',"'+docId+'")'  :'printBriefIMG()';
+  var dlId   =docId?'downloadMAHDoc("'+type+'","'+escAttr(sc.name||sc.code||'')+'",'+scIdx+',"'+docId+'")'  :'downloadBriefIMG()';
+  var btnBar='<div class="doc-btn-bar">'
+    +'<button class="doc-dl-btn primary" onclick="'+dlId+'"><i class="ti ti-download"></i> Download HTML</button>'
+    +'<button class="doc-dl-btn secondary" onclick="'+printId+'"><i class="ti ti-printer"></i> Print / Save PDF</button>'
+    +(docId?'<button class="doc-dl-btn secondary" onclick="addMAHToLibrary(\''+docId+'\','+scIdx+')"><i class="ti ti-library-plus"></i> Add to Exercise Library</button>':'')
+    +'</div>';
+  var footer='<div class="doc-footer">'
+    +'<span>'+typeLabel+' | '+esc(sc.name||sc.code||'')+'</span>'
+    +'<span>Risk2Safe Major Emergencies Simulator | '+today+'</span>'
+    +'<span>'+docNum+'</span>'
+    +'</div>';
+  return btnBar+'<div class="doc-preview-wrap">'+cover+secHtml+footer+'</div>';
 }
 
-// ── MAH Library: generateIMG (updated) ───────────────────────────
-async function generateIMG(docId,scIdx){
-  var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
-  var sc=doc.scenarios[scIdx];if(!sc)return;
-  var isOffshore=(sc.tier||0)<=2&&(sc.affectedArea||'').toLowerCase().indexOf('offshore')>=0||false;
-  setMAHTab('img');
-  $('mah-img-pane').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating IMG for: <strong>'+esc(sc.name)+'</strong> &mdash; please wait...</div>';
-  var prompt=buildIMGPrompt(sc,isOffshore);
-  try{
-    var txt=await callAI(prompt,3000);
-    doc.scenarios[scIdx].img=txt;
-    saveMAHDocs(docs);
-    displayIMGFormatted(sc.name,txt,'mah-img-pane',docId,scIdx);
-  }catch(e){
-    $('mah-img-pane').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#991b1b">IMG generation failed: '+esc(e.message||String(e))+'</div>';
-  }
+function renderDocSection(sec,accentColor,type){
+  var h=sec.heading;var b=sec.body;
+  var isTable=b.indexOf('##TABLE')>=0;
+  var isAssessment=h.indexOf('TIME-OUT')>=0||h.indexOf('ASSESSMENT')>=0;
+  var isSafety=h.indexOf('SAFETY SYSTEM')>=0;
+  var isEscalation=h.indexOf('ESCALATION')>=0;
+  var isTactics=h.indexOf('STRATEGY')>=0||h.indexOf('TACTIC')>=0;
+  var icon='ti-file';
+  if(h.indexOf('INITIAL')>=0||h.indexOf('ACTION')>=0)icon='ti-bolt';
+  else if(h.indexOf('MUSTER')>=0)icon='ti-users';
+  else if(h.indexOf('ONGOING')>=0)icon='ti-refresh';
+  else if(h.indexOf('TIME-OUT')>=0)icon='ti-clock';
+  else if(h.indexOf('SAFETY')>=0)icon='ti-shield';
+  else if(h.indexOf('ESCALAT')>=0)icon='ti-arrow-up';
+  else if(h.indexOf('STRATEGY')>=0||h.indexOf('TACTIC')>=0)icon='ti-target';
+  else if(h.indexOf('HAZARD')>=0)icon='ti-alert-triangle';
+  else if(h.indexOf('CONTACT')>=0)icon='ti-phone';
+  else if(h.indexOf('EVACUAT')>=0)icon='ti-run';
+  else if(h.indexOf('FACILITY')>=0)icon='ti-building-factory';
+  else if(h.indexOf('DETECT')>=0)icon='ti-bell';
+  else if(h.indexOf('RESOURCE')>=0)icon='ti-package';
+  var body='';
+  if(isTable){
+    var tm=b.match(/##TABLE([\s\S]*?)##END_TABLE/);
+    body=renderActionTable(tm?tm[1]:'');
+    var after=b.replace(/##TABLE[\s\S]*?##END_TABLE/,'').trim();
+    if(after)body+=renderDocText(after,isEscalation,isTactics);
+  } else if(isAssessment){body=renderAssessmentGuide(b);}
+  else if(isSafety){body=renderSafetyTable(b);}
+  else{body=renderDocText(b,isEscalation,isTactics);}
+  return '<div class="doc-section">'
+    +'<div class="doc-sec-header" style="background:'+accentColor+'10;color:'+accentColor+';border-bottom-color:'+accentColor+'20">'
+    +'<i class="ti '+icon+'" style="font-size:13px;color:'+accentColor+'"></i><span>'+esc(h)+'</span>'
+    +'</div><div class="doc-sec-body">'+body+'</div></div>';
 }
 
-function displayIMG(name,txt,docId,scIdx){
-  displayIMGFormatted(name,txt,'mah-img-pane',docId,scIdx);
+function renderActionTable(tableText){
+  var rows=tableText.split('\n').filter(function(r){return r.trim()&&r.trim()!=='##TABLE'&&r.trim()!=='##END_TABLE';});
+  var html='<table class="doc-action-tbl"><thead><tr><th style="width:28px">#</th><th>Action</th><th style="width:65px;text-align:center">Position</th></tr></thead><tbody>';
+  var num=0;
+  rows.forEach(function(row){
+    var t=row.trim();
+    if(t.startsWith('---')&&t.endsWith('---')){
+      html+='<tr><td colspan="3"><div class="doc-subhd">'+esc(t.replace(/^---\s*/,'').replace(/\s*---$/,''))+'</div></td></tr>';return;
+    }
+    var pipe=t.lastIndexOf('|');
+    var action=pipe>=0?t.substring(0,pipe).trim():t;
+    var pos=pipe>=0?t.substring(pipe+1).trim():'';
+    action=action.replace(/^\[|\]$/g,'');
+    if(!action)return;
+    num++;
+    html+='<tr class="doc-action-row"><td class="num">'+num+'</td><td>'+esc(action)+'</td><td class="pos">'+posBadge(pos)+'</td></tr>';
+  });
+  return html+'</tbody></table>';
 }
 
-// ── Brief screen: genBriefIMG ─────────────────────────────────────
-var briefIMGCache={};
-async function genBriefIMG(){
-  var sc=S.sc;if(!sc)return;
-  var btn=$('btn-gen-img');if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generating...';}
-  var isOffshore=sc.cat==='offshore';
-  $('brief-img-body').innerHTML='<div class="img-brief-progress"><span class="spin"></span> Generating Incident Management Guideline for <strong>'+esc(sc.name)+'</strong> &mdash; this may take 20-30 seconds...</div>';
-  // Build a scenario-compatible object for buildIMGPrompt
-  var scObj={
-    name:sc.name, cat:sc.cat, lvl:sc.lvl, tier:sc.tier,
-    loc:sc.loc, pob:sc.pob,
-    hazmat:(sc.haz||[]).join(', '),
-    initiatingEvent:sc.desc||sc.name,
-    consequences:'Emergency response activation, casualties possible, environmental impact',
-    hazards:sc.haz||[],
-    controls:['ESD/ESD system','Fire detection','Deluge system','Emergency response plan'],
-    affectedArea:sc.loc,
-    vessel:sc.vessel||'',
-    support:sc.support||''
+function renderAssessmentGuide(txt){
+  var lines=txt.split('\n');
+  var boxes=[];var currentBox=null;var items=[];
+  var isSubHead=function(t){return(t.match(/^[A-Z][A-Z\s\/&]+:?\s*$/)&&t.length<70)||t.match(/^(SITUATION|CONTAINMENT|PERSONNEL|MEANS|PLAN|ACCESS|DETECT|TACTICAL|STATUS)/i);};
+  lines.forEach(function(line){
+    var t=line.trim();if(!t)return;
+    if(isSubHead(t)){if(currentBox)boxes.push({head:currentBox,items:items.slice()});currentBox=t.replace(/:$/,'');items=[];}
+    else{items.push(t);}
+  });
+  if(currentBox)boxes.push({head:currentBox,items:items});
+  if(!boxes.length)return renderDocText(txt,false,false);
+  var html='<div class="doc-check-grid">';
+  boxes.forEach(function(box){
+    html+='<div class="doc-check-box"><h4>'+esc(box.head)+'</h4>';
+    box.items.forEach(function(item){html+='<div class="doc-check-item">'+esc(item.replace(/^\[\s*\]\s*/,'').replace(/^[•\-*]\s*/,''))+'</div>';});
+    if(box.head.match(/PERSONNEL|MISSING/i))html+='<div style="margin-top:6px;font-size:10px;color:#64748b">Missing: <span class="doc-fill-field"></span>&nbsp;Location: <span class="doc-fill-field"></span></div>';
+    html+='</div>';
+  });
+  return html+'</div>';
+}
+
+function renderSafetyTable(txt){
+  var lines=txt.split('\n').filter(function(l){return l.trim();});
+  var html='';var sys='';var impact='';var comp='';
+  lines.forEach(function(line){
+    var t=line.trim();
+    if(t.match(/^(DELUGE|SHUTDOWN|ESD|DETECT|COMMUN|STRUCT|FIRE\s*WATER|HVAC|POWER|GAS)/i)){if(sys)html+=safetyRow(sys,impact,comp);sys=t;impact='';comp='';}
+    else if(t.startsWith('•')||t.startsWith('-')){var c=t.replace(/^[•\-]\s*/,'');if(!impact)impact=c;else comp=(comp?comp+' ':'')+c;}
+    else if(sys){if(!impact)impact=t;else comp=(comp?comp+' ':'')+t;}
+  });
+  if(sys)html+=safetyRow(sys,impact,comp);
+  return html||renderDocText(txt,false,false);
+}
+function safetyRow(s,i,c){
+  return '<div class="doc-safety-row"><div>'+esc(s)+'</div>'
+    +'<div><strong>Impact if unavailable:</strong><br>'+esc(i||'See ERP')+'</div>'
+    +'<div><strong>Compensatory measure:</strong><br>'+esc(c||'Activate secondary per ERP')+'</div></div>';
+}
+
+function renderDocText(txt,isEsc,isTac){
+  var lines=txt.split('\n');var html='';
+  lines.forEach(function(line){
+    var t=line.trim();if(!t)return;
+    if(t.match(/^[A-Z][A-Z\s\/&]+:?\s*$/)&&t.length<70&&!t.startsWith('•')){html+='<div class="doc-subhd">'+esc(t.replace(/:$/,''))+'</div>';return;}
+    var isBp=t.startsWith('•')||t.startsWith('-')||t.startsWith('*');
+    var clean=isBp?t.replace(/^[•\-*]\s*/,''):t;
+    if(isBp&&isEsc)html+='<div class="doc-escalation-item">'+esc(clean)+'</div>';
+    else if(isBp&&isTac)html+='<div class="doc-tactic-item">'+esc(clean)+'</div>';
+    else if(isBp)html+='<div class="doc-bp-item">'+esc(clean)+'</div>';
+    else if(t.startsWith('['))html+='<div class="doc-check-item">'+esc(t.replace(/^\[\s*\]\s*/,''))+'</div>';
+    else html+='<div style="padding:2px 0;font-size:11px;line-height:1.6">'+esc(t)+'</div>';
+  });
+  return html;
+}
+
+// ── Self-contained download HTML ─────────────────────────────────
+function escForHTML(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function buildDownloadHTML(type,sc,sections,isOffshore){
+  var typeLabel=type==='IMG'?'Incident Management Guideline':'Pre-Incident Plan';
+  var accentColor=type==='IMG'?'#1e3a5f':'#7f1d1d';
+  var today=clockDate();
+  var docNum=type+'-'+(sc.code||'R2S')+'/'+(new Date().getFullYear());
+  var framework=isOffshore?'OPITO OIS-194/195':'FEMA ICS/NIMS';
+  var catLabel=isOffshore?'OFFSHORE ECC':'ONSHORE ICS';
+  var css='*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{font-family:"Segoe UI",Arial,sans-serif;font-size:11pt;color:#1e293b;background:#fff}'
+    +'@page{size:A4;margin:16mm 14mm}'
+    +'@media print{.no-print{display:none!important}.page-break{page-break-before:always}}'
+    +'.cover{background:linear-gradient(135deg,'+accentColor+',#0f172a);color:#fff;padding:20px 24px;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}'
+    +'.cover h1{font-size:19pt;font-weight:900;margin-bottom:4px}'
+    +'.cover .sub{font-size:10.5pt;color:#94a3b8;margin-bottom:8px}'
+    +'.cover .badges span{display:inline-block;padding:3px 9px;border-radius:3px;font-size:8pt;font-weight:800;letter-spacing:.4px;margin-right:4px}'
+    +'.cr{text-align:right;font-size:9pt;color:#94a3b8;line-height:2}'
+    +'.cr strong{color:#e2e8f0;display:block;font-size:11pt}'
+    +'.section{border:1px solid #e2e8f0;border-radius:5px;margin-bottom:9px;overflow:hidden;break-inside:avoid}'
+    +'.sec-hd{background:'+accentColor+';color:#fff;padding:7px 13px;font-size:9pt;font-weight:800;text-transform:uppercase;letter-spacing:.5px}'
+    +'.sec-body{padding:10px 13px}'
+    +'table{width:100%;border-collapse:collapse}'
+    +'th{background:#0f172a;color:#fff;padding:6px 9px;font-size:8pt;text-align:left;text-transform:uppercase;letter-spacing:.4px}'
+    +'td{padding:6px 9px;border-bottom:1px solid #f1f5f9;font-size:10.5pt;vertical-align:top;line-height:1.45}'
+    +'tr:last-child td{border-bottom:none}'
+    +'tr:nth-child(even) td{background:#f8fafc}'
+    +'.num{width:22pt;text-align:center;font-weight:700;color:#64748b;font-size:9pt}'
+    +'.pos-col{width:55pt;text-align:center}'
+    +'.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:8pt;font-weight:800;background:#0f172a;color:#fff}'
+    +'.sub-hd{background:#f0f9ff;color:#0369a1;font-size:8pt;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:4px 9px;border-top:1px solid #bae6fd;border-bottom:1px solid #bae6fd;margin:5px 0}'
+    +'.cg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:6px}'
+    +'.cb{border:1px solid #e2e8f0;border-radius:4px;padding:7px 9px;background:#f8fafc}'
+    +'.cb h4{font-size:8pt;font-weight:800;text-transform:uppercase;color:#475569;margin-bottom:4px;padding-bottom:3px;border-bottom:1px dashed #e2e8f0}'
+    +'.ci{display:flex;gap:5px;margin-bottom:3px;font-size:9.5pt;line-height:1.4;align-items:flex-start}'
+    +'.ci::before{content:"☐";flex-shrink:0;color:#94a3b8}'
+    +'.bp{padding-left:11pt;position:relative;margin-bottom:4px;font-size:10.5pt;line-height:1.5}'
+    +'.bp::before{content:"▸";position:absolute;left:0;color:'+accentColor+'}'
+    +'.ei{border-left:3pt solid #dc2626;padding:5px 9px;margin-bottom:4px;background:#fff5f5;font-size:10.5pt;line-height:1.5}'
+    +'.ti{border-left:3pt solid #2563eb;padding:5px 9px;margin-bottom:4px;background:#eff6ff;font-size:10.5pt;line-height:1.5}'
+    +'.sr{display:grid;grid-template-columns:100pt 1fr 1fr;border:1px solid #e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:4px;font-size:9.5pt}'
+    +'.sr>div{padding:5px 8px;line-height:1.4}'
+    +'.sr>div:first-child{background:#0f172a;color:#e2e8f0;font-weight:700}'
+    +'.sr>div:nth-child(2){background:#fef3c7;color:#92400e;border-left:1px solid #e2e8f0}'
+    +'.sr>div:last-child{background:#f0fdf4;color:#166534;border-left:1px solid #e2e8f0}'
+    +'.footer{background:#0f172a;color:#94a3b8;padding:8px 18px;display:flex;justify-content:space-between;font-size:8pt;margin-top:8px}'
+    +'.nbtn{display:flex;gap:8px;justify-content:center;padding:10px;margin-bottom:8px}'
+    +'.nbtn button{padding:7px 16px;border-radius:5px;border:none;cursor:pointer;font-size:10pt;font-weight:700;font-family:inherit}'
+    +'.pb{background:#0f172a;color:#fff}.pb2{background:#2563eb;color:#fff}';
+
+  var buildSec=function(sec){
+    var h=sec.heading;var b=sec.body;
+    var isT=b.indexOf('##TABLE')>=0;
+    var isA=h.indexOf('TIME-OUT')>=0||h.indexOf('ASSESSMENT')>=0;
+    var isSf=h.indexOf('SAFETY SYSTEM')>=0;
+    var isE=h.indexOf('ESCALAT')>=0;
+    var isTc=h.indexOf('STRATEGY')>=0||h.indexOf('TACTIC')>=0;
+    var icon=h.indexOf('INITIAL')>=0?'⚡':h.indexOf('MUSTER')>=0?'👥':h.indexOf('ONGOING')>=0?'🔄':h.indexOf('TIME-OUT')>=0?'⏸':h.indexOf('SAFETY')>=0?'🛡':h.indexOf('ESCALAT')>=0?'🔺':h.indexOf('STRATEGY')>=0||h.indexOf('TACTIC')>=0?'🎯':h.indexOf('HAZARD')>=0?'⚠':'📋';
+    var body='';
+    if(isT){var tm=b.match(/##TABLE([\s\S]*?)##END_TABLE/);body=buildDlTable(tm?tm[1]:'');var aft=b.replace(/##TABLE[\s\S]*?##END_TABLE/,'').trim();if(aft)body+=buildDlText(aft,isE,isTc);}
+    else if(isA)body=buildDlAssessment(b);
+    else if(isSf)body=buildDlSafety(b);
+    else body=buildDlText(b,isE,isTc);
+    return '<div class="section"><div class="sec-hd">'+icon+' '+escForHTML(h)+'</div><div class="sec-body">'+body+'</div></div>';
   };
-  var prompt=buildIMGPrompt(scObj,isOffshore);
-  try{
-    var txt=await callAI(prompt,3000);
-    briefIMGCache[sc.id]=txt;
-    displayIMGFormatted(sc.name,txt,'brief-img-body',null,0);
-  }catch(e){
-    $('brief-img-body').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#dc2626"><i class="ti ti-alert-triangle"></i> IMG generation failed: '+esc(e.message||String(e))+'</div>';
-  }finally{
-    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-book"></i> Generate IMG';}
-  }
+  var bodySecs=sections.map(buildSec).join('');
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'+typeLabel+': '+escForHTML(sc.name||'')+'</title><style>'+css+'</style></head><body>'
+    +'<div class="nbtn no-print"><button class="pb2" onclick="window.print()">🖨 Print / Save as PDF</button><button class="pb" onclick="window.close()">✕ Close</button></div>'
+    +'<div class="cover"><div>'
+    +'<div style="font-size:9pt;font-weight:700;letter-spacing:1.2px;color:#94a3b8;text-transform:uppercase;margin-bottom:5px">Risk2Safe — '+typeLabel+'</div>'
+    +'<h1>'+escForHTML(sc.name||sc.code||'')+'</h1>'
+    +'<div class="sub">'+escForHTML(sc.loc||sc.affectedArea||'')+(sc.pob?' | POB/PAX: '+sc.pob:'')+'</div>'
+    +'<div class="badges"><span style="background:#0369a1">'+catLabel+'</span>'
+    +'<span style="background:#475569">'+(sc.lvl||'MAJOR').toUpperCase()+'</span>'
+    +(sc.tier?'<span style="background:#dc2626">TIER '+sc.tier+'</span>':'')
+    +'<span style="background:rgba(255,255,255,.1)">INTERNAL USE ONLY</span></div></div>'
+    +'<div class="cr"><strong>'+docNum+'</strong><span>Date: '+today+'</span><span>'+framework+'</span>'
+    +'<span>'+escForHTML((sc.hazmat||(sc.haz||[]).join(', ')||'Hydrocarbons'))+'</span></div></div>'
+    +bodySecs
+    +'<div class="footer"><span>'+typeLabel+' | '+escForHTML(sc.name||'')+'</span><span>Risk2Safe Major Emergencies Simulator</span><span>'+docNum+'</span></div></body></html>';
+}
+
+function buildDlTable(tableText){
+  var rows=tableText.split('\n').filter(function(r){return r.trim()&&r.trim()!=='##TABLE'&&r.trim()!=='##END_TABLE';});
+  var html='<table><thead><tr><th class="num">#</th><th>Action</th><th class="pos-col">Position</th></tr></thead><tbody>';
+  var num=0;
+  rows.forEach(function(row){
+    var t=row.trim();
+    if(t.startsWith('---')&&t.endsWith('---')){html+='<tr><td colspan="3"><div class="sub-hd">'+escForHTML(t.replace(/^---\s*/,'').replace(/\s*---$/,''))+'</div></td></tr>';return;}
+    var pipe=t.lastIndexOf('|');
+    var action=pipe>=0?t.substring(0,pipe).trim():t;
+    var pos=pipe>=0?t.substring(pipe+1).trim():'';
+    action=action.replace(/^\[|\]$/g,'');
+    if(!action)return;
+    num++;
+    html+='<tr><td class="num">'+num+'</td><td>'+escForHTML(action)+'</td><td class="pos-col"><span class="badge">'+escForHTML(pos||'—')+'</span></td></tr>';
+  });
+  return html+'</tbody></table>';
+}
+function buildDlText(txt,isE,isTc){
+  var lines=txt.split('\n');var html='';
+  lines.forEach(function(line){
+    var t=line.trim();if(!t)return;
+    if(t.match(/^[A-Z][A-Z\s\/&]+:?\s*$/)&&t.length<70&&!t.startsWith('•')){html+='<div class="sub-hd">'+escForHTML(t.replace(/:$/,''))+'</div>';return;}
+    var isBp=t.startsWith('•')||t.startsWith('-')||t.startsWith('*');
+    var clean=isBp?t.replace(/^[•\-*]\s*/,''):t;
+    if(isBp&&isE)html+='<div class="ei">'+escForHTML(clean)+'</div>';
+    else if(isBp&&isTc)html+='<div class="ti">'+escForHTML(clean)+'</div>';
+    else if(isBp)html+='<div class="bp">'+escForHTML(clean)+'</div>';
+    else if(t.startsWith('['))html+='<div class="ci">'+escForHTML(t.replace(/^\[\s*\]\s*/,''))+'</div>';
+    else html+='<div style="padding:2px 0;line-height:1.6">'+escForHTML(t)+'</div>';
+  });
+  return html;
+}
+function buildDlAssessment(txt){
+  var lines=txt.split('\n');var boxes=[];var cur=null;var items=[];
+  var isSH=function(t){return(t.match(/^[A-Z][A-Z\s\/&]+:?\s*$/)&&t.length<70)||t.match(/^(SITUATION|CONTAINMENT|PERSONNEL|MEANS|PLAN|ACCESS|DETECT|TACTICAL)/i);};
+  lines.forEach(function(line){
+    var t=line.trim();if(!t)return;
+    if(isSH(t)){if(cur)boxes.push({head:cur,items:items.slice()});cur=t.replace(/:$/,'');items=[];}
+    else items.push(t);
+  });
+  if(cur)boxes.push({head:cur,items:items});
+  if(!boxes.length)return buildDlText(txt,false,false);
+  var html='<div class="cg">';
+  boxes.forEach(function(box){
+    html+='<div class="cb"><h4>'+escForHTML(box.head)+'</h4>';
+    box.items.forEach(function(item){html+='<div class="ci">'+escForHTML(item.replace(/^\[\s*\]\s*/,'').replace(/^[•\-*]\s*/,''))+'</div>';});
+    if(box.head.match(/PERSONNEL|MISSING/i))html+='<div style="margin-top:5px;font-size:9pt;color:#64748b">Missing: <span style="border-bottom:1px solid #94a3b8;display:inline-block;width:60pt">&nbsp;</span>&nbsp;Location: <span style="border-bottom:1px solid #94a3b8;display:inline-block;width:80pt">&nbsp;</span></div>';
+    html+='</div>';
+  });
+  return html+'</div>';
+}
+function buildDlSafety(txt){
+  var lines=txt.split('\n').filter(Boolean);var html='';
+  var sys='';var impact='';var comp='';
+  lines.forEach(function(line){
+    var t=line.trim();
+    if(t.match(/^(DELUGE|SHUTDOWN|ESD|DETECT|COMMUN|STRUCT|FIRE\s*WATER|HVAC|POWER|GAS)/i)){if(sys)html+=dlSR(sys,impact,comp);sys=t;impact='';comp='';}
+    else if(t.startsWith('•')||t.startsWith('-')){var c=t.replace(/^[•\-]\s*/,'');if(!impact)impact=c;else comp=(comp?comp+' ':'')+c;}
+    else if(sys){if(!impact)impact=t;else comp=(comp?comp+' ':'')+t;}
+  });
+  if(sys)html+=dlSR(sys,impact,comp);
+  return html||buildDlText(txt,false,false);
+}
+function dlSR(s,i,c){
+  return '<div class="sr"><div>'+escForHTML(s)+'</div><div><strong>Impact:</strong><br>'+escForHTML(i||'See ERP')+'</div><div><strong>Compensatory:</strong><br>'+escForHTML(c||'Activate secondary per ERP')+'</div></div>';
+}
+
+function triggerDownload(filename,html){
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},5000);
+}
+
+function downloadMAHDoc(type,name,scIdx,docId){
+  var docs=loadMAHDocs();
+  var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var scData=doc.scenarios[scIdx];if(!scData)return;
+  var txt=type==='IMG'?scData.img:scData.pip;if(!txt)return;
+  var isOffshore=(scData.affectedArea||'').toLowerCase().indexOf('offshore')>=0;
+  var html=buildDownloadHTML(type,scData,parseIMGSections(txt),isOffshore);
+  triggerDownload(type+'_'+name.replace(/[^a-z0-9]/gi,'_')+'.html',html);
+}
+
+function downloadBriefIMG(){
+  var sc=S.sc;if(!sc)return;
+  var cache=briefIMGCache[sc.id];
+  if(!cache){alert('Please generate the IMG first.');return;}
+  var html=buildDownloadHTML('IMG',sc,parseIMGSections(cache),sc.cat==='offshore');
+  triggerDownload('IMG_'+sc.code+'_'+sc.name.replace(/[^a-z0-9]/gi,'_')+'.html',html);
+}
+
+function displayPIP(name,txt,docId,scIdx){
+  var docs=loadMAHDocs();
+  var doc=docs&&docs.find(function(d){return d.id===docId;});
+  var scData=doc?doc.scenarios[scIdx]:null;
+  var isOffshore=scData&&(scData.affectedArea||'').toLowerCase().indexOf('offshore')>=0||false;
+  var sc=scData||{name:name,code:'R2S',loc:'',pob:'',tier:null,lvl:'major',cat:'onshore',haz:[]};
+  $('mah-pip-pane').innerHTML=buildDocPreview('PIP',sc,parseIMGSections(txt),docId,scIdx,isOffshore);
+}
+
+function printMAHDoc(type,name,scIdx,docId){
+  var docs=loadMAHDocs();
+  var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var scData=doc.scenarios[scIdx];if(!scData)return;
+  var txt=type==='IMG'?scData.img:scData.pip;if(!txt)return;
+  var isOffshore=(scData.affectedArea||'').toLowerCase().indexOf('offshore')>=0;
+  var html=buildDownloadHTML(type,scData,parseIMGSections(txt),isOffshore);
+  var w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(function(){w.print();},400);
 }
 
 function printBriefIMG(){
   var sc=S.sc;if(!sc)return;
-  var w=window.open('','_blank');
-  var body=$('brief-img-body');
-  if(!body||!body.innerHTML)return;
-  w.document.write('<html><head><title>IMG: '+esc(sc.name)+'</title><style>'
-    +'body{font-family:Arial,sans-serif;font-size:11px;padding:20px}'
-    +'table{width:100%;border-collapse:collapse}'
-    +'th{background:#0f172a;color:#fff;padding:5px 8px;text-align:left;font-size:10px}'
-    +'td{padding:5px 8px;border:1px solid #e2e8f0;vertical-align:top}'
-    +'td:last-child{font-weight:700;text-align:center;width:60px}'
-    +'h3{font-size:13px;border-bottom:2px solid #0f172a;padding-bottom:4px}'
-    +'</style></head><body>'+body.innerHTML+'</body></html>');
-  w.print();
-}
-
-
-// ── Generate PIP ──────────────────────────────────────────────────
-async function generatePIP(docId,scIdx){
-  var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
-  var sc=doc.scenarios[scIdx];if(!sc)return;
-  setMAHTab('pip');
-  $('mah-pip-pane').innerHTML='<div class="mah-progress"><span class="spin"></span> Generating Pre-Incident Plan for: '+esc(sc.name)+'...</div>';
-  var prompt='You are a fire and emergency response pre-planning expert. Generate a comprehensive Pre-Incident Plan (PIP) for the following Major Accident Hazard.\n\n'
-    +'SCENARIO: '+sc.name+'\n'
-    +'HAZARDOUS MATERIAL: '+(sc.hazmat||'N/A')+'\n'
-    +'TIER: '+(sc.tier||2)+' | SEVERITY: '+(sc.lvl||'major')+'\n'
-    +'HAZARDS: '+(sc.hazards||[]).join(', ')+'\n'
-    +'AFFECTED AREA: '+(sc.affectedArea||'N/A')+'\n\n'
-    +'Generate a complete PIP with these sections:\n\n'
-    +'1. FACILITY / SITE INFORMATION (area description, key installations, access points)\n'
-    +'2. HAZARD PROFILE (chemical/physical properties, IDLH, flammability, toxicity, reactivity, special hazards)\n'
-    +'3. DETECTION SYSTEMS (detectors, alarms, monitoring, early warning indicators)\n'
-    +'4. INITIAL RESPONSE ACTIONS (first responder actions on scene arrival, size-up checklist)\n'
-    +'5. ACCESS ROUTES AND ENTRY POINTS (primary and secondary access, staging area locations)\n'
-    +'6. FIRE PROTECTION / SUPPRESSION (water supplies, foam systems, fixed suppression, deluge, cooling)\n'
-    +'7. HAZMAT CONSIDERATIONS (PPE requirements, decon corridor, sample points, plume direction)\n'
-    +'8. EVACUATION ROUTES AND ASSEMBLY POINTS (primary and alternate routes, muster stations)\n'
-    +'9. EXPOSURES AND OCCUPANCIES (adjacent risks, personnel concentrations, sensitive receptors)\n'
-    +'10. RESOURCE PRE-POSITIONING (equipment pre-positioning, specialist teams, mutual aid)\n'
-    +'11. KEY CONTACTS AND NOTIFICATIONS (on-call personnel, contractor specialists, regulators)\n'
-    +'12. TACTICAL WORKSHEETS (task force assignments, ICS branch/division structure for this incident)\n\n'
-    +'Be specific, tactical, and pre-incident focused. Use fire service / emergency planning terminology.';
-  try{
-    var txt=await callAI(prompt,2500);
-    doc.scenarios[scIdx].pip=txt;
-    saveMAHDocs(docs);
-    displayPIP(sc.name,txt,docId,scIdx);
-  }catch(e){
-    $('mah-pip-pane').innerHTML='<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:12px;color:#991b1b">PIP generation failed: '+esc(e.message||String(e))+'</div>';
-  }
-}
-
-function viewIMG(docId,scIdx){
-  var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
-  var sc=doc.scenarios[scIdx];if(!sc||!sc.img)return;
-  setMAHTab('img');displayIMG(sc.name,sc.img,docId,scIdx);
-}
-function viewPIP(docId,scIdx){
-  var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
-  var sc=doc.scenarios[scIdx];if(!sc||!sc.pip)return;
-  setMAHTab('pip');displayPIP(sc.name,sc.pip,docId,scIdx);
-}
-
-function displayPIP(name,txt,docId,scIdx){
-  var sections=txt.split(/\n(?=\d+\.\s+[A-Z])/);
-  var rendered=sections.map(function(s){
-    var lines=s.split('\n');
-    var hd=lines[0].replace(/^\d+\.\s*/,'');
-    var body=lines.slice(1).join('\n').trim();
-    return '<div class="img-section"><div class="img-section-hd">'+esc(hd)+'</div><div class="img-section-body">'+esc(body)+'</div></div>';
-  }).join('');
-  $('mah-pip-pane').innerHTML=
-    '<div class="sb" style="margin-bottom:10px">'
-    +'<div style="font-size:14px;font-weight:800"><i class="ti ti-map" style="color:var(--green)"></i> PIP: '+esc(name)+'</div>'
-    +'<div style="display:flex;gap:6px">'
-    +'<button class="btn btn-sm" onclick="printMAHDoc(\'PIP\',\''+escAttr(name)+'\','+scIdx+',\''+docId+'\')"><i class="ti ti-printer"></i> Print</button>'
-    +'<button class="btn btn-sm btn-p" onclick="addMAHToLibrary(\''+docId+'\','+scIdx+')"><i class="ti ti-library-plus"></i> Add to Library</button>'
-    +'</div></div>'
-    +'<div class="img-viewer">'+rendered+'</div>';
-}
-
-// ── Print IMG/PIP ─────────────────────────────────────────────────
-function printMAHDoc(type,name,scIdx,docId){
-  var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
-  var sc=doc.scenarios[scIdx];if(!sc)return;
-  var txt=type==='IMG'?sc.img:sc.pip;if(!txt)return;
-  var w=window.open('','_blank');
-  w.document.write('<html><head><title>'+type+': '+name+'</title><style>body{font-family:Arial,sans-serif;padding:28px;font-size:12px;line-height:1.8;color:#1a1a1a}h1{font-size:18px;margin-bottom:4px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#475569;border-bottom:2px solid #e2e8f0;padding-bottom:4px;margin:16px 0 8px}pre{white-space:pre-wrap;font-family:inherit}@media print{@page{margin:2cm}}</style></head><body>'
-    +'<h1>'+type+': '+name+'</h1>'
-    +'<div style="font-size:10px;color:#64748b;margin-bottom:16px">'+esc(doc.name)+' &bull; Generated by Risk2Safe &bull; '+clockDate()+' '+clockTime()+'</div>'
-    +'<pre>'+esc(txt)+'</pre>'
-    +'</body></html>');
-  w.print();
+  var cache=briefIMGCache[sc.id];
+  if(!cache){alert('Please generate the IMG first.');return;}
+  var html=buildDownloadHTML('IMG',sc,parseIMGSections(cache),sc.cat==='offshore');
+  var w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(function(){w.print();},400);
 }
 
 // ── Add MAH scenario to exercise library ─────────────────────────
 function addMAHToLibrary(docId,scIdx){
   var docs=loadMAHDocs();
-  var doc=docs.find(function(d){return d.id===docId;});
-  if(!doc)return;
+  var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
   var sc=doc.scenarios[scIdx];if(!sc)return;
-  // Convert MAH scenario to exercise scenario format
   var psKey=sc.cat==='offshore'?'offshore_ecc':sc.cat==='lng'?'ics_lng':sc.lvl==='major'?'ics_major':sc.lvl==='medium'?'ics_medium':'ics_minor';
   var exSc={
-    id:'mah_ex_'+Date.now(),
-    isCustom:true,
+    id:'mah_ex_'+Date.now(),isCustom:true,
     code:'MAH-'+String(Date.now()).slice(-4),
-    name:sc.name,
-    desc:'Extracted from '+doc.name+'. '+( sc.consequences||''),
-    cat:sc.cat||'onshore',
-    lvl:sc.lvl||'major',
-    tier:sc.tier||2,
-    loc:sc.affectedArea||'See document',
-    pob:50,missing:2,cas:1,dur:90,
-    wx:'See site conditions',
-    vessel:'N/A',
+    name:sc.name,desc:'Extracted from '+doc.name+'. '+(sc.consequences||''),
+    cat:sc.cat||'onshore',lvl:sc.lvl||'major',tier:sc.tier||2,
+    loc:sc.affectedArea||'See document',pob:50,missing:2,cas:1,dur:90,
+    wx:'See site conditions',vessel:'N/A',
     support:doc.docType==='ERP'?'Per ERP procedures':'See ERP / emergency contacts',
-    haz:sc.hazards||[sc.hazmat||'Unknown hazard'],
-    ps:psKey,
-    phases:[
-      {n:'Initial Response',d:20},{n:'Escalation & Control',d:30},
-      {n:'Stabilisation',d:25},{n:'Recovery',d:15}
-    ],
+    haz:sc.hazards||[sc.hazmat||'Unknown hazard'],ps:psKey,
+    phases:[{n:'Initial Response',d:20},{n:'Escalation & Control',d:30},{n:'Stabilisation',d:25},{n:'Recovery',d:15}],
     inj:[
-      {id:'mi1',m:3, fr:'Control Room',to:psKey==='offshore_ecc'?'EM':'IC',u:'IMMEDIATE',msg:sc.initiatingEvent||'Incident detected — activate ECC/ICS immediately',act:'Declare emergency and activate response team'},
-      {id:'mi2',m:10,fr:'Field Supervisor',to:psKey==='offshore_ecc'?'OTL':'OSC',u:'URGENT',msg:'Situation confirmed. '+( sc.consequences||'Casualties possible.'),act:'Deploy response teams per emergency plan'},
+      {id:'mi1',m:3, fr:'Control Room',to:psKey==='offshore_ecc'?'EM':'IC',u:'IMMEDIATE',msg:sc.initiatingEvent||'Incident detected \u2014 activate ECC/ICS immediately',act:'Declare emergency and activate response team'},
+      {id:'mi2',m:10,fr:'Field Supervisor',to:psKey==='offshore_ecc'?'OTL':'OSC',u:'URGENT',msg:'Situation confirmed. '+(sc.consequences||'Casualties possible.'),act:'Deploy response teams per emergency plan'},
       {id:'mi3',m:20,fr:'Site Manager',to:psKey==='offshore_ecc'?'EM':'IC',u:'URGENT',msg:'Request Tier '+(sc.tier||2)+' activation. External agencies required.',act:'Initiate Tier '+(sc.tier||2)+' procedures and notify duty manager'},
-    ],
-    imgText:sc.img||null,
-    pipText:sc.pip||null
+    ]
   };
   var cx=loadCustom();cx.push(exSc);saveCustom(cx);
-  doc.scenarios[scIdx].addedToLibrary=true;
-  saveMAHDocs(docs);
-  renderMAHScenarios(doc);
-  renderMAHDocList();
+  doc.scenarios[scIdx].addedToLibrary=true;saveMAHDocs(docs);
+  renderMAHScenarios(doc);renderMAHDocList();
   var banner=document.createElement('div');
   banner.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#15803d;color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.3)';
-  banner.innerHTML='<i class="ti ti-check"></i> "'+esc(sc.name)+'" added to Exercise Library — find it under Custom filter';
+  banner.innerHTML='<i class="ti ti-check"></i> "'+esc(sc.name)+'" added to Exercise Library';
   document.body.appendChild(banner);
   setTimeout(function(){if(banner.parentNode)banner.parentNode.removeChild(banner);},4000);
 }
 
-// Safe HTML attribute escape
 function escAttr(s){return esc(s).replace(/'/g,'&#39;');}
-
-// ══════════════════════════════════════════════════════════════════
-// HIERARCHY + SECTION COLORS
-// ══════════════════════════════════════════════════════════════════
-var ICS_HIER={
- // OFFSHORE ECC: EM is command, SMO is Safety Officer (command staff)
- // All functional positions report to EM; OTL has FTL below
- offshore_ecc:{
-  root:'EM',
-  staff:['SMO'],              // command staff — dotted box, side position
-  sections:[
-   {chief:'DEM', units:['OTL','MC','PT']},  // DEM manages operations roles
-   {chief:'RO',  units:[]},                  // Radio Operator direct to EM
-   {chief:'EL',  units:[]},                  // Event Logger direct to EM
-  ],
-  report:{
-   'EM' :['DEM','RO','EL'],
-   'DEM':['OTL','MC','PT'],
-   'OTL':['FTL'],
-  }
- },
- // ICS MAJOR: IC + 3 command staff + 4 section chiefs + sub-units
- ics_major:{
-  root:'IC',
-  staff:['SO','PIO','LNO'],   // command staff — dotted box, right panel
-  sections:[
-   {chief:'OSC', units:['ONSCDR','HZM','MEDU','DIVS']},
-   {chief:'PSC', units:['SITL','RESL','DOCL','THSP']},
-   {chief:'LSC', units:['SUPL','COMUL']},
-   {chief:'FSC', units:[]},
-  ],
-  report:{
-   'IC' :['OSC','PSC','LSC','FSC'],
-   'OSC':['ONSCDR','HZM','MEDU','DIVS'],
-   'ONSCDR':['FATS','RSC'],
-   'PSC':['SITL','RESL','DOCL','THSP'],
-   'LSC':['SUPL','COMUL'],
-  }
- },
- ics_medium:{
-  root:'IC',
-  staff:['SO','PIO'],
-  sections:[
-   {chief:'OSC', units:['ONSCDR','HZM','MEDU']},
-   {chief:'PSC', units:['SITL','RESL','DOCL']},
-   {chief:'LSC', units:[]},
-   {chief:'FSC', units:[]},
-  ],
-  report:{
-   'IC' :['OSC','PSC','LSC','FSC'],
-   'OSC':['ONSCDR','HZM','MEDU'],
-   'PSC':['SITL','RESL','DOCL'],
-  }
- },
- ics_minor:{
-  root:'IC',
-  staff:['SO'],
-  sections:[{chief:'OSC',units:['MEDU']}],
-  report:{'IC':['OSC'],'OSC':['MEDU']}
- },
- ics_lng:{
-  root:'IC',
-  staff:['SO','PIO','LNO'],
-  sections:[
-   {chief:'OSC', units:['ONSCDR','HZM','MEDU','EVAC']},
-   {chief:'PSC', units:['SITL']},
-   {chief:'LSC', units:[]},
-   {chief:'FSC', units:[]},
-  ],
-  report:{
-   'IC' :['OSC','PSC','LSC','FSC'],
-   'OSC':['ONSCDR','HZM','MEDU','EVAC'],
-   'PSC':['SITL'],
-  }
- },
-};
-function getHier(psKey){return ICS_HIER[psKey]||ICS_HIER.ics_medium;}
-var SECTION_COLORS={
- command:{bg:'#fef2f2',border:'#dc2626'},
- ops:{bg:'#fff7ed',border:'#ea580c'},
- plan:{bg:'#eff6ff',border:'#2563eb'},
- log:{bg:'#f0fdf4',border:'#16a34a'},
- fin:{bg:'#f5f3ff',border:'#7c3aed'},
-};
-
-// ══════════════════════════════════════════════════════════════════
-// TIME OUT REMINDER
-// ══════════════════════════════════════════════════════════════════
-var _toRemTmr=null;
-function startToReminderTimer(){
-  if(_toRemTmr)clearInterval(_toRemTmr);
-  _toRemTmr=setInterval(function(){if(!R.paused&&S.sc)showToReminder();},12*60*1000);
+function viewIMG(docId,scIdx){
+  var docs=loadMAHDocs();var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var sc=doc.scenarios[scIdx];if(!sc||!sc.img)return;
+  setMAHTab('img');
+  displayIMGFormatted(sc.name,sc.img,'mah-img-pane',docId,scIdx);
 }
-function clearToReminderTimer(){if(_toRemTmr){clearInterval(_toRemTmr);_toRemTmr=null;}}
-function dismissReminder(){var el=$('to-reminder');if(el&&el.parentNode)el.parentNode.removeChild(el);}
-function getTimeOutTopics(sc){
-  var base=['Situation awareness — brief all positions on current status',
-    'Muster status — accounted/missing/casualties update',
-    'Hazard control — is the hazard contained or escalating?',
-    'Resource adequacy — additional resources required?',
-    'External notifications — all agencies notified as required?',
-    'Next phase objectives — confirm team priorities'];
-  var haz=(sc.haz||[]).join(' ').toLowerCase();
-  if(haz.includes('h2s')||haz.includes('toxic'))base.push('H2S/toxic monitoring — detector readings and wind direction');
-  if(haz.includes('fire')||haz.includes('explosion'))base.push('Fire boundary — hot zone defined, firefighting resource status');
-  if(haz.includes('oil')||haz.includes('spill'))base.push('Spill containment — booms/barriers deployed, downstream protected');
-  if(haz.includes('casualt')||haz.includes('injury'))base.push('Casualty status — triage, medivac requested/despatched?');
-  if((sc.tier||0)>=2)base.push('Tier '+(sc.tier)+' — escalation notifications status, duty manager briefed?');
-  if(sc.cat==='offshore')base.push('ERRV/standby vessel — on station, briefed, ready to assist?');
-  if(sc.cat==='onshore'||sc.cat==='lng')base.push('Unified Command — fire service/emergency services integrated?');
-  return base.slice(0,7);
-}
-function showToReminder(){
-  if($('to-reminder'))return;
-  var sc=S.sc;if(!sc)return;
-  var topics=getTimeOutTopics(sc);
-  var div=document.createElement('div');
-  div.id='to-reminder';div.className='to-reminder';
-  div.innerHTML='<div class="to-reminder-hd">&#9201; Time Out Reminder — '+clockTime()+'</div>'
-    +'<div style="font-size:11px;color:#94a3b8;margin-bottom:7px">Suggested topics for your Time Out brief ('+hhmmss(R.elapsed)+'):</div>'
-    +topics.map(function(t){return'<div class="to-reminder-topic">&#8226; '+esc(t)+'</div>';}).join('')
-    +'<div class="to-reminder-actions">'
-    +'<button class="btn btn-sm" style="background:#ea580c;color:#fff;flex:1" onclick="dismissReminder();openTimeout()">&#9209; Call Time Out now</button>'
-    +'<button class="btn btn-sm" style="background:#334155;color:#fff" onclick="dismissReminder()">Dismiss</button>'
-    +'</div>';
-  document.body.appendChild(div);
+function viewPIP(docId,scIdx){
+  var docs=loadMAHDocs();var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
+  var sc=doc.scenarios[scIdx];if(!sc||!sc.pip)return;
+  setMAHTab('pip');
+  displayPIP(sc.name,sc.pip,docId,scIdx);
 }
 
-// ══════════════════════════════════════════════════════════════════
-// ORG CHART VIEW
-// ══════════════════════════════════════════════════════════════════
-var orgViewMode='cards';
-function switchOrgView(mode){
-  orgViewMode=mode;
-  var cb=$('view-cards-btn'),ob=$('view-org-btn');
-  if(cb)cb.classList.toggle('on',mode==='cards');
-  if(ob)ob.classList.toggle('on',mode==='org');
-  var g=$('pos-grid');if(!g)return;
-  if(mode==='cards'){g.innerHTML='';renderPosGrid();}
-  else{renderOrgChart();}
-}
-function renderOrgChart(){
-  var g=$('pos-grid');if(!g)return;
-  var sc_=S.sc;if(!sc_){g.innerHTML='';return;}
-  var psKey=sc_.ps||autoPs(sc_);
-  var ps=PS[psKey]||PS.ics_medium;
-  var hier=ICS_HIER[psKey]||ICS_HIER.ics_medium;
-  var posMap={};ps.forEach(function(p){posMap[p.id]=p;});
-  g.style.gridTemplateColumns='';
 
-  // Colour palette per section
-  function sCol(p){
-    var m={command:{bg:'#fef2f2',bd:'#dc2626'},ops:{bg:'#fff7ed',bd:'#ea580c'},
-           plan:{bg:'#eff6ff',bd:'#2563eb'},log:{bg:'#f0fdf4',bd:'#16a34a'},fin:{bg:'#f5f3ff',bd:'#7c3aed'}};
-    return m[p.section||'command']||m.command;
-  }
-
-  // Build one position box
-  function box(id,dashed){
-    var p=posMap[id];if(!p)return'';
-    var c=sCol(p);
-    var pend=S.actions.filter(function(a){return a.pos===id&&!a.done;}).length;
-    var short=(p.full||'')
-      .replace('Section Chief','Chief').replace('Unit Leader','UL')
-      .replace('Group Supervisor','Supv.').replace('Emergency Manager','Emerg.Mgr')
-      .replace('Operations Team Leader','Ops TL').replace('Deputy Emergency Manager','Deputy EM');
-    return '<div class="ibox" style="background:'+c.bg+';border:2px '+(dashed?'dashed':'solid')+' '+c.bd+';color:'+p.c+'" title="'+esc(p.full)+'">'
-      +(pend?'<div class="ibox-badge">'+pend+'</div>':'')
-      +'<div class="ibox-id">'+p.id+'</div>'
-      +'<div class="ibox-full">'+esc(short.trim())+'</div>'
-      +'<div class="ibox-ch">'+esc(p.ch)+'</div>'
-      +'</div>';
-  }
-
-  // Recursively build a sub-tree rooted at id
-  function subtree(id){
-    if(!posMap[id])return'';
-    var ch=(hier.report[id]||[]).filter(function(c){return posMap[c];});
-    var nodeHtml='<li class="onode">'
-      +box(id,false)
-      +(ch.length
-        ?'<div class="ovline"></div><ul class="olevel">'+ch.map(subtree).join('')+'</ul>'
-        :'')
-      +'</li>';
-    return nodeHtml;
-  }
-
-  // Build staff panel
-  var staffIds=(hier.staff||[]).filter(function(id){return posMap[id];});
-  var staffPanel=staffIds.length
-    ?'<div class="ostaff-wrap">'
-      +'<div class="ostaff-hdr">Command Staff</div>'
-      +staffIds.map(function(id){return box(id,true);}).join('')
-      +'</div>'
-    :'';
-
-  // Build the sections sub-tree (direct children excluding staff)
-  var staffSet={};staffIds.forEach(function(id){staffSet[id]=1;});
-  var directKids=(hier.report[hier.root]||[]).filter(function(id){return posMap[id]&&!staffSet[id];});
-
-  var treeHtml='<div class="otree-wrap"><div class="otop">'
-    +'<div class="otop-root">'
-    +box(hier.root,false)
-    +(directKids.length?'<div class="ovline"></div>':'')
-    +'</div>'
-    +staffPanel
-    +'</div>'
-    +(directKids.length
-      ?'<ul class="olevel">'+directKids.map(subtree).join('')+'</ul>'
-      :'')
-    +'</div>';
-
-  // Legend
-  var legend='<div class="olegend">'
-    +'<span class="oleg-item" style="background:#fef2f2;border-color:#dc2626;color:#dc2626">Command</span>'
-    +'<span class="oleg-item" style="background:#fff7ed;border-color:#ea580c;color:#ea580c">Operations</span>'
-    +'<span class="oleg-item" style="background:#eff6ff;border-color:#2563eb;color:#2563eb">Planning</span>'
-    +'<span class="oleg-item" style="background:#f0fdf4;border-color:#16a34a;color:#16a34a">Logistics</span>'
-    +'<span class="oleg-item" style="background:#f5f3ff;border-color:#7c3aed;color:#7c3aed">Finance</span>'
-    +'<span class="oleg-item" style="border-style:dashed;border-color:#64748b;color:#64748b">- - Command Staff</span>'
-    +'</div>';
-
-  g.innerHTML=legend+treeHtml;
-}
-
-// ══════════════════════════════════════════════════════════════════
-// METHANE REPORTING FORM
-// ══════════════════════════════════════════════════════════════════
-var methaneReports=[];
-
-function openMETHANE(){
-  var sc=S.sc;
-  $('methane-time').textContent=clockTime()+' | Exercise: '+hhmmss(R.elapsed);
-  if(sc){
-    var locEl=$('m-location');if(locEl&&!locEl.value)locEl.value=sc.loc||'';
-    var hazEl=$('m-hazards');if(hazEl&&!hazEl.value)hazEl.value=(sc.haz||[]).join(', ');
-    var pobEl=$('m-pob-total');if(pobEl&&pobEl.value==='0')pobEl.value=sc.pob||0;
-    var misEl=$('m-missing');if(misEl&&misEl.value==='0')misEl.value=S.muster.mis||0;
-  }
-  var dt=$('m-decl-time');if(dt&&!dt.value){var d=new Date();dt.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-  $('methane-overlay').style.display='flex';
-  renderMETHANELog();
-}
-function closeMETHANE(){$('methane-overlay').style.display='none';}
-
-function getMETHANEData(){
-  var declared=document.querySelector('input[name="m-decl"]:checked');
-  var es=[];
-  ['fire','amb','police','cg','heli','enviro'].forEach(function(id){
-    var el=$('m-es-'+id);if(el&&el.checked)es.push(el.parentElement.textContent.trim());
-  });
-  var esOther=($('m-es-other')||{}).value||'';if(esOther)es.push(esOther);
-  return{
-    ts:clockTime(),exTs:hhmmss(R.elapsed),
-    declared:(declared&&declared.value)||'NO',
-    declaredTime:($('m-decl-time')||{}).value||'',
-    location:($('m-location')||{}).value||'',
-    type:($('m-type')||{}).value+(($('m-type-detail')||{}).value?' \u2014 '+$('m-type-detail').value:''),
-    hazards:($('m-hazards')||{}).value||'',
-    access:($('m-access')||{}).value||'',
-    p1:parseInt(($('m-p1')||{}).value)||0,
-    p2:parseInt(($('m-p2')||{}).value)||0,
-    p3:parseInt(($('m-p3')||{}).value)||0,
-    missing:parseInt(($('m-missing')||{}).value)||0,
-    pob:parseInt(($('m-pob-total')||{}).value)||0,
-    emergencyServices:es.join(', '),
-  };
-}
-
-function submitMETHANE(){
-  var d=getMETHANEData();
-  if(!d.location&&!d.type){alert('Please fill in at least location and type of incident.');return;}
-  var msg='METHANE REPORT ['+d.ts+']'
-    +' | M: Major incident '+d.declared+(d.declaredTime?' @ '+d.declaredTime:'')
-    +' | E: '+d.location
-    +' | T: '+d.type
-    +' | H: '+d.hazards
-    +' | A: '+d.access
-    +' | N: POB '+d.pob+' | P1:'+d.p1+' P2:'+d.p2+' P3:'+d.p3+' Missing:'+d.missing
-    +' | E: '+d.emergencyServices;
-  var act='Acknowledge receipt of METHANE report. Activate response as per emergency plan. Notify duty manager and regulatory authority.';
-  var sc=S.sc;var psKey=sc&&(sc.ps||autoPs(sc));
-  var ps=PS[psKey]||PS.ics_medium;
-  var tgt=ps[0]&&ps[0].id||'IC';
-  var src=psKey==='offshore_ecc'?'RO':'PIO';
-  fireInject(src,tgt,'IMMEDIATE',msg,act,'man');
-  methaneReports.push(d);
-  renderMETHANELog();
-  if(d.pob>0&&S.muster){S.muster.mis=d.missing;S.muster.cas=d.p1+d.p2+d.p3;updateMuster();}
-  var banner=document.createElement('div');
-  banner.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#15803d;color:#fff;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.3)';
-  banner.textContent='METHANE report logged to Comms log';
-  document.body.appendChild(banner);
-  setTimeout(function(){if(banner.parentNode)banner.parentNode.removeChild(banner);},3000);
-  setTimeout(closeMETHANE,1500);
-}
-
-function renderMETHANELog(){
-  var el=$('methane-log-list');if(!el)return;
-  if(!methaneReports.length){el.innerHTML='';return;}
-  el.innerHTML='<div style="font-size:10px;font-weight:700;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Previous METHANE Reports This Exercise</div>'
-    +methaneReports.map(function(r,i){
-      return'<div class="methane-log"><strong>Report '+(i+1)+' @ '+r.ts+'</strong> (Ex: '+r.exTs+')<br>'
-        +'<strong>M:</strong> '+r.declared+(r.declaredTime?' @ '+r.declaredTime:'')+' &nbsp; '
-        +'<strong>E:</strong> '+esc(r.location)+' &nbsp; '
-        +'<strong>T:</strong> '+esc(r.type)+'<br>'
-        +'<strong>N:</strong> POB '+r.pob+' | P1: '+r.p1+' P2: '+r.p2+' P3: '+r.p3+' Missing: '+r.missing
-        +'</div>';
-    }).join('');
-}
-
-function printMETHANE(){
-  var d=getMETHANEData();
-  var w=window.open('','_blank');
-  w.document.write('<html><head><title>METHANE Report</title><style>body{font-family:Arial,sans-serif;padding:28px;font-size:13px}h1{font-size:20px;border-bottom:3px solid #dc2626;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin-top:16px}td{padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}td:first-child{font-weight:700;background:#f8fafc;width:40px;font-size:22px;color:#dc2626;text-align:center}td:nth-child(2){font-weight:700;background:#f8fafc;width:140px}.footer{margin-top:30px;font-size:10px;color:#94a3b8}</style></head><body>'
-    +'<h1>METHANE INCIDENT REPORT</h1>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:4px">Time: '+d.ts+' (Exercise: '+d.exTs+') | Generated by Risk2Safe</div>'
-    +'<table>'
-    +'<tr><td>M</td><td>Major incident declared</td><td>'+esc(d.declared)+(d.declaredTime?' at '+d.declaredTime:'')+'</td></tr>'
-    +'<tr><td>E</td><td>Exact location</td><td>'+esc(d.location)+'</td></tr>'
-    +'<tr><td>T</td><td>Type of incident</td><td>'+esc(d.type)+'</td></tr>'
-    +'<tr><td>H</td><td>Hazards present</td><td>'+esc(d.hazards)+'</td></tr>'
-    +'<tr><td>A</td><td>Access routes</td><td>'+esc(d.access)+'</td></tr>'
-    +'<tr><td>N</td><td>Number of casualties</td><td>POB: '+d.pob+' | P1 (Critical): '+d.p1+' | P2 (Urgent): '+d.p2+' | P3 (Minor): '+d.p3+' | Missing: '+d.missing+'</td></tr>'
-    +'<tr><td style="color:#2563eb">E</td><td>Emergency services</td><td>'+esc(d.emergencyServices||'None notified yet')+'</td></tr>'
-    +'</table>'
-    +'<div class="footer">Completed by: ____________ Position: ____________ Signature: ____________</div>'
-    +'</body></html>');
-  w.print();
-}
-
-// ══════════════════════════════════════════════════════════════════
-// GLOBAL EVENT DELEGATION
-// ══════════════════════════════════════════════════════════════════
-document.addEventListener('click',function(e){
-  var btn=e.target.closest('[data-action]');
-  if(!btn)return;
-  var action=btn.dataset.action,id=btn.dataset.id,pi=btn.dataset.pi;
-  switch(action){
-    case 'edit-inj':(function(){
-      var inj=S.injects.find(function(i){return i.id===id;});if(!inj)return;
-      showModal('Edit comms log entry',
-        '<div class="g2" style="gap:8px;margin-bottom:8px">'
-        +'<div class="form-g" style="margin:0"><label>From</label><input id="m-efr" value="'+esc(inj.from)+'"></div>'
-        +'<div class="form-g" style="margin:0"><label>To position</label><input id="m-eto" value="'+esc(inj.to)+'"></div>'
-        +'</div>'
-        +'<div class="form-g"><label>Urgency</label><select id="m-eurg">'
-        +'<option'+(inj.urgency==='IMMEDIATE'?' selected':'')+'>IMMEDIATE</option>'
-        +'<option'+(inj.urgency==='URGENT'?' selected':'')+'>URGENT</option>'
-        +'<option'+(inj.urgency==='ROUTINE'?' selected':'')+'>ROUTINE</option>'
-        +'</select></div>'
-        +'<div class="form-g"><label>Message</label><textarea id="m-emsg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'
-        +'<div class="form-g"><label>Required action</label><textarea id="m-eact" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
-        function(){
-          inj.from=($('m-efr')||{}).value||inj.from;
-          inj.to=($('m-eto')||{}).value||inj.to;
-          inj.urgency=($('m-eurg')||{}).value||inj.urgency;
-          inj.msg=($('m-emsg')||{}).value||inj.msg;
-          inj.act=($('m-eact')||{}).value||'';
-          renderCommsLog();renderActList();renderPosGrid();
-        }
-      );
-    })();break;
-    case 'del-inj':
-      if(!confirm('Delete this comms log entry?'))break;
-      S.injects=S.injects.filter(function(i){return i.id!==id;});
-      S.actions=S.actions.filter(function(a){return a.id!==id;});
-      renderCommsLog();renderActList();renderPosGrid();
-      $('comms-cnt').textContent=S.injects.length;
-      $('act-cnt').textContent=S.actions.filter(function(a){return!a.done;}).length;
-      break;
-    case 'done-act':markDone(id);break;
-    case 'del-act':deleteAction(id);break;
-    case 'edit-pos':editPosCard(parseInt(pi));break;
-    case 'del-trk':
-      S.tracker=S.tracker.filter(function(t){return t.id!==id;});
-      renderTracker();break;
-    case 'review-hist':reviewHistory(btn.dataset.hid);break;
-    case 'del-hist':deleteHistory(btn.dataset.hid);break;
-    case 'show-protocol':showExtProtocol(btn.dataset.ecid);break;
-    case 'abn-check':checkAbnStep(parseInt(btn.dataset.step),btn.checked);break;
-    case 'edit-sched':(function(){
-      var idx=parseInt(id);var inj=S.sc&&S.sc.inj&&S.sc.inj[idx];if(!inj)return;
-      showModal('Edit scheduled inject',
-        '<div class="g2" style="gap:8px;margin-bottom:8px">'
-        +'<div class="form-g" style="margin:0"><label>Fire at minute</label><input id="m-sm" type="number" value="'+inj.m+'"></div>'
-        +'<div class="form-g" style="margin:0"><label>From</label><input id="m-sfr" value="'+esc(inj.fr||'Controller')+'"></div>'
-        +'</div>'
-        +'<div class="form-g"><label>To position</label><input id="m-sto" value="'+esc(inj.to||'')+'"></div>'
-        +'<div class="form-g"><label>Urgency</label><select id="m-surg">'
-        +'<option'+(inj.u==='IMMEDIATE'?' selected':'')+'>IMMEDIATE</option>'
-        +'<option'+(inj.u==='URGENT'?' selected':'')+'>URGENT</option>'
-        +'<option'+(inj.u==='ROUTINE'?' selected':'')+'>ROUTINE</option>'
-        +'</select></div>'
-        +'<div class="form-g"><label>Message</label><textarea id="m-smsg" rows="3" style="font-size:12px">'+esc(inj.msg)+'</textarea></div>'
-        +'<div class="form-g"><label>Required action</label><textarea id="m-sact" rows="2" style="font-size:12px">'+esc(inj.act||'')+'</textarea></div>',
-        function(){
-          inj.m=parseInt(($('m-sm')||{}).value)||inj.m;
-          inj.fr=($('m-sfr')||{}).value||inj.fr;
-          inj.to=($('m-sto')||{}).value||inj.to;
-          inj.u=($('m-surg')||{}).value||inj.u;
-          inj.msg=($('m-smsg')||{}).value||inj.msg;
-          inj.act=($('m-sact')||{}).value||'';
-          renderSchedule();
-        }
-      );
-    })();break;
-    case 'del-sched':(function(){
-      var idx=parseInt(id);if(S.sc&&S.sc.inj){S.sc.inj.splice(idx,1);renderSchedule();}
-    })();break;
-  }
-});
-
-// ══════════════════════════════════════════════════════════════════
-// PAGE INITIALIZATION
-// ══════════════════════════════════════════════════════════════════
+// ===== INIT =====
 loadDocCache();
 window.addEventListener('DOMContentLoaded', function(){
   updateApiDot();
   renderHome();
 });
-
 </script>
 </body>
 </html>
